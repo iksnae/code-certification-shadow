@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations.",
+  "userValue" : "The plan correctly addresses all product requirements: partitioning units into supported\/unsupported, rendering a banner with count and language list in both text and markdown formats, excluding unsupported units from all aggregates (GPA, distribution, averages, badges), clarifying denominators, and covering edge cases with tests."
+}
