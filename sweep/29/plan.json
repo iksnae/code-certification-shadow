@@ -1,0 +1,29 @@
+{
+  "apiOrSchemaChanges" : [
+    "New exported type: Tier (int enum with TierGeneric, TierFull)",
+    "New exported function: TierForLanguage(lang string) Tier"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.95,
+  "failingTest" : "",
+  "fileMap" : [
+    "internal\/language_tiers\/language_tiers.go — create — new package: Tier type, TierGeneric\/TierFull constants, TierForLanguage function",
+    "internal\/language_tiers\/language_tiers_test.go — create — table-driven tests for supported and unsupported languages"
+  ],
+  "fixApproach" : "Create a new `language_tiers` package with a `Tier` enum (`TierGeneric`, `TierFull`) and a `TierForLanguage(lang string) Tier` function that delegates to `analysis.ForLanguage(lang)` — non-nil → TierFull, nil → TierGeneric. Write table-driven tests covering the five explicitly registered languages (go, ts, py, rs, plus js which shares the TS grammar) and several unregistered ones.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "js is registered via the same init() as ts (internal\/analysis\/ts_analyzer.go:26) and will naturally return TierFull from TierForLanguage(\"js\"), but the issue body only mentions \"go, ts, py, rs\". Should js be explicitly excluded (treated as TierGeneric), or is it acceptable for js to also be TierFull since it has a real parser?"
+  ],
+  "steps" : [
+    "Create internal\/language_tiers\/language_tiers.go: define Tier type as int with const block (TierGeneric, TierFull), implement TierForLanguage(lang string) Tier using analysis.ForLanguage()",
+    "Create internal\/language_tiers\/language_tiers_test.go: table-driven test covering TierFull for go\/ts\/py\/rs\/js and TierGeneric for ruby\/swift\/c\/empty-string",
+    "Run go test .\/... -count=1 to verify the package compiles and tests pass"
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Create the language_tiers package with Tier constants and TierForLanguage function backed by analysis.ForLanguage",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
