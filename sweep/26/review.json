@@ -1,21 +1,21 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 8 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 50 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "no files were changed",
+      "detail" : "1 file(s) changed: internal\/engine\/scorer_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -25,97 +25,138 @@
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Plan required 5 functional tests with specific assertions. Only TestScore_SupportedLanguage_StillWorks and TestScore_DefaultsNotInjected are fully functional. TestScore_UnmeasuredComplexity_NotScoredExcellent documents the bug instead of asserting 'NOT scored as 0.95' as the plan requires. TestScore_UnsupportedLanguage_ReturnsNA and TestScore_AggregateSkipsUnsupported are t.Skip() stubs that test nothing.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.3
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Only scorer_test.go modified, matching plan's single target file. No other files touched; no production code changed. Deduction only for incomplete delivery, not for scope violation.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.95
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "No existing tests deleted or weakened. No hard-coded expected values to force green. However, 2 of 5 required tests use t.Skip(), meaning the real defect (issue #25) is never actually asserted against — the tests are effectively vacuous, which sidesteps the plan's verification intent without falsifying results.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.8
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "No production code changes, so zero regression risk. Skip tests are harmless at runtime. However, the plan explicitly states 'Run go test .\/... -count=1 and fix any failures' — the skip tests mean key plan behaviors (unsupported-language N\/A, aggregate exclusion) are completely unverified, leaving a gap an operator would need to fill before merging.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.75
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.9
         }
       }
     }
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "is\t5.225s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.979s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t2.940s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.238s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.933s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t1.563s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t1.786s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.524s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t2.388s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t3.144s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t2.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t2.775s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t2.609s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.239s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.444s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.019s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
-  "confidence" : 0,
+  "committed" : true,
+  "confidence" : 0.9,
   "correlationId" : "sweep-build-26",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Plan required 5 functional tests with specific assertions. Only TestScore_SupportedLanguage_StillWorks and TestScore_DefaultsNotInjected are fully functional. TestScore_UnmeasuredComplexity_NotScoredExcellent documents the bug instead of asserting 'NOT scored as 0.95' as the plan requires. TestScore_UnsupportedLanguage_ReturnsNA and TestScore_AggregateSkipsUnsupported are t.Skip() stubs that test nothing.",
+      "score" : 0.3
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only scorer_test.go modified, matching plan's single target file. No other files touched; no production code changed. Deduction only for incomplete delivery, not for scope violation.",
+      "score" : 0.95
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "No existing tests deleted or weakened. No hard-coded expected values to force green. However, 2 of 5 required tests use t.Skip(), meaning the real defect (issue #25) is never actually asserted against — the tests are effectively vacuous, which sidesteps the plan's verification intent without falsifying results.",
+      "score" : 0.8
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "No production code changes, so zero regression risk. Skip tests are harmless at runtime. However, the plan explicitly states 'Run go test .\/... -count=1 and fix any failures' — the skip tests mean key plan behaviors (unsupported-language N\/A, aggregate exclusion) are completely unverified, leaving a gap an operator would need to fill before merging.",
+      "score" : 0.75
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-26#s0",
     "rcpt-build-verify-sweep-build-26#s0",
-    "rcpt-build-commit-sweep-build-26#s0"
+    "rcpt-build-commit-sweep-build-26#s0",
+    "rcpt-build-implement-sweep-build-26#s1",
+    "rcpt-build-verify-sweep-build-26#s1",
+    "rcpt-build-commit-sweep-build-26#s1"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 8 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
-    "No files were changed."
+    "2 of 5 required tests (TestScore_UnsupportedLanguage_ReturnsNA, TestScore_AggregateSkipsUnsupported) are t.Skip() stubs that perform zero assertions, failing to implement plan requirements #1 and #5.",
+    "TestScore_UnmeasuredComplexity_NotScoredExcellent documents bug #25 and accepts the buggy 0.95 score instead of asserting it is NOT scored as 0.95 as the plan explicitly requires ('Assert that the maintainability dimension is NOT scored as 0.95').",
+    "Plan objective substantially incomplete: only 2 of 5 tests are fully functional with correct assertions."
   ],
   "filesReviewed" : [
-
+    "internal\/engine\/scorer_test.go"
   ],
-  "outcome" : "blocked",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "needsFix",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
