@@ -1,0 +1,31 @@
+ISSUE issue:iksnae/code-certification#26: Add comprehensive tests in scorer_test.go: unsupported language → N/A, unmeasured complexity not scored as excellent, Swift-like generic unit produces no fabricated dimensions, and regression tests for each fix area.
+
+Add comprehensive tests in scorer_test.go: unsupported language → N/A, unmeasured complexity not scored as excellent, Swift-like generic unit produces no fabricated dimensions, and regression tests for each fix area.
+
+Split from parent issue:iksnae/code-certification#21 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/engine/scorer_test.go
+
+Non-goals:
+- Do NOT change production code in this step — only tests
+- Do NOT modify language_tiers.go
+- Do NOT touch report generation or init_cmd.go
+
+Verification command: go test ./... -count=1
+Size: m
+Risk: medium
+
+Add to internal/engine/scorer_test.go:
+
+1. TestScore_UnsupportedLanguage_ReturnsNA — construct a unit whose language is 'Swift' (or any TierGeneric language). Call Score(). Assert Grade == "N/A". Assert Unsupported marker is true. Assert no dimension scores are present (or all are sentinel 'unmeasured').
+
+2. TestScore_UnmeasuredComplexity_NotScored — construct a unit with complexity=0 from a TierGeneric language. Call scoreFromMetrics (or Score). Assert that the maintainability dimension is NOT scored as 0.95 (excellent). It should be absent or marked unmeasured.
+
+3. TestScore_SupportedLanguage_StillWorks — construct a Go unit with real metrics. Call Score(). Assert it produces a real grade (A/B/C/D/F, not N/A) and has populated dimension scores. This is a regression guard.
+
+4. TestScore_DefaultsNotInjected — construct a TierGeneric unit. Call Score(). Assert that no dimension has value 0.5 (the old default). All unmeasured dimensions should be absent from the dimension map.
+
+5. TestScore_AggregateSkipsUnsupported — if scorer.go has aggregate logic, test that unsupported units are excluded.
+
+Run `go test ./... -count=1` and fix any failures.
