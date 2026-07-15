@@ -1,0 +1,31 @@
+ISSUE issue:iksnae/code-certification#27: Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations.
+
+Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations.
+
+Split from parent issue:iksnae/code-certification#21 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/report/report.go
+
+Non-goals:
+- Do NOT change scorer.go or language_tiers.go
+- Do NOT change init_cmd.go
+- Do NOT change the visual design of the report card beyond adding the banner
+
+Verification command: go test ./... -count=1
+Size: m
+Risk: medium
+
+Modify the report card generator in internal/report/report.go (or whichever file generates .certification/REPORT_CARD.md):
+
+1. After collecting unit results, partition them: supported (Grade != "N/A") vs unsupported (Unsupported==true).
+
+2. Add a banner/section to the report card output: '⚠️ N units in unsupported languages (Swift, Shell, ...) — not analyzed. Scores for these units are withheld.' List the distinct unsupported language names.
+
+3. Exclude unsupported units from all aggregate grade calculations (overall GPA, distribution counts, averages). Only supported units with real grades contribute to aggregate stats.
+
+4. Ensure the aggregate section clearly states the denominator (e.g., 'Based on X analyzable units; Y units skipped').
+
+5. Update any badge/summary generation that reads aggregate scores to also exclude unsupported units.
+
+Run `go test ./... -count=1`. If the report package has tests, ensure they pass.

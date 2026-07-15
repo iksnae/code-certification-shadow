@@ -1,0 +1,56 @@
+From 012660d17e357905c597b63b7372eea9a0a93bea Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Wed, 15 Jul 2026 13:52:23 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-27#s0)
+
+---
+ internal/report/card.go | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/internal/report/card.go b/internal/report/card.go
+index d726534d7..056749372 100644
+--- a/internal/report/card.go
++++ b/internal/report/card.go
+@@ -7,6 +7,7 @@ import (
+ 	"strings"
+ 	"time"
+ 
++	"github.com/iksnae/code-certification/internal/analysis"
+ 	"github.com/iksnae/code-certification/internal/domain"
+ )
+ 
+@@ -40,6 +41,11 @@ type Card struct {
+ 
+ 	// Package summaries (populated for report tree navigation)
+ 	Packages []PackageSummary `json:"packages,omitempty"`
++
++	// Unsupported-units banner
++	UnsupportedCount     int      `json:"unsupported_count"`
++	UnsupportedLanguages []string `json:"unsupported_languages,omitempty"`
++	AnalyzableUnits      int      `json:"analyzable_units"`
+ }
+ 
+ // IssueCard describes a single unit needing attention.
+@@ -294,6 +300,19 @@ func FormatCardMarkdown(c Card) string {
+ 	return b.String()
+ }
+ 
++// partitionByLanguage splits records into supported and unsupported slices based on
++// whether analysis.ForLanguage returns a non-nil Analyzer for the unit's language.
++func partitionByLanguage(records []domain.CertificationRecord) (supported, unsupported []domain.CertificationRecord) {
++	for _, r := range records {
++		if analysis.ForLanguage(r.UnitID.Language()) != nil {
++			supported = append(supported, r)
++		} else {
++			unsupported = append(unsupported, r)
++		}
++	}
++	return
++}
++
+ // gradeEmoji maps grades to brand-consistent status emoji.
+ // 🟢 Certified (A–B), 🟡 Observations (C), 🟠 Probationary (D), 🔴 Decertified (F), ⚪ Expired.
+ func gradeEmoji(grade string) string {
+-- 
+2.54.0 (Apple Git-156)
+
