@@ -1,0 +1,35 @@
+{
+  "apiOrSchemaChanges" : [
+    "internal\/discovery: +func KnownLanguages() []string",
+    "internal\/engine: +type Tier int (None\/Generic\/Lint\/Parse\/Full), +func TierForLanguage(string) Tier, +var languageTiers map[string]Tier"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.95,
+  "failingTest" : "TestTierRegistry_AllKnownLanguagesHaveTiers",
+  "fileMap" : [
+    "internal\/discovery\/generic.go — modify — add exported KnownLanguages() to expose deduplicated language IDs from certifiableExts",
+    "internal\/engine\/language_tiers.go — create — Tier enum, static registry of 22 language→tier mappings, TierForLanguage helper",
+    "internal\/engine\/language_tiers_test.go — create — three tests: exhaustive coverage, unknown fallback, Swift regression pin"
+  ],
+  "fixApproach" : "Add a minimal exported `KnownLanguages()` function to `internal\/discovery\/generic.go` so the engine test can enumerate all known language IDs. Then create `internal\/engine\/language_tiers.go` with a `Tier` enum (None=0, Generic, Lint, Parse, Full), a static `map[string]Tier` registry covering all 22 languages, and a `TierForLanguage(lang string) Tier` helper defaulting to TierGeneric. Finally, create `internal\/engine\/language_tiers_test.go` with three tests: exhaustive coverage of all discovery-known languages, the unknown-language fail-safe, and a Swift-is-Generic regression pin.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+
+  ],
+  "steps" : [
+    "Add exported `KnownLanguages() []string` to `internal\/discovery\/generic.go` deduplicating and sorting keys from `certifiableExts`",
+    "Create `internal\/engine\/language_tiers.go`: define `Tier` iota enum (None, Generic, Lint, Parse, Full) with a `String()` method",
+    "Define the static registry `var languageTiers = map[string]Tier{…}` mapping all 22 language IDs to their tiers: go\/ts\/js\/py\/rs → Full, all others (rb,java,kt,sh,c,cpp,cs,swift,php,elixir,erlang,scala,lua,r,zig,sql,proto) → Generic",
+    "Implement `func TierForLanguage(lang string) Tier` returning the registry entry or TierGeneric for unknowns",
+    "Create `internal\/engine\/language_tiers_test.go` with TestTierRegistry_AllKnownLanguagesHaveTiers (calls discovery.KnownLanguages(), asserts every ID has a non-zero tier entry)",
+    "Add TestTierRegistry_UnknownLanguageReturnsGeneric (asserts TierForLanguage(\"nonsense\") == TierGeneric)",
+    "Add TestTierRegistry_SwiftIsGeneric (asserts TierForLanguage(\"swift\") == TierGeneric as regression pin)",
+    "Run `go test .\/... -count=1` to verify all tests pass"
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Create a language-tier registry (None\/Generic\/Lint\/Parse\/Full) mapping all 22 known language IDs to capability tiers, with a CI-enforcing test that fails when a new extension is added without a tier entry.",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
