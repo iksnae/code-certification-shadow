@@ -253,3 +253,8 @@
 {"ticketId":"26","outcome":{"advanced":{"to":"planning"}},"id":"26-255","at":805828604.606733,"phase":"queued-build","detail":"advanced to planning"}
 {"at":805828604.678893,"phase":"queued-build","ticketId":"27","detail":"advanced to planning","outcome":{"advanced":{"to":"planning"}},"id":"27-256"}
 {"outcome":{"advanced":{"to":"planning"}},"at":805828605.323415,"id":"28-257","ticketId":"28","phase":"queued-build","detail":"advanced to planning"}
+{"phase":"queued-build","id":"25-258","ticketId":"25","outcome":{"running":{}},"detail":"working queued-build","at":805828609.148685}
+{"ticketId":"24","outcome":{"running":{}},"id":"24-259","at":805828609.327088,"phase":"queued-build","detail":"working queued-build"}
+{"at":805828610.227649,"phase":"queued-build","ticketId":"23","detail":"working queued-build","outcome":{"running":{}},"id":"23-260"}
+{"outcome":{"advanced":{"to":"planning"}},"at":805828611.398558,"id":"24-261","ticketId":"24","phase":"queued-build","detail":"advanced to planning"}
+{"ticketId":"25","phase":"queued-build","detail":"advanced to planning","outcome":{"advanced":{"to":"planning"}},"at":805828611.398873,"id":"25-262"}
