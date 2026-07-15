@@ -1,0 +1,20 @@
+ISSUE issue:iksnae/code-certification#23: Create a language-tier registry mapping every known language ID to an analysis capability tier (None/Generic/Lint/Parse/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry.
+
+Create a language-tier registry mapping every known language ID to an analysis capability tier (None/Generic/Lint/Parse/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry.
+
+Split from parent issue:iksnae/code-certification#21 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/engine/language_tiers.go
+- internal/engine/language_tiers_test.go
+
+Non-goals:
+- Do NOT implement any new collectors
+- Do NOT change scorer.go yet
+- Do NOT modify init_cmd.go or report generation
+
+Verification command: go test ./... -count=1
+Size: m
+Risk: medium
+
+Create internal/engine/language_tiers.go with a Tier enum (None, Generic, Lint, Parse, Full) and a registry map[languageID]Tier. Audit existing evidence collectors under internal/ to determine which languages have parser, lint, and test collectors vs. generic-only (git history + line counts). Mark Swift, Shell, and all other generic-only languages as TierGeneric. Mark Go as at least TierParse (has parser, lint via golangci-lint, test collector). Mark TypeScript, Python, Rust similarly based on actual collector presence. Add a helper function `TierForLanguage(lang string) Tier` that returns TierGeneric for unknown languages (fail-safe). Create internal/engine/language_tiers_test.go with: (a) TestTierRegistry_AllKnownLanguagesHaveTiers — iterate all known language IDs from discovery and assert each maps to a tier; (b) TestTierRegistry_UnknownLanguageReturnsGeneric — verify the fail-safe; (c) TestTierRegistry_SwiftIsGeneric — explicit regression test that Swift is TierGeneric until a real collector is added. Use `go test ./... -count=1` as the verify command.
