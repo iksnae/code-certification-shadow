@@ -849,3 +849,9 @@ come":{"note":{}},"detail":"deepseek-v4-pro · 92743 tok · 18339ms · $0.0254",
 {"ticketId":"23","outcome":{"advanced":{"to":"product"}},"at":805829617.013747,"id":"23-870","phase":"planning","detail":"advanced to product"}
 {"id":"25-871","stat":{"modelId":"deepseek:deepseek-v4-pro","completionTokens":2604,"costUSD":0.00355668,"promptTokens":2564,"latencyMs":45727},"outcome":{"note":{}},"ticketId":"25","at":805829625.963778,"phase":"planning","detail":"deepseek-v4-pro · 5168 tok · 45727ms · $0.0036"}
 {"phase":"planning","at":805829630.147167,"id":"25-872","ticketId":"25","detail":"advanced to product","outcome":{"advanced":{"to":"product"}}}
+{"ticketId":"26","outcome":{"running":{}},"detail":"working product","id":"26-874","phase":"product","at":805829667.213216}
+{"ticketId":"28","outcome":{"running":{}},"detail":"working product","id":"28-875","phase":"product","at":805829667.213242}
+{"ticketId":"27","outcome":{"running":{}},"detail":"working product","id":"27-873","phase":"product","at":805829667.213172}
+{"stat":{"modelId":"deepseek:deepseek-v4-pro","completionTokens":660,"latencyMs":10414,"costUSD":0.00110832,"promptTokens":1416},"ticketId":"27","outcome":{"note":{}},"id":"27-876","detail":"deepseek-v4-pro · 2076 tok · 10414ms · $0.0011","at":805829677.629617,"phase":"product"}
+{"at":805829680.51277,"outcome":{"advanced":{"to":"planning"}},"id":"27-877","phase":"product","ticketId":"27","detail":"advanced to planning"}
+{"detail":"working product","at":805829680.537481,"phase":"product","id":"25-878","ticketId":"25","outcome":{"running":{}}}
