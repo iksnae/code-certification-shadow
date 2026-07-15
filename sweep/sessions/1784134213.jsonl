@@ -1353,3 +1353,7 @@ tok · 11608ms · $0.0113","id":"23-1301","at":805830315.509442,"ticketId":"23",
 {"at":805830615.412002,"outcome":{"advanced":{"to":"planning"}},"id":"31-1375","phase":"queued-build","ticketId":"31","detail":"advanced to planning"}
 {"outcome":{"advanced":{"to":"planning"}},"at":805830615.471955,"phase":"queued-build","ticketId":"32","detail":"advanced to planning","id":"32-1376"}
 {"detail":"advanced to planning","at":805830615.526721,"id":"30-1377","outcome":{"advanced":{"to":"planning"}},"ticketId":"30","phase":"queued-build"}
+{"phase":"queued-build","detail":"working queued-build","at":805830619.778161,"id":"27-1378","outcome":{"running":{}},"ticketId":"27"}
+{"phase":"queued-build","detail":"working queued-build","at":805830619.921277,"id":"29-1379","outcome":{"running":{}},"ticketId":"29"}
+{"phase":"queued-build","outcome":{"running":{}},"ticketId":"28","detail":"working queued-build","at":805830619.969884,"id":"28-1380"}
+{"outcome":{"advanced":{"to":"planning"}},"id":"29-1381","ticketId":"29","phase":"queued-build","detail":"advanced to planning","at":805830622.396851}
