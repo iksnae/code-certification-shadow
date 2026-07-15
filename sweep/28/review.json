@@ -1,0 +1,121 @@
+{
+  "checklist" : [
+    {
+      "detail" : "ran all 8 round(s) without finishing — deliverable left partial",
+      "id" : "build-completed",
+      "label" : "Build completed",
+      "result" : {
+        "fail" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "no files were changed",
+      "id" : "change-present",
+      "label" : "Change is visible",
+      "result" : {
+        "fail" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "expected ≥1 of: cmd\/certify\/cli_test.go, cmd\/certify\/init_cmd.go, internal\/config\/policy_test.go, internal\/domain\/dimension.go, internal\/domain\/record.go, internal\/engine\/certifier.go, internal\/engine\/language_tiers_test.go, internal\/engine\/pipeline.go, internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/full.go, internal\/report\/full_test.go, testdata\/policies\/swift-standard.yml",
+      "id" : "on-target",
+      "label" : "Changed the deliverable's target files",
+      "result" : {
+        "fail" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "the project verify command was RED",
+      "id" : "verify-green",
+      "label" : "Verification passed",
+      "result" : {
+        "fail" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "verification result was not committed",
+      "id" : "committed",
+      "label" : "Work committed",
+      "result" : {
+        "fail" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "implements-the-approved-plan",
+      "label" : "Implements the approved plan",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "safe-to-advance",
+      "label" : "Safe to advance",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    }
+  ],
+  "claims" : [
+    {
+      "statement" : "the reviewer's independent re-verification passes",
+      "verdict" : "unsure"
+    }
+  ],
+  "committed" : false,
+  "confidence" : 0,
+  "correlationId" : "sweep-build-28",
+  "dimensions" : [
+
+  ],
+  "evidenceReceiptIds" : [
+    "rcpt-build-implement-sweep-build-28#s0",
+    "rcpt-build-verify-sweep-build-28#s0",
+    "rcpt-build-commit-sweep-build-28#s0"
+  ],
+  "failureReasons" : [
+    "Implementation did not complete — the build used all 8 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
+    "No files were changed."
+  ],
+  "filesReviewed" : [
+
+  ],
+  "outcome" : "blocked",
+  "rubricId" : "",
+  "rubricVersion" : 0
+}
