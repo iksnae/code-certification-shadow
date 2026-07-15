@@ -939,3 +939,11 @@
 {"at":805852329.26907,"outcome":{"note":{}},"phase":"building","id":"26-942","detail":"running verify…","ticketId":"26"}
 {"at":805852329.361003,"id":"26-943","ticketId":"26","outcome":{"note":{}},"detail":"✓ git.commit","phase":"building"}
 {"at":805852332.594632,"id":"26-944","ticketId":"26","outcome":{"advanced":{"to":"review"}},"phase":"fix-review","detail":"advanced to review"}
+{"ticketId":"26","outcome":{"running":{}},"id":"26-945","detail":"working review","phase":"review","at":805852369.703011}
+{"at":805852369.703127,"detail":"working shipping","phase":"shipping","outcome":{"running":{}},"id":"23-946","ticketId":"23"}
+{"detail":"working fix-review","id":"27-947","outcome":{"running":{}},"ticketId":"27","at":805852369.703258,"phase":"fix-review"}
+{"ticketId":"23","phase":"shipping","detail":"⚠️ pass, but shipping failed: openPRFailed(reason: \"To get started with GitHub CLI, please run:  gh auth login\\nAlternatively, populate the GH_TOKEN environment variable with a GitHub API authentication token.\\n\")","at":805852372.082467,"outcome":{"note":{}},"id":"23-948"}
+{"detail":"deepseek-v4-pro · 2621 tok · $0.0009","id":"27-949","stat":{"promptTokens":2440,"costUSD":0.000858,"completionTokens":181,"modelId":"deepseek:deepseek-v4-pro"},"ticketId":"27","outcome":{"note":{}},"at":805852374.549117,"phase":"building"}
+{"detail":"↪ list_files internal\/analysis","at":805852374.55719,"id":"27-950","outcome":{"note":{}},"phase":"building","ticketId":"27","tool":{"summary":"internal\/analysis","name":"list_files","failed":false}}
+{"outcome":{"note":{}},"detail":"↪ list_files internal\/report","id":"27-951","tool":{"summary":"internal\/report","name":"list_files","failed":false},"phase":"building","ticketId":"27","at":805852374.564545}
+{"outcome":{"blocked":{}},"detail":"escalated — review passed but shipping failed: openPRFailed(reason: \"To get started with GitHub CLI, please run:  gh auth login\\nAlternatively, populate the GH_TOKEN environment variable with a GitHub API authentication token.\\n\")","at":805852374.999353,"phase":"shipping","ticketId":"23","id":"23-952"}
