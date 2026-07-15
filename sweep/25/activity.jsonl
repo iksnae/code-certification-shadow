@@ -122,3 +122,6 @@
 {"ticketId":"25","outcome":{"note":{}},"at":805829580.180573,"id":"25-866","phase":"planning","detail":"The investigation is complete. The next phase (implementation) has a concrete, grounded plan covering all 10 change areas across 7 files plus 1 new package."}
 {"id":"25-871","stat":{"modelId":"deepseek:deepseek-v4-pro","completionTokens":2604,"costUSD":0.00355668,"promptTokens":2564,"latencyMs":45727},"outcome":{"note":{}},"ticketId":"25","at":805829625.963778,"phase":"planning","detail":"deepseek-v4-pro · 5168 tok · 45727ms · $0.0036"}
 {"ticketId":"25","outcome":{"advanced":{"to":"product"}},"at":805829630.147167,"id":"25-872","phase":"planning","detail":"advanced to product"}
+{"detail":"working product","at":805829680.537481,"phase":"product","id":"25-878","ticketId":"25","outcome":{"running":{}}}
+{"at":805829710.665612,"id":"25-889","phase":"product","stat":{"completionTokens":749,"latencyMs":30127,"promptTokens":1542,"modelId":"deepseek:deepseek-v4-pro","costUSD":0.00124024},"outcome":{"note":{}},"detail":"deepseek-v4-pro · 2291 tok · 30127ms · $0.0012","ticketId":"25"}
+{"at":805829713.820113,"outcome":{"advanced":{"to":"planning"}},"phase":"product","ticketId":"25","id":"25-890","detail":"advanced to planning"}
