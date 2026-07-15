@@ -1,0 +1,157 @@
+{
+  "checklist" : [
+    {
+      "detail" : "the implementor finished in 11 round(s)",
+      "id" : "build-completed",
+      "label" : "Build completed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "1 file(s) changed: cmd\/certify\/init_cmd.go",
+      "id" : "change-present",
+      "label" : "Change is visible",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "expected ≥1 of: cmd\/certify\/init_cmd.go",
+      "id" : "on-target",
+      "label" : "Changed the deliverable's target files",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "the project verify command was GREEN",
+      "id" : "verify-green",
+      "label" : "Verification passed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "committed locally on the build branch",
+      "id" : "committed",
+      "label" : "Work committed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "Diff removes exactly the dead SwiftLint rule block (id: lint-clean, lines 708-714) from init_cmd.go as the plan required; removal was an explicitly permitted approach.",
+      "id" : "implements-the-approved-plan",
+      "label" : "Implements the approved plan",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "Only cmd\/certify\/init_cmd.go changed; only the 7-line SwiftLint rule block removed — no other rules, files, or unrelated churn.",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "No tests were deleted, weakened, or altered; no hard-coded values introduced; the dead rule referencing a non-existent collector was genuinely removed.",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "Low-risk removal of a rule that could never be evaluated (no SwiftLint collector exists); no correctness, security, or regression concerns introduced.",
+      "id" : "safe-to-advance",
+      "label" : "Safe to advance",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    }
+  ],
+  "claims" : [
+    {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "s\t10.852s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t6.624s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t6.144s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t7.717s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t5.946s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t8.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t6.876s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t8.715s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t5.776s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t7.899s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t7.502s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t7.084s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t8.167s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t4.343s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t6.610s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t4.052s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
+      "statement" : "the reviewer's independent re-verification passes",
+      "verdict" : "pass"
+    }
+  ],
+  "committed" : true,
+  "confidence" : 1,
+  "correlationId" : "sweep-build-24",
+  "dimensions" : [
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Diff removes exactly the dead SwiftLint rule block (id: lint-clean, lines 708-714) from init_cmd.go as the plan required; removal was an explicitly permitted approach.",
+      "score" : 1
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only cmd\/certify\/init_cmd.go changed; only the 7-line SwiftLint rule block removed — no other rules, files, or unrelated churn.",
+      "score" : 1
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "No tests were deleted, weakened, or altered; no hard-coded values introduced; the dead rule referencing a non-existent collector was genuinely removed.",
+      "score" : 1
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "Low-risk removal of a rule that could never be evaluated (no SwiftLint collector exists); no correctness, security, or regression concerns introduced.",
+      "score" : 1
+    }
+  ],
+  "evidenceReceiptIds" : [
+    "rcpt-build-implement-sweep-build-24#s0",
+    "rcpt-build-verify-sweep-build-24#s0",
+    "rcpt-build-commit-sweep-build-24#s0"
+  ],
+  "failureReasons" : [
+
+  ],
+  "filesReviewed" : [
+    "cmd\/certify\/init_cmd.go"
+  ],
+  "outcome" : "pass",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
+}
