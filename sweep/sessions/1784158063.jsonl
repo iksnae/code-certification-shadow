@@ -328,3 +328,12 @@
 {"at":805851142.88687,"ticketId":"27","id":"27-330","detail":"↪ run_tests internal\/report","tool":{"summary":"internal\/report","name":"run_tests","failed":false},"outcome":{"note":{}},"phase":"building"}
 {"phase":"product","outcome":{"advanced":{"to":"planning"}},"detail":"advanced to planning","at":805851143.783709,"id":"32-331","ticketId":"32"}
 {"phase":"product","ticketId":"31","outcome":{"running":{}},"detail":"working product","id":"31-332","at":805851143.813201}
+{"stat":{"promptTokens":8583,"completionTokens":101,"costUSD":0.002429,"modelId":"deepseek:deepseek-v4-pro"},"ticketId":"27","phase":"building","detail":"deepseek-v4-pro · 8684 tok · $0.0024","id":"27-333","outcome":{"note":{}},"at":805851146.133827}
+{"phase":"building","ticketId":"27","outcome":{"note":{}},"detail":"↪ build","at":805851146.15369,"tool":{"name":"build","summary":"","failed":false},"id":"27-334"}
+{"stat":{"modelId":"deepseek:deepseek-v4-pro","costUSD":0.006331,"promptTokens":14099,"completionTokens":2295},"ticketId":"26","phase":"building","detail":"deepseek-v4-pro · 16394 tok · $0.0063","id":"26-335","outcome":{"note":{}},"at":805851149.989559}
+{"tool":{"name":"build","summary":"","failed":false},"ticketId":"26","phase":"building","detail":"↪ build","outcome":{"note":{}},"id":"26-336","at":805851150.017873}
+{"stat":{"completionTokens":233,"promptTokens":7914,"modelId":"deepseek:deepseek-v4-pro","costUSD":0.002393},"ticketId":"27","phase":"building","detail":"deepseek-v4-pro · 8147 tok · $0.0024","id":"27-337","outcome":{"note":{}},"at":805851150.423313}
+{"tool":{"name":"search_code","failed":false,"summary":"ForLanguage"},"ticketId":"27","phase":"building","detail":"↪ search_code ForLanguage","outcome":{"note":{}},"id":"27-338","at":805851150.449572}
+{"tool":{"summary":"","failed":true,"name":"search_code"},"ticketId":"27","phase":"building","detail":"✗ search_code","outcome":{"note":{}},"id":"27-339","at":805851150.460919}
+{"outcome":{"note":{}},"detail":"deepseek-v4-pro · 2619 tok · 13214ms · $0.0014","ticketId":"31","at":805851157.029254,"stat":{"promptTokens":1810,"modelId":"deepseek:deepseek-v4-pro","latencyMs":13214,"completionTokens":809,"costUSD":0.0013786000000000002},"phase":"product","id":"31-340"}
+{"ticketId":"31","phase":"product","at":805851159.791355,"detail":"advanced to planning","outcome":{"advanced":{"to":"planning"}},"id":"31-341"}
