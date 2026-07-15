@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Run the full test suite (go test .\/... -count=1), fix any regressions in existing tests that assumed all languages produce full dimension sets or non-N\/A grades, and ensure the build compiles cleanly.",
+  "userValue" : "Plan correctly scopes to fixing test regressions caused by the parent language-tier split, with minimal production changes (N\/A handling, Swift cleanup) that are necessary to restore test integrity rather than introducing new features."
+}
