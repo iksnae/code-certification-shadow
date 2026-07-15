@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 23 round(s)",
+      "detail" : "ran all 31 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "1 file(s) changed: internal\/report\/card.go",
+      "detail" : "2 file(s) changed: internal\/report\/card.go, internal\/report\/card_internal_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,131 +31,94 @@
       }
     },
     {
-      "detail" : "the project verify command was GREEN",
+      "detail" : "the project verify command was RED",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "committed locally on the build branch",
+      "detail" : "verification result was not committed",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "Diff only adds Card struct fields and a partitionByLanguage helper; the banner output, aggregate exclusions, denominator display, and badge updates required by the plan are not visibly implemented. The FormatCardMarkdown body shows zero changes in the diff hunk.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "score" : {
-          "_0" : 0.2
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Only 1 file changed (card.go vs plan's report.go) but plan allowed 'whichever file'; additions are focused on the task domain with no unrelated churn.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "score" : {
-          "_0" : 0.8
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "No test modifications visible in the diff, but the implementation is so incomplete that a green test suite strongly suggests the new code paths are untested or unreachable.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "score" : {
-          "_0" : 0.5
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Dead code risk: new struct fields and partitionByLanguage are never called; detection uses analysis.ForLanguage() instead of plan-specified Unsupported==true, diverging from the intended mechanism; incomplete implementation would mislead an operator reviewing the PR.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "score" : {
-          "_0" : 0.1
-        }
-      }
-    },
-    {
-      "detail" : "at or above the confidence bar",
-      "id" : "judge-confidence",
-      "label" : "Judge confidence",
-      "result" : {
-        "score" : {
-          "_0" : 0.9
+        "skipped" : {
+
         }
       }
     }
   ],
   "claims" : [
     {
-      "evidence" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "is\t6.060s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.553s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.983s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t1.437s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.477s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.808s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t3.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t2.663s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t3.108s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t2.086s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.378s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t2.472s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.485s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.351s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.513s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.397s\n"
-      },
-      "oracle" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "kind" : "testsPass"
-      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "pass"
+      "verdict" : "unsure"
     }
   ],
-  "committed" : true,
-  "confidence" : 0.9,
+  "committed" : false,
+  "confidence" : 0,
   "correlationId" : "sweep-build-27",
   "dimensions" : [
-    {
-      "dimension" : "implements-the-approved-plan",
-      "evidence" : "Diff only adds Card struct fields and a partitionByLanguage helper; the banner output, aggregate exclusions, denominator display, and badge updates required by the plan are not visibly implemented. The FormatCardMarkdown body shows zero changes in the diff hunk.",
-      "score" : 0.2
-    },
-    {
-      "dimension" : "minimal-and-scoped",
-      "evidence" : "Only 1 file changed (card.go vs plan's report.go) but plan allowed 'whichever file'; additions are focused on the task domain with no unrelated churn.",
-      "score" : 0.8
-    },
-    {
-      "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "No test modifications visible in the diff, but the implementation is so incomplete that a green test suite strongly suggests the new code paths are untested or unreachable.",
-      "score" : 0.5
-    },
-    {
-      "dimension" : "safe-to-advance",
-      "evidence" : "Dead code risk: new struct fields and partitionByLanguage are never called; detection uses analysis.ForLanguage() instead of plan-specified Unsupported==true, diverging from the intended mechanism; incomplete implementation would mislead an operator reviewing the PR.",
-      "score" : 0.1
-    }
+
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-27#s0",
     "rcpt-build-verify-sweep-build-27#s0",
-    "rcpt-build-commit-sweep-build-27#s0"
+    "rcpt-build-commit-sweep-build-27#s0",
+    "rcpt-build-implement-sweep-build-27#s1",
+    "rcpt-build-verify-sweep-build-27#s1",
+    "rcpt-build-commit-sweep-build-27#s1"
   ],
   "failureReasons" : [
-    "The diff does not implement the banner output, aggregate exclusion logic, denominator display, or badge updates required by the plan — only struct fields and an uncalled helper function were added.",
-    "The partitionByLanguage function uses analysis.ForLanguage() instead of the plan-specified Unsupported==true field, diverging from the approved approach.",
-    "The FormatCardMarkdown function body shows no changes in the diff, meaning the report card output was not modified at all.",
-    "23 implementation rounds produced an incomplete change that would not satisfy the plan requirements.",
-    "aggregate score 0.400 below threshold 0.600"
+    "Implementation did not complete — the build used all 31 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
-    "internal\/report\/card.go"
+    "internal\/report\/card.go",
+    "internal\/report\/card_internal_test.go"
   ],
-  "outcome" : "needsFix",
-  "rubricId" : "build-review",
-  "rubricVersion" : 1
+  "outcome" : "blocked",
+  "rubricId" : "",
+  "rubricVersion" : 0
 }
