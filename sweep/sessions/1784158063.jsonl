@@ -378,3 +378,5 @@
 {"phase":"fix-review","outcome":{"running":{}},"detail":"working fix-review","ticketId":"28","at":805851411.649475,"id":"28-380"}
 {"detail":"incomplete build → fix-review (one retry)","at":805851411.84712,"phase":"review","id":"26-381","outcome":{"routedBack":{"to":"fix-review"}},"ticketId":"26"}
 {"detail":"working planning","phase":"planning","outcome":{"running":{}},"at":805851411.863308,"id":"32-382","ticketId":"32"}
+{"phase":"planning","outcome":{"advanced":{"to":"architect"}},"detail":"advanced to architect","ticketId":"32","at":805851413.98193,"id":"32-383"}
+{"detail":"working planning","phase":"planning","id":"31-384","ticketId":"31","outcome":{"running":{}},"at":805851413.998754}
