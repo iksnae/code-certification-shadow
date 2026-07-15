@@ -1,0 +1,32 @@
+{
+  "apiOrSchemaChanges" : [
+    "GradeNA Grade = -1 (new exported const in domain)",
+    "CertificationRecord.Unsupported bool (new exported field on existing struct)"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.95,
+  "failingTest" : "",
+  "fileMap" : [
+    "internal\/domain\/dimension.go — modify — add GradeNA constant (-1) and \"N\/A\" mapping",
+    "internal\/domain\/record.go — modify — add Unsupported bool field to CertificationRecord"
+  ],
+  "fixApproach" : "Two purely additive domain-type changes: (1) In dimension.go, add `const GradeNA Grade = -1` in a separate const block (so existing iota-based Grade constants are not shifted), and add `GradeNA: \"N\/A\"` to the gradeStrings map; (2) In record.go, add `Unsupported bool` to the CertificationRecord struct. Both changes are zero-risk — the zero-value bool defaults to false, preserving all existing behavior. No logic, scorer, pipeline, or report files are touched.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+
+  ],
+  "steps" : [
+    "Open internal\/domain\/dimension.go and locate the existing Grade type, const block, and gradeStrings map",
+    "Add a new const block after the existing Grade const block: `const GradeNA Grade = -1`",
+    "Add `GradeNA: \"N\/A\"` entry to the gradeStrings map",
+    "Open internal\/domain\/record.go and locate the CertificationRecord struct",
+    "Add `Unsupported bool` field to CertificationRecord (append to struct, not insert)",
+    "Run `go test .\/... -count=1` to confirm all tests pass"
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Add GradeNA constant (-1 with \"N\/A\" label) to domain\/dimension.go and Unsupported bool to CertificationRecord in domain\/record.go",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
