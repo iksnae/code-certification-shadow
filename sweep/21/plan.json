@@ -1,0 +1,48 @@
+{
+  "apiOrSchemaChanges" : [
+    "Score dimension values change from `float64` to `*float64` (nullable) for unmeasured dimensions, or a new `Unsupported bool` \/ `Grade string` field is added to the unit result struct to carry `N\/A`.",
+    "Evidence struct may gain a `Measured bool` or `Source string` field so the scorer can distinguish `complexity:0 (measured)` from `complexity:0 (unmeasured)`.",
+    "Report-card JSON schema gains an `unsupported_count` or `unsupported_languages` field for the banner."
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.78,
+  "failingTest" : "None exists — the bug is that no test catches unanalyzed-language scoring. The plan adds `TestScore_UnsupportedLanguage_ReturnsNA` (or similar) to `internal\/engine\/scorer_test.go`.",
+  "fileMap" : [
+    "internal\/engine\/scorer.go — modify — guard scoreFromMetrics against unmeasured complexity; add unsupported-language detection gate in Score(); reconcile 0.5 defaults with doc contract",
+    "internal\/engine\/scorer_test.go — modify — add TestScore_UnsupportedLanguage_ReturnsNA, TestScore_UnmeasuredComplexity_NotScored, and regression tests for each fix area",
+    "internal\/engine\/language_tiers.go — create — registry mapping language IDs to capability levels (none\/generic\/lint\/test\/parse) so unsupported detection is data-driven",
+    "internal\/engine\/language_tiers_test.go — create — verify every discovered language maps to a tier; fail CI if a new language extension is added without a tier entry",
+    "cmd\/certify\/init_cmd.go — modify — remove or guard the dead SwiftLint rule at line ~711",
+    "internal\/report\/ (exact file TBD) — modify — surface unsupported-unit count and language list in the report card banner\/summary",
+    "internal\/discovery\/generic.go — possibly modify — annotate discovered units with tier info, or ensure the engine can look up tier from language ID"
+  ],
+  "fixApproach" : "Gate scoring on whether a language has a real static-analysis tier. Build a language-tier registry mapping each language to its evidence-collector capabilities. When a unit's language has only generic discovery (git history + line counts) and no parser\/linter\/test collector, mark it `unsupported` with grade `N\/A`, exclude it from aggregates, and surface a banner in the report card. Guard `scoreFromMetrics` so that `complexity:0` from an unmeasured language does not trigger the \"excellent maintainability\" (≤5 → 0.95) rule — omit or null-out the dimension instead. Reconcile the `0.5` dimension default with the `Score()` doc contract: unmeasured dimensions are omitted from the record (not defaulted), and any downstream fill step is removed. Remove the dead SwiftLint rule from the init template (`cmd\/certify\/init_cmd.go:711`) since no collector evaluates it. Add a follow-on step to build a real Swift tier via tree-sitter-swift for complexity, fan-in\/out, and dead-code detection comparable to Go\/Python Tier-2.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "Which languages currently have analysis tiers? Need to audit all evidence collectors under internal\/ to build the tier registry accurately.",
+    "Should unsupported-language units appear in the report card at all, or only as a count in a banner?",
+    "For the dead SwiftLint rule: remove it entirely, or guard it behind a `swiftlint_enabled` check so it activates when a collector is added later?",
+    "Is the `0.5` default injected by Score() itself or by a downstream serialization\/persistence step? The issue observes it in persisted records — the exact injection point must be confirmed.",
+    "For the Swift tier (item 3): tree-sitter-swift vs. SwiftSyntax? The issue suggests either; tree-sitter is language-agnostic and fits the existing patterns better."
+  ],
+  "steps" : [
+    "Audit all evidence collectors under internal\/ to catalog which languages have parser, lint, and test collectors vs. generic-only. Produce the data for the tier registry.",
+    "Create internal\/engine\/language_tiers.go with a registry mapping every known language ID to a Tier enum (None\/Generic\/Lint\/Parse\/Full). Mark Swift and all other generic-only languages as TierGeneric. Add a test that fails CI when a new language extension is added to discovery without a tier entry.",
+    "In internal\/engine\/scorer.go, add a pre-scoring gate: if a unit's language tier is Generic (no analysis collectors), short-circuit Score() to return Grade=N\/A, skip all dimension scoring, and emit an unsupported marker.",
+    "In scoreFromMetrics (scorer.go), guard the complexity-based maintainability rule: if the complexity value is zero AND the language tier has no parser, do not apply the ≤5→0.95 rule. Either skip the dimension or set it to an explicit unknown sentinel.",
+    "Reconcile the 0.5 defaults: trace where correctness=0.5 and testability=0.5 are injected for unmeasured dimensions (Score() itself or a downstream fill). Remove the injection so unmeasured dimensions are absent from the record, matching the Score() doc comment. Update the doc comment if the contract changes.",
+    "In the report-card generator, add a banner\/section: \"N units in unsupported languages (Swift, Shell, ...) — not analyzed. Scores for these units are withheld.\" Exclude unsupported units from aggregate grade calculations.",
+    "In cmd\/certify\/init_cmd.go, remove the dead SwiftLint rule (line ~711) or guard it with a comment noting it activates only when a SwiftLint collector is present.",
+    "Add comprehensive tests in scorer_test.go: unsupported language → N\/A, unmeasured complexity → not scored as excellent, Swift-like generic unit produces no fabricated dimensions, report-card excludes unsupported from aggregates.",
+    "Run go test .\/... -count=1 and fix any regressions in existing tests that assumed all languages produce full dimension sets.",
+    "Optional follow-up: implement a Swift analysis tier using tree-sitter-swift for per-unit complexity, fan-in\/out, and dead-code detection, and wire the SwiftLint collector so the init-template rule becomes live."
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Stop fabricating C grades for Swift (and ~14 other unanalyzed languages) by detecting unsupported languages, guarding unmeasured metrics from being scored as excellent, reconciling Score() defaults with its contract, removing the dead SwiftLint init-template rule, and optionally adding a real Swift analysis tier.",
+  "uiStateNotes" : [
+    "Report card shows an 'Unsupported Languages' banner listing languages discovered but not analyzed, with unit counts.",
+    "Unsupported units display grade 'N\/A' instead of a fabricated letter grade.",
+    "Report card aggregate scores exclude unsupported units so they don't dilute or distort the overall grade."
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
