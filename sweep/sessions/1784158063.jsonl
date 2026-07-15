@@ -381,3 +381,11 @@
 {"phase":"planning","outcome":{"advanced":{"to":"architect"}},"detail":"advanced to architect","ticketId":"32","at":805851413.98193,"id":"32-383"}
 {"detail":"working planning","phase":"planning","id":"31-384","ticketId":"31","outcome":{"running":{}},"at":805851413.998754}
 {"id":"31-385","ticketId":"31","detail":"advanced to architect","phase":"planning","outcome":{"advanced":{"to":"architect"}},"at":805851416.546907}
+{"ticketId":"30","id":"30-386","phase":"planning","detail":"working planning","at":805851417.231963,"outcome":{"running":{}}}
+{"phase":"building","id":"28-387","at":805851417.232016,"detail":"deepseek-v4-pro · 2653 tok · $0.0009","stat":{"modelId":"deepseek:deepseek-v4-pro","completionTokens":276,"costUSD":0.000945,"promptTokens":2377},"outcome":{"note":{}},"ticketId":"28"}
+{"id":"28-388","outcome":{"note":{}},"ticketId":"28","phase":"building","at":805851417.257293,"detail":"↪ update_plan 4 steps · 0 done · 1 in progress","tool":{"summary":"4 steps · 0 done · 1 in progress","failed":false,"name":"update_plan"}}
+{"ticketId":"28","outcome":{"note":{}},"at":805851418.640363,"detail":"deepseek-v4-pro · 2820 tok · $0.0009","phase":"building","stat":{"modelId":"deepseek:deepseek-v4-pro","completionTokens":109,"costUSD":0.000852,"promptTokens":2711},"id":"28-389"}
+{"ticketId":"28","outcome":{"note":{}},"tool":{"name":"read_file","failed":false,"summary":"cmd\/certify\/init_cmd.go"},"detail":"↪ read_file cmd\/certify\/init_cmd.go","phase":"building","at":805851418.657175,"id":"28-390"}
+{"ticketId":"28","outcome":{"note":{}},"tool":{"failed":false,"name":"list_files","summary":"testdata\/policies"},"detail":"↪ list_files testdata\/policies","phase":"building","at":805851418.664248,"id":"28-391"}
+{"detail":"advanced to architect","ticketId":"30","at":805851419.857435,"phase":"planning","id":"30-392","outcome":{"advanced":{"to":"architect"}}}
+{"ticketId":"29","detail":"working planning","outcome":{"running":{}},"phase":"planning","at":805851419.899201,"id":"29-393"}
