@@ -1,0 +1,41 @@
+{
+  "apiOrSchemaChanges" : [
+    "CertificationRecord gains field `Unsupported bool` (default false, backward-compatible)"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.85,
+  "failingTest" : "(none yet — the field doesn't exist, so no test can reference it; tests will be added as part of this work)",
+  "fileMap" : [
+    "internal\/domain\/record.go — modify — add `Unsupported bool` field to CertificationRecord struct",
+    "internal\/report\/detailed.go — modify — skip Unsupported records in computeDimensionAverages and computeLanguageBreakdowns",
+    "internal\/report\/full.go — modify — skip Unsupported records in buildLanguageDetail",
+    "internal\/report\/health.go — modify — skip Unsupported records in Health() with adjusted denominator",
+    "internal\/report\/card.go — modify — skip Unsupported records in GenerateCard() with adjusted TotalUnits",
+    "internal\/report\/detailed_test.go — modify — add subtests verifying Unsupported records are excluded from dimension\/language aggregates",
+    "internal\/report\/full_test.go — modify — add subtests verifying Unsupported records are excluded from per-language aggregates",
+    "internal\/report\/health_test.go — modify — add subtests verifying Unsupported records are excluded from pass-rate\/score",
+    "internal\/report\/card_test.go — modify — add subtests verifying Unsupported records are excluded from card aggregates"
+  ],
+  "fixApproach" : "Add `Unsupported bool` to `domain.CertificationRecord` (default `false`, backward-compatible), then guard each of the four report-aggregation loops — `computeDimensionAverages`, `buildLanguageDetail`, `Health`, `GenerateCard` (and the local `computeLanguageBreakdowns` in detailed.go) — with `if r.Unsupported { continue }`. Adjust denominator counters (`TotalUnits`, `counts`, `accum` entry totals) so unsupported records are excluded from averages, pass rates, and grade distributions. Add table-driven subtests to existing test files that insert one or more `Unsupported: true` records and assert they contribute nothing to aggregates. Existing tests continue to pass because the new field defaults to `false`.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "The Unsupported field does not exist on CertificationRecord yet. The non-goal says \"Do not modify domain types,\" but this work requires adding the field — is adding Unsupported to CertificationRecord acceptable, or should we wait for parent issue #25 to land first?",
+    "Should Unsupported records still be counted in TotalUnits for display purposes (even if excluded from averages), or fully excluded from all counts?",
+    "Should the Unsupported field be serialized\/deserialized in JSON (evidence output), or is it a runtime-only flag?"
+  ],
+  "steps" : [
+    "Add `Unsupported bool` field to `domain.CertificationRecord` struct in `internal\/domain\/record.go` (defaults to false, backward-compatible)",
+    "In `internal\/report\/detailed.go`: guard `computeDimensionAverages` loop with `if r.Unsupported { continue }`; apply same guard in the local `computeLanguageBreakdowns` function",
+    "In `internal\/report\/full.go`: guard `buildLanguageDetail` loop with `if r.Unsupported { continue }` so unsupported records are excluded from per-language score\/grades\/passing aggregates",
+    "In `internal\/report\/health.go`: guard `Health()` loop with `if r.Unsupported { continue }`; use a separate counted-total for denominators instead of `len(records)` so PassRate and AverageScore exclude unsupported records",
+    "In `internal\/report\/card.go`: guard `GenerateCard()` loop with `if r.Unsupported { continue }`; compute `TotalUnits` as the counted (non-unsupported) total so OverallScore, PassRate, and GradeDistribution exclude unsupported records",
+    "Add subtests to `internal\/report\/card_test.go`, `internal\/report\/health_test.go`, `internal\/report\/full_test.go`, and `internal\/report\/detailed_test.go` that insert `Unsupported: true` records and assert zero contribution to aggregates",
+    "Run `go test .\/... -count=1` and confirm all existing and new tests pass"
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Add Unsupported field to CertificationRecord and skip unsupported records in report aggregate calculations across four report consumers",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
