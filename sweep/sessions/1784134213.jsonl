@@ -903,3 +903,5 @@ come":{"note":{}},"detail":"deepseek-v4-pro · 92743 tok · 18339ms · $0.0254",
 {"detail":"advanced to planned","id":"28-924","at":805829889.981049,"ticketId":"28","outcome":{"advanced":{"to":"planned"}},"phase":"planning"}
 {"detail":"working planning","id":"25-925","at":805829890.03386,"ticketId":"25","outcome":{"running":{}},"phase":"planning"}
 {"at":805829890.097435,"outcome":{"advanced":{"to":"planned"}},"id":"27-926","phase":"planning","ticketId":"27","detail":"advanced to planned"}
+{"detail":"working planning","at":805829890.137229,"phase":"planning","id":"24-927","ticketId":"24","outcome":{"running":{}}}
+{"detail":"advanced to planned","id":"26-928","at":805829890.224669,"ticketId":"26","outcome":{"advanced":{"to":"planned"}},"phase":"planning"}
