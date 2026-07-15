@@ -1,0 +1,46 @@
+{
+  "apiOrSchemaChanges" : [
+
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.85,
+  "failingTest" : "None yet — this is a feature addition; new tests must be written to validate the unsupported-units banner and exclusion logic.",
+  "fileMap" : [
+    "internal\/report\/card.go — modify — partition units by language support, add banner to text\/markdown output, exclude unsupported from aggregates",
+    "internal\/report\/badge.go — modify — exclude unsupported units from badge grade\/score calculations",
+    "internal\/report\/health.go — modify — exclude unsupported units from health aggregate (if applicable)",
+    "internal\/report\/detailed.go — modify — reflect unsupported status in detailed report output",
+    "internal\/report\/full.go — modify — reflect unsupported status in full report output",
+    "internal\/report\/report_tree.go — modify — reflect unsupported status in report tree",
+    "internal\/report\/card_test.go — create or modify — add test cases for unsupported-language units in card generation",
+    "internal\/report\/badge_test.go — create or modify — add test cases for unsupported-language exclusion in badges",
+    "testdata\/ — create — add fixture file(s) in an unsupported language (e.g. .swift) for integration-style tests"
+  ],
+  "fixApproach" : "At report-generation time in card.go, iterate over all unit CertificationRecords and partition them by calling analysis.ForLanguage(unit.Language). Units where this returns nil are unsupported — they receive a derived Grade of \"N\/A\" (or similar placeholder), are excluded from GPA\/distribution\/average aggregates, and are listed in a new banner section. The banner is rendered in both FormatCardText and FormatCardMarkdown. Badge generation in badge.go reads the same supported-only aggregates. Health\/detailed\/full reports inherit the partitioning. New testdata with an unsupported-language fixture (e.g. a .swift file) validates the banner appears, aggregates exclude it, and supported-language tests remain unchanged.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "Where exactly is the unsupported-status derivation best placed — in card.go before GenerateCard is called, or inside GenerateCard itself? (Investigation suggests inside GenerateCard, checking analysis.ForLanguage per unit.)",
+    "Should the unsupported banner appear only in the Markdown card (FormatCardMarkdown), only in the text card (FormatCardText), or both? (Likely both, matching existing format patterns.)"
+  ],
+  "steps" : [
+    "1. Read internal\/report\/card.go, badge.go, health.go to understand current CertificationRecord structure and how grades flow into aggregates (GPA, distribution, averages).",
+    "2. Read internal\/analysis registry (or wherever analysis.ForLanguage is defined) to confirm the nil-means-unsupported contract.",
+    "3. In card.go, add a helper that partitions []CertificationRecord into supported \/ unsupported slices using analysis.ForLanguage.",
+    "4. Modify GenerateCard (or its callers) to use only supported units for GPA, grade distribution counts, and all averages.",
+    "5. Add the unsupported-units banner to FormatCardText: '⚠️ N units in unsupported languages (lang1, lang2, ...) — not analyzed. Scores for these units are withheld.'",
+    "6. Add the equivalent banner to FormatCardMarkdown.",
+    "7. Add denominator clarification to the aggregate section in both text and markdown formats: 'Based on X analyzable units; Y units skipped.'",
+    "8. In badge.go, ensure badge grade\/score reads from supported-only aggregates.",
+    "9. In health.go, detailed.go, full.go, report_tree.go, ensure unsupported units are surfaced with N\/A grades and do not distort any aggregate.",
+    "10. Write new test cases: (a) mixed supported+unsupported units produce the banner and correct aggregates, (b) all-supported case produces no banner, (c) all-unsupported case produces the banner with zero supported units.",
+    "11. Run go test .\/... -count=1 and fix any failures.",
+    "12. Run go build -o build\/bin\/certify .\/cmd\/certify\/ to confirm clean build."
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Add an unsupported-units banner to the report card that counts\/lists unsupported languages and excludes them from all aggregate grade calculations.",
+  "uiStateNotes" : [
+    "Report card gains a new banner section: '⚠️ N units in unsupported languages (Swift, Shell, ...) — not analyzed. Scores for these units are withheld.'",
+    "Aggregate section gains denominator clarification: 'Based on X analyzable units; Y units skipped.'"
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
