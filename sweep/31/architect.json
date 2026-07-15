@@ -1,0 +1,22 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+    "Plan acknowledges that creating internal\/language_tiers and adding GradeNA\/Unsupported to domain types conflicts with project non-goals but does not resolve this contradiction — proceeding anyway introduces structural risk of rejected design",
+    "GradeNA value is ambiguous (255 or -1) with no resolution; if domain grades use uint8, -1 is invalid, and 255 may overflow grade arithmetic elsewhere",
+    "Plan does not audit for other callers of Score() beyond pipeline.go — changing its signature could break undiscovered call sites",
+    "TierForLanguage has no defined behavior for empty string, case sensitivity, or unknown languages beyond the explicit mapping — edge cases unaddressed"
+  ],
+  "summary" : "Plan self-identifies architectural contradictions (non-goals forbid creating language_tiers\/GradeNA yet proceeds) and leaves GradeNA value unresolved (255 vs -1), making it not technically sound as written."
+}
