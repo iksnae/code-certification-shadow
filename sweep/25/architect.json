@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Layered defense with Score()-level TierGeneric gate + scoreFromMetrics complexity-zero guard is correct; removing 0.5 defaults aligns code with doc contract; aggregate skip for Unsupported units prevents corruption."
+}
