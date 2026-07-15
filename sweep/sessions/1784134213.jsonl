@@ -1,0 +1,4 @@
+{"outcome":{"running":{}},"ticketId":"21","id":"21-1","detail":"working new","at":805827291.266373,"phase":"new"}
+{"id":"21-2","ticketId":"21","outcome":{"note":{}},"detail":"classifying issue:iksnae\/code-certification#21 (structured single-shot)","phase":"intake","at":805827291.269133}
+{"phase":"intake","ticketId":"21","detail":"deepseek-v4-pro · 2243 tok · 6031ms · $0.0009","outcome":{"note":{}},"stat":{"costUSD":0.0008986000000000002,"latencyMs":6031,"completionTokens":353,"modelId":"deepseek:deepseek-v4-pro","promptTokens":1890},"at":805827297.310501,"id":"21-3"}
+{"detail":"advanced to planning","outcome":{"advanced":{"to":"planning"}},"phase":"new","id":"21-4","at":805827301.792919,"ticketId":"21"}
