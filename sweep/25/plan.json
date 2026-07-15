@@ -1,0 +1,41 @@
+{
+  "apiOrSchemaChanges" : [
+    "Result struct may gain an Unsupported bool field",
+    "Score() may now return Grade=\"N\/A\" with empty dimensions for TierGeneric units (new return shape)",
+    "scoreFromMetrics may no longer emit correctness=0.5 or testability=0.5 for unmeasured dimensions (keys absent from map)"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.85,
+  "failingTest" : "Tests in internal\/engine\/scorer_test.go that currently expect 0.5 defaults for unmeasured dimensions (will break when defaults are removed) and any tests that pass TierGeneric-language units through Score() expecting dimension scores.",
+  "fileMap" : [
+    "internal\/engine\/scorer.go — modify — add language-tier gate, complexity guard, remove 0.5 defaults, update doc comment, skip Unsupported in aggregates",
+    "internal\/engine\/scorer_test.go — modify — update tests expecting 0.5 defaults; add TierGeneric short-circuit, zero-complexity guard, and aggregate-skip test cases"
+  ],
+  "fixApproach" : "Add a language-tier gate at the top of Score() so TierGeneric units short-circuit to Grade=\"N\/A\" with no dimension scores; guard the complexity-based maintainability rule in scoreFromMetrics to skip when complexity is an untrustworthy zero; remove the 0.5 default injections for correctness and testability so unmeasured dimensions are truly absent from the output map (matching the existing doc contract); and ensure any aggregate loop skips Unsupported units. Update\/add tests to cover each new code path.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "Does the result struct already have an Unsupported bool field, or must it be added?",
+    "What are the exact tier constant names in the language_tiers package (TierGeneric, TierNone, TierNative, etc.) and the full import path?",
+    "Does the language_tiers package expose a parser-capability boolean per tier, or should we infer it from tier identity alone?",
+    "Is there an existing aggregate loop in scorer.go that iterates units (which must skip Unsupported), or is aggregation handled elsewhere?"
+  ],
+  "steps" : [
+    "Read internal\/engine\/scorer.go to understand Score() signature, scoreFromMetrics signature, the result struct fields, and all 0.5 default injection points.",
+    "Read internal\/language_tiers\/ package (tier constants, TierForLanguage signature, parser-capability indicators if any).",
+    "Read internal\/engine\/scorer_test.go to understand existing test patterns and which tests exercise Score\/scoreFromMetrics.",
+    "In scorer.go, add the language_tiers import.",
+    "In Score(), add the pre-scoring gate: call TierForLanguage(unit.Language); if tier == TierGeneric, return a result with Grade=\"N\/A\", an Unsupported=true field on the struct (add the field if absent), and an empty\/nil dimension map. Do NOT call scoreFromMetrics.",
+    "In scoreFromMetrics, guard the complexity ≤ 5 → 0.95 maintainability rule: if complexity == 0 AND the language tier lacks parser capability (TierGeneric \/ TierNone), omit the maintainability dimension entirely (no entry in the map).",
+    "Remove every injection of correctness=0.5 and testability=0.5 for unmeasured dimensions so those keys are absent from the output dimension map.",
+    "Update the Score() doc comment if removing the 0.5 defaults changes the described contract — ensure doc matches behaviour.",
+    "Ensure any aggregate calculation loop (if present in scorer.go) skips units where Unsupported == true.",
+    "Update existing tests in scorer_test.go that expect 0.5 defaults; add new test cases for TierGeneric short-circuit, zero-complexity guard, and aggregate skip.",
+    "Run go test .\/... -count=1 and fix any failures."
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Guard Score() with a language-tier gate for TierGeneric → N\/A, protect the complexity maintainability rule from firing on unmeasured zero values, and remove 0.5 dimension defaults so output matches the doc contract.",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
