@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Plan is well-scoped: partition at card.go via analysis.ForLanguage nil-check, propagate supported-only slices through all aggregates\/formats, and render banners in text\/markdown. All report types and badge are accounted for."
+}
