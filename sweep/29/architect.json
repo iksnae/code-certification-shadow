@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Simple, well-scoped package: Tier enum + TierForLanguage thin wrapper over analysis.ForLanguage with table-driven tests; no structural risk."
+}
