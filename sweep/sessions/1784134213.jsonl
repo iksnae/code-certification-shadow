@@ -1347,3 +1347,8 @@ tok · 11608ms · $0.0113","id":"23-1301","at":805830315.509442,"ticketId":"23",
 {"stat":{"costUSD":0.004193830000000001,"completionTokens":2615,"latencyMs":43630,"modelId":"deepseek:deepseek-v4-pro","promptTokens":4879},"phase":"decompose","detail":"deepseek-v4-pro · 7494 tok · 43630ms · $0.0042","id":"25-1369","at":805830560.358225,"ticketId":"25","outcome":{"note":{}}}
 {"ticketId":"25","at":805830566.029167,"phase":"decompose","outcome":{"note":{}},"detail":"split #25 into 4 atomic sub-issues (#800)","id":"25-1370"}
 {"phase":"planned","detail":"advanced to split","id":"25-1371","at":805830570.265493,"ticketId":"25","outcome":{"advanced":{"to":"split"}}}
+{"detail":"working queued-build","outcome":{"running":{}},"phase":"queued-build","id":"31-1372","at":805830612.744161,"ticketId":"31"}
+{"phase":"queued-build","id":"32-1373","outcome":{"running":{}},"detail":"working queued-build","at":805830612.99116,"ticketId":"32"}
+{"phase":"queued-build","outcome":{"running":{}},"detail":"working queued-build","ticketId":"30","at":805830613.286467,"id":"30-1374"}
+{"at":805830615.412002,"outcome":{"advanced":{"to":"planning"}},"id":"31-1375","phase":"queued-build","ticketId":"31","detail":"advanced to planning"}
+{"outcome":{"advanced":{"to":"planning"}},"at":805830615.471955,"phase":"queued-build","ticketId":"32","detail":"advanced to planning","id":"32-1376"}
