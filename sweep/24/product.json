@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Remove the dead SwiftLint rule from the init template in cmd\/certify\/init_cmd.go (line ~711) since no SwiftLint collector exists to evaluate it.",
+  "userValue" : "Removing a dead rule that silently fabricated identical \"missing evidence\" violations for every Swift repo — the fix restores honest certification signals with zero behavior risk."
+}
