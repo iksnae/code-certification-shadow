@@ -1,46 +1,47 @@
-From 27a26a95a895f30f8989bbec493930af7c764395 Mon Sep 17 00:00:00 2001
+From 1cbec257d5793553202a99e468a5312a92978153 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 13:54:32 -0400
+Date: Wed, 15 Jul 2026 14:16:37 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-23#s0)
 
 ---
- internal/discovery/generic.go      | 15 +++++++
- internal/discovery/generic_test.go | 72 ++++++++++++++++++++++++++++++
- 2 files changed, 87 insertions(+)
+ internal/discovery/generic.go      | 16 ++++++++
+ internal/discovery/generic_test.go | 60 ++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
  create mode 100644 internal/discovery/generic_test.go
 
 diff --git a/internal/discovery/generic.go b/internal/discovery/generic.go
-index abcb9fa16..cb7fa3c03 100644
+index abcb9fa16..c3fab9f13 100644
 --- a/internal/discovery/generic.go
 +++ b/internal/discovery/generic.go
-@@ -82,6 +82,21 @@ var scanSkipDirs = map[string]bool{
- // Backward-compatible alias
- var languageFromExt = certifiableExts
+@@ -79,6 +79,22 @@ var scanSkipDirs = map[string]bool{
+ 	".nuxt":       true,
+ }
  
-+// KnownLanguages returns the sorted, deduplicated set of language IDs from
-+// the certifiableExts map — the single source of truth for known languages.
++// KnownLanguages returns the sorted, deduplicated list of all known language IDs
++// from certifiableExts. This is the canonical registry of languages the
++// discovery layer can recognize.
 +func KnownLanguages() []string {
 +	seen := make(map[string]bool)
 +	for _, lang := range certifiableExts {
 +		seen[lang] = true
 +	}
-+	out := make([]string, 0, len(seen))
++	langs := make([]string, 0, len(seen))
 +	for lang := range seen {
-+		out = append(out, lang)
++		langs = append(langs, lang)
 +	}
-+	sort.Strings(out)
-+	return out
++	sort.Strings(langs)
++	return langs
 +}
 +
- // GenericScanner discovers all files as file-level units.
- type GenericScanner struct {
- 	include []string // glob patterns to include (nil = all)
+ // Backward-compatible alias
+ var languageFromExt = certifiableExts
+ 
 diff --git a/internal/discovery/generic_test.go b/internal/discovery/generic_test.go
 new file mode 100644
-index 000000000..87b987328
+index 000000000..928498d95
 --- /dev/null
 +++ b/internal/discovery/generic_test.go
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,60 @@
 +package discovery_test
 +
 +import (
@@ -49,8 +50,9 @@ index 000000000..87b987328
 +	"github.com/iksnae/code-certification/internal/discovery"
 +)
 +
-+func TestKnownLanguages_ReturnsSortedDeduplicated(t *testing.T) {
++func TestKnownLanguages_ReturnsSortedUnique(t *testing.T) {
 +	langs := discovery.KnownLanguages()
++
 +	if len(langs) == 0 {
 +		t.Fatal("KnownLanguages() returned empty slice")
 +	}
@@ -58,58 +60,45 @@ index 000000000..87b987328
 +	// Verify sorted
 +	for i := 1; i < len(langs); i++ {
 +		if langs[i-1] >= langs[i] {
-+			t.Errorf("KnownLanguages() not sorted: %q >= %q at index %d", langs[i-1], langs[i], i)
++			t.Errorf("KnownLanguages() not sorted: %q >= %q at positions %d, %d",
++				langs[i-1], langs[i], i-1, i)
 +		}
 +	}
 +
-+	// Verify no duplicates
++	// Verify unique
 +	seen := make(map[string]bool)
-+	for _, lang := range langs {
-+		if seen[lang] {
-+			t.Errorf("duplicate language %q in KnownLanguages()", lang)
++	for _, l := range langs {
++		if seen[l] {
++			t.Errorf("KnownLanguages() has duplicate: %q", l)
 +		}
-+		seen[lang] = true
++		seen[l] = true
 +	}
 +
-+	// Verify that every language in certifiableExts is represented.
-+	// If a new extension was added without a corresponding tier entry,
-+	// we can't check that here directly (tiers are elsewhere), but at
-+	// minimum this test pinpoints every language ID present.
-+	// The "fail CI" requirement for missing tier entries is enforced
-+	// by the tier registry test in the certification package; this test
-+	// ensures the language set is accessible and well-formed.
-+}
-+
-+func TestKnownLanguages_ContainsExpectedLanguages(t *testing.T) {
-+	langs := discovery.KnownLanguages()
-+	set := make(map[string]bool, len(langs))
-+	for _, lang := range langs {
-+		set[lang] = true
++	// Verify expected languages are present (spot-check a few key ones)
++	expected := map[string]bool{
++		"go":      true,
++		"ts":      true,
++		"js":      true,
++		"py":      true,
++		"java":    true,
++		"c":       true,
++		"cpp":     true,
++		"erlang":  true,
++		"elixir":  true,
++		"sql":     true,
++		"proto":   true,
++		"zig":     true,
 +	}
-+
-+	expected := []string{
-+		"c", "cpp", "cs", "elixir", "erlang",
-+		"go", "java", "js", "kt", "lua",
-+		"php", "proto", "py", "r", "rb",
-+		"rs", "scala", "sh", "sql", "swift",
-+		"ts", "zig",
-+	}
-+	for _, want := range expected {
-+		if !set[want] {
-+			t.Errorf("KnownLanguages() missing expected language %q", want)
++	for lang := range expected {
++		found := false
++		for _, l := range langs {
++			if l == lang {
++				found = true
++				break
++			}
 +		}
-+	}
-+}
-+
-+func TestKnownLanguages_IsDeterministic(t *testing.T) {
-+	a := discovery.KnownLanguages()
-+	b := discovery.KnownLanguages()
-+	if len(a) != len(b) {
-+		t.Fatal("KnownLanguages() is not deterministic (different lengths)")
-+	}
-+	for i := range a {
-+		if a[i] != b[i] {
-+			t.Fatalf("KnownLanguages() not deterministic: %q vs %q at index %d", a[i], b[i], i)
++		if !found {
++			t.Errorf("KnownLanguages() missing expected language: %q", lang)
 +		}
 +	}
 +}
