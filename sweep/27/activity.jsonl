@@ -103,3 +103,5 @@ y** | `certify` (built from `cmd\/certify\/`) |\n| **Test command** | `go test .
 {"outcome":{"running":{}},"phase":"product","ticketId":"27","detail":"working product","at":805829667.213172,"id":"27-873"}
 {"stat":{"latencyMs":10414,"modelId":"deepseek:deepseek-v4-pro","costUSD":0.00110832,"promptTokens":1416,"completionTokens":660},"ticketId":"27","outcome":{"note":{}},"id":"27-876","detail":"deepseek-v4-pro · 2076 tok · 10414ms · $0.0011","at":805829677.629617,"phase":"product"}
 {"at":805829680.51277,"outcome":{"advanced":{"to":"planning"}},"id":"27-877","phase":"product","ticketId":"27","detail":"advanced to planning"}
+{"id":"27-892","outcome":{"running":{}},"detail":"working planning","ticketId":"27","at":805829750.666395,"phase":"planning"}
+{"detail":"advanced to architect","at":805829753.49638,"phase":"planning","id":"27-894","ticketId":"27","outcome":{"advanced":{"to":"architect"}}}
