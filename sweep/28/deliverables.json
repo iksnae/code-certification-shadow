@@ -1,0 +1,90 @@
+[
+  {
+    "nonGoals" : [
+      "Do NOT touch any test files",
+      "Do NOT modify engine, report, or domain packages",
+      "Do NOT add any new code"
+    ],
+    "objective" : "Strip all Swift-specific production code: the policy constant, the languagePolicy case, and the YAML policy pack file.",
+    "orderIndex" : 0,
+    "planText" : "Remove the swiftStandardPolicy constant block entirely and delete the `case \"swift\": return swiftStandardPolicy` branch from languagePolicy() in cmd\/certify\/init_cmd.go. Delete testdata\/policies\/swift-standard.yml. Run `go build -o build\/bin\/certify .\/cmd\/certify\/` to confirm compilation. Existing tests that reference Swift will fail — those are fixed in the next deliverable.",
+    "riskClass" : "medium",
+    "size" : "s",
+    "targetFiles" : [
+      "cmd\/certify\/init_cmd.go",
+      "testdata\/policies\/swift-standard.yml"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT create any new test files",
+      "Do NOT modify production code beyond what D0 already changed",
+      "Do NOT add N\/A-grade or unsupported-banner test cases yet"
+    ],
+    "objective" : "Update existing test fixtures to match the Swift-free world: supported-language lists and policy-pack counts.",
+    "orderIndex" : 1,
+    "planText" : "In cmd\/certify\/cli_test.go, remove \"swift\" from the supported-languages slice in TestLanguagePolicy_AllSupported (change from 6 languages to 5: go, typescript, javascript, python, rust). In internal\/config\/policy_test.go, change the pack-count assertion from 7 to 6 and remove \"swift-standard\" from the expected-name list. After this deliverable, all pre-existing tests pass again.",
+    "riskClass" : "low",
+    "size" : "xs",
+    "targetFiles" : [
+      "cmd\/certify\/cli_test.go",
+      "internal\/config\/policy_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT modify report\/card.go or report\/full.go",
+      "Do NOT alter scoring logic for supported languages",
+      "Do NOT remove any existing engine test"
+    ],
+    "objective" : "Ensure the engine emits N\/A (not F) for unsupported-language units, and lock in the analyzer-registry contract with a new language_tiers_test.go.",
+    "orderIndex" : 2,
+    "planText" : "In internal\/engine\/certifier.go and internal\/engine\/pipeline.go, guard CertifyUnit so that when a unit's language has no registered analyzer (analysis.ForLanguage returns nil), the unit is marked with an N\/A grade (GradeUnsupported or equivalent) rather than score-0→F. If needed, add GradeUnsupported to internal\/domain\/dimension.go and StatusUnsupported to internal\/domain\/record.go. Create internal\/engine\/language_tiers_test.go with: TestForLanguage_SupportedLanguages (go\/ts\/js\/py\/rs return non-nil), TestForLanguage_SwiftReturnsNil, and TestCertifyUnit_SwiftUnitGetsNA.",
+    "riskClass" : "medium",
+    "size" : "m",
+    "targetFiles" : [
+      "internal\/engine\/certifier.go",
+      "internal\/engine\/pipeline.go",
+      "internal\/domain\/dimension.go",
+      "internal\/domain\/record.go",
+      "internal\/engine\/language_tiers_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT add or modify test files in this deliverable",
+      "Do NOT change the engine or domain packages",
+      "Do NOT alter the card layout for supported-only reports"
+    ],
+    "objective" : "Add unsupported-language banner to the card report and exclude unsupported records from full-report aggregate scoring.",
+    "orderIndex" : 3,
+    "planText" : "In internal\/report\/card.go, after computing OverallGrade, detect whether any records are unsupported-language N\/A units; if so, add an unsupported-language banner\/warning to the card output. In internal\/report\/full.go's buildLanguageDetail, exclude unsupported-language records from aggregate score calculations so they do not drag down language averages.",
+    "riskClass" : "medium",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/report\/card.go",
+      "internal\/report\/full.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT modify production code in this deliverable",
+      "Do NOT change any engine or domain tests",
+      "Do NOT add tests for packages other than internal\/report"
+    ],
+    "objective" : "Add N\/A-grade, unsupported-banner, and aggregate-exclusion test coverage to the report test suite.",
+    "orderIndex" : 4,
+    "planText" : "Add test cases to internal\/report\/card_test.go: TestGenerateCard_WithUnsupportedLanguage (a swift record → card shows unsupported banner, overall grade computed only from supported units) and TestGenerateCard_AllUnsupported (all records unsupported → grade is N\/A). Add test cases to internal\/report\/full_test.go: TestFullReport_UnsupportedExcludedFromAggregates (language detail excludes swift from averages) and TestFullReport_UnsupportedBanner (report output mentions unsupported languages).",
+    "riskClass" : "low",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/report\/card_test.go",
+      "internal\/report\/full_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  }
+]
