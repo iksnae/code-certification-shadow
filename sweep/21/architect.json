@@ -1,0 +1,55 @@
+{
+  "components" : [
+    "internal\/domain\/record.go",
+    "internal\/domain\/dimension.go",
+    "internal\/analysis\/analyzer.go",
+    "internal\/evidence\/executor.go",
+    "internal\/evidence\/metrics.go",
+    "internal\/evidence\/complexity.go",
+    "internal\/engine\/certifier.go",
+    "internal\/engine\/scorer.go",
+    "internal\/policy\/evaluator.go",
+    "internal\/report\/card.go",
+    "internal\/report\/full.go",
+    "cmd\/certify\/init_cmd.go",
+    "testdata\/policies\/swift-standard.yml"
+  ],
+  "confidence" : 0.92,
+  "constraints" : [
+    "Streams 1 (unsupported gate) and 3 (policy removal) must land in the same release to prevent the inflated-score regression described in the trade-off analysis",
+    "The certifiableExts map in generic.go must NOT be modified — Swift files must still be discovered so the report banner can surface the count of unanalyzed units",
+    "CodeMetrics.Complexity pointer migration must be accompanied by nil-guards at every direct field access site (complexity.go:ComputeSymbolMetrics, complexity_test.go, metrics_test.go)",
+    "Score()'s violation loop must distinguish 'missing evidence' violations from threshold violations by matching on the Description prefix from evaluator.go:97, not by introducing a new Violation type (to keep scope minimal)",
+    "Existing on-disk swift.yml policy files from prior 'certify init' are not modified or deleted — only new inits are affected",
+    "The WeightedAverage function must continue to handle nil\/empty dimension maps gracefully (returns 0)",
+    "All report formatters (JSON, text, YAML) must handle the new StatusUnsupported and GradeNA values"
+  ],
+  "contractChanges" : [
+    "domain: new StatusUnsupported status, new GradeNA grade",
+    "domain: CodeMetrics.Complexity int → *int (nil = unmeasured)",
+    "evidence: ToEvidence() conditionally omits complexity key when nil",
+    "analysis: new IsAnalyzable(lang string) bool",
+    "evidence: new HasToolSupport(lang string) bool",
+    "engine: Certify() \/ collectUnitEvidence() gate — unsupported → StatusUnsupported, GradeNA, skip scoring",
+    "engine: Score() skips dimension-introduction for violations with missing-evidence description",
+    "report: GenerateCard() excludes StatusUnsupported from aggregates; adds Unanalyzed count + banner",
+    "report: LanguageDetail gains Unanalyzed field",
+    "init: remove swiftStandardPolicy and case \"swift\" from languagePolicy()",
+    "testdata: delete swift-standard.yml"
+  ],
+  "openQuestions" : [
+    "Should the unsupported gate fire at discovery time (GenericScanner skips .swift entirely) or at evidence-collection time (unit is discovered but marked unsupported)? Discovery-time gating is cleaner but removes visibility — the report-card banner needs the count of unanalyzed units, which requires them to be discovered first",
+    "Should HasToolSupport be derived from a formal registry (like the analyzer Registry) or remain a hardcoded check in executor.go? A registry would future-proof but adds scope",
+    "What is the migration path for existing certification databases\/JSON stores that contain Status='ok' records for Swift units? Re-certify? Backfill to StatusUnsupported?",
+    "Should the 'Insufficient Data' UI label appear in the report card summary row or only in the per-unit detail view?",
+    "Do we need a CLI flag (e.g. --include-unsupported) to force scoring of unsupported units for users who knowingly accept git-only metrics?"
+  ],
+  "risks" : [
+    "Streams 1+3 must land together: if the unsupported gate lands without removing the SwiftLint policy template, existing Swift repos with stale swift.yml policies on disk may bypass the gate or produce confusing mixed signals",
+    "Pointer migration risk: changing Complexity from int to *int requires auditing all direct field accesses — complexity.go ComputeSymbolMetrics, complexity_test.go, metrics_test.go — to avoid nil-dereference panics",
+    "Report formatters that switch on Status without a default\/catch-all case will render StatusUnsupported as a raw string or panic; all formatters (JSON, text, YAML) need the new string mapping",
+    "Existing persisted certification records in DB\/JSON may have Status 'ok' for Swift units; a re-certify after the change will flip them to unsupported, which could surprise users comparing old vs new reports",
+    "The WeightedAverage change (fewer dimensions) could inflate scores for partially-analyzed languages if the gate is bypassed; Stream 4 must not land before Stream 1"
+  ],
+  "summary" : "Introduce an \"unsupported language\" gate that intercepts units before scoring when no analyzer nor tool runner exists for the language; fix a data-quality bug where unmeasured complexity defaults to 0 and feeds scoring; remove the dead SwiftLint policy template; and reconcile the scoring contract so missing-evidence violations do not introduce phantom dimension scores."
+}
