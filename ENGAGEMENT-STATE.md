@@ -5,7 +5,7 @@ Lifecycle: **active**
 - Delivered: **0**
 - Open issues: **—**
 - Last activity: —
-- Spend: **$0.13**
+- Spend: **$0.14**
 - Rounds: avg **0.0**, max **0**
 - Confidence: last **—**, min **—**
 - Verify-green streak: **0**
