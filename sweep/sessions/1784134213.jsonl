@@ -258,3 +258,4 @@
 {"at":805828610.227649,"phase":"queued-build","ticketId":"23","detail":"working queued-build","outcome":{"running":{}},"id":"23-260"}
 {"outcome":{"advanced":{"to":"planning"}},"at":805828611.398558,"id":"24-261","ticketId":"24","phase":"queued-build","detail":"advanced to planning"}
 {"ticketId":"25","phase":"queued-build","detail":"advanced to planning","outcome":{"advanced":{"to":"planning"}},"at":805828611.398873,"id":"25-262"}
+{"detail":"advanced to planning","ticketId":"23","outcome":{"advanced":{"to":"planning"}},"at":805828612.822022,"phase":"queued-build","id":"23-263"}
