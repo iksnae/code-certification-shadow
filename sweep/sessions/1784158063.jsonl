@@ -348,3 +348,5 @@
 {"detail":"✗ read_file","phase":"building","outcome":{"note":{}},"at":805851170.216493,"ticketId":"26","tool":{"summary":"","name":"read_file","failed":true},"id":"26-350"}
 {"at":805851171.023073,"detail":"advanced to planning","phase":"product","outcome":{"advanced":{"to":"planning"}},"id":"30-351","ticketId":"30"}
 {"at":805851171.066985,"outcome":{"running":{}},"ticketId":"29","phase":"product","detail":"working product","id":"29-352"}
+{"phase":"product","at":805851177.981863,"detail":"deepseek-v4-pro · 1449 tok · 6908ms · $0.0008","id":"29-353","stat":{"costUSD":0.0007688800000000001,"latencyMs":6908,"promptTokens":994,"modelId":"deepseek:deepseek-v4-pro","completionTokens":455},"outcome":{"note":{}},"ticketId":"29"}
+{"id":"29-354","ticketId":"29","detail":"advanced to planning","phase":"product","at":805851180.498527,"outcome":{"advanced":{"to":"planning"}}}
