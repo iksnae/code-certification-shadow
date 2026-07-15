@@ -3,4 +3,4 @@
 Account-manager record of what we delivered and discussed, in order (the client-relationship
 narrative — distinct from the machine `DECISIONS.md`). Entries are client-clean.
 
-- **onboarding** — Engagement set up; shadow brain initialized.
+- **onboarding** — Engagement set up; shadow brain initialized.- **21** — Investigated Issue #21: Swift repos get fabricated grades. Confirmed the full end-to-end mechanism. Swift files are discovered by the GenericScanner (generic.go maps .swift→swift) but have no analysis tier — no structural analyzer registered, no SwiftLint collector, no test runner. The only evidence collected is file-level metrics (complexity always 0, scored as excellent) and git history. When the Swift policy template is loaded, its lint-clean and test-pass rules trigger "missing evidence" violations that introduce correctness and testability at 0.5, dragging the weighted average to ~0.80 (Grade C). This is a hollow grade — 213 Swift units get identical scores regardless of code quality. Five fix areas identified, prioritized P0–P3.
