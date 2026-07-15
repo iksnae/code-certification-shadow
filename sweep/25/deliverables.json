@@ -1,0 +1,74 @@
+[
+  {
+    "nonGoals" : [
+      "Do not modify scorer.go, pipeline.go, or any report files",
+      "Do not add the Unsupported field to CertificationRecord",
+      "Do not change Score() signature"
+    ],
+    "objective" : "Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking",
+    "orderIndex" : 0,
+    "planText" : "Create internal\/language_tiers\/language_tiers.go: define a Tier type (TierGeneric, TierFull), implement TierForLanguage(lang string) Tier using analysis.ForLanguage() to check parser availability — languages with a registered analyzer (go, ts, py, rs) are TierFull, everything else is TierGeneric. Create internal\/language_tiers\/language_tiers_test.go with table-driven tests covering each supported language returning TierFull and unsupported languages returning TierGeneric.",
+    "riskClass" : "low",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/language_tiers\/language_tiers.go",
+      "internal\/language_tiers\/language_tiers_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do not modify scorer.go, pipeline.go, or any report files",
+      "Do not change GradeFromScore logic",
+      "Do not alter any existing grade constants"
+    ],
+    "objective" : "Add GradeNA constant and Unsupported field to domain types to support the N\/A short-circuit path",
+    "orderIndex" : 1,
+    "planText" : "In internal\/domain\/dimension.go, add GradeNA Grade = \"N\/A\" constant alongside existing grade constants. In internal\/domain\/record.go, add Unsupported bool field to CertificationRecord struct. Both changes are purely additive — zero-value bool defaults to false preserving existing behaviour.",
+    "riskClass" : "low",
+    "size" : "xs",
+    "targetFiles" : [
+      "internal\/domain\/dimension.go",
+      "internal\/domain\/record.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do not modify report\/detailed.go, report\/full.go, report\/health.go, or report\/card.go",
+      "Do not add aggregate-skip logic outside the engine package",
+      "Do not create the language_tiers package or domain types (those are prior deliverables)"
+    ],
+    "objective" : "Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests",
+    "orderIndex" : 2,
+    "planText" : "Modify internal\/engine\/scorer.go: (a) Import language_tiers and domain packages. (b) Change Score() signature to accept a language string parameter. (c) At the top of Score(), call language_tiers.TierForLanguage(lang); if TierGeneric, return domain.DimensionScores(nil) — caller will handle the N\/A short-circuit. (d) In scoreFromMetrics, guard the complexity ≤ 5 → 0.95 maintainability rule: skip when complexity == 0 AND the evidence's language has no parser (TierGeneric). Pass language into scoreFromMetrics. (e) Remove the violation else-branch that injects dimensions at 0.80 minus penalty (lines 65-74); only the if-branch that applies penalties to existing dimensions remains. (f) Update the Score() doc comment to state that dimensions without evidence are absent and TierGeneric units receive nil scores. Modify internal\/engine\/pipeline.go: (a) Pass unit.ID.Language() to Score(). (b) After Score() returns, if scores == nil, set record.Grade = domain.GradeNA, record.Unsupported = true, and return immediately without computing avg\/status. Update internal\/engine\/scorer_test.go: update all Score() calls to pass a language string; add test cases for TierGeneric short-circuit (swift → nil scores), zero-complexity guard (generic file with complexity=0 must NOT get maintainability=0.95), and violation handling without 0.5 injection (violation on absent dimension → no dimension entry). Update internal\/engine\/pipeline_test.go if needed.",
+    "riskClass" : "medium",
+    "size" : "l",
+    "targetFiles" : [
+      "internal\/engine\/scorer.go",
+      "internal\/engine\/scorer_test.go",
+      "internal\/engine\/pipeline.go",
+      "internal\/engine\/pipeline_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do not modify scorer.go, pipeline.go, or domain types",
+      "Do not change the N\/A rendering logic (already handled by existing gradeEmoji fallback)",
+      "Do not add new report output formats"
+    ],
+    "objective" : "Update report consumers to skip Unsupported records in aggregate calculations",
+    "orderIndex" : 3,
+    "planText" : "In internal\/report\/detailed.go computeDimensionAverages: skip records where Unsupported == true when summing and counting. In internal\/report\/full.go buildLanguageDetail: skip Unsupported records when computing per-language averages. In internal\/report\/health.go Health(): skip Unsupported records in pass\/fail counts and score averaging. In internal\/report\/card.go: skip Unsupported records from the total count used in GenerateCard(). Existing tests in card_test.go already handle N\/A for empty records and should continue to pass.",
+    "riskClass" : "low",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/report\/detailed.go",
+      "internal\/report\/full.go",
+      "internal\/report\/health.go",
+      "internal\/report\/card.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  }
+]
