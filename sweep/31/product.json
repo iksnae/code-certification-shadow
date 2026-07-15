@@ -1,0 +1,16 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+    "Non-goals explicitly forbid creating the language_tiers package or domain types (they are listed as prior deliverables), yet steps 1-2 of the plan create internal\/language_tiers\/tiers.go, add GradeNA to domain\/dimension.go, and add Unsupported to domain\/record.go.",
+    "If language_tiers and the domain additions (GradeNA, Unsupported) are truly absent prerequisites, that is a blocking dependency — the plan must either (a) confirm these deliverables already exist and reference them as imports only, or (b) defer this task until the prerequisite work is complete. The plan cannot silently absorb prerequisite creation into this task.",
+    "The plan itself flags this contradiction ('flagged as open question since non-goals forbid creating these, yet they are absent prerequisites') but proceeds anyway without resolution. The open question must be resolved before approval."
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests",
+  "userValue" : "Plan violates explicit non-goals by creating language_tiers package and modifying domain types, which are stated as prior deliverables outside this task's scope."
+}
