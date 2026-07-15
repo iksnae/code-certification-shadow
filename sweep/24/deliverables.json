@@ -1,0 +1,20 @@
+[
+  {
+    "nonGoals" : [
+      "Do NOT add any new collector or rule",
+      "Do NOT modify testdata\/policies\/swift-standard.yml",
+      "Do NOT add comment referencing language_tiers.go (does not exist)",
+      "Do NOT modify any test files",
+      "Do NOT alter any other constant or function in init_cmd.go"
+    ],
+    "objective" : "Remove the dead lint-clean (SwiftLint) rule from the swiftStandardPolicy constant in cmd\/certify\/init_cmd.go",
+    "orderIndex" : 0,
+    "planText" : "Open cmd\/certify\/init_cmd.go and locate the swiftStandardPolicy constant (line ~704). Delete the 8-line lint-clean rule block (lines 709–716): the 7 YAML lines defining the rule plus the trailing blank line. This rule references metric: lint_errors but no SwiftLint collector exists, causing fabricated grades. After removal, swiftStandardPolicy will have exactly 3 rules: test-pass, no-todos, and max-complexity. Run go build -o build\/bin\/certify .\/cmd\/certify\/ to confirm clean compilation, then go test .\/... -count=1 to confirm no tests break. Confirm via grep that 'SwiftLint' no longer appears in any .go file.",
+    "riskClass" : "low",
+    "size" : "xs",
+    "targetFiles" : [
+      "cmd\/certify\/init_cmd.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  }
+]
