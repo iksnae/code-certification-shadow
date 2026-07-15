@@ -1,0 +1,47 @@
+{
+  "apiOrSchemaChanges" : [
+    "Score(ev []domain.Evidence, evalResult policy.EvaluationResult, lang string) domain.DimensionScores — new lang parameter",
+    "scoreFromMetrics(e domain.Evidence, scores domain.DimensionScores, lang string) — new lang parameter",
+    "domain.CertificationRecord.Unsupported bool — new field",
+    "domain.GradeNA — new Grade constant",
+    "language_tiers.TierForLanguage(lang string) Tier — new public function",
+    "language_tiers.TierGeneric — new exported constant"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.75,
+  "failingTest" : "internal\/engine\/scorer_test.go — all Score() call sites (signature change from 2-arg to 3-arg); new TierGeneric\/zero-complexity\/violation-else-branch tests must be added",
+  "fileMap" : [
+    "internal\/language_tiers\/tiers.go — create — new package mapping languages to tiers (TierNative, TierGeneric); prerequisite dependency",
+    "internal\/domain\/dimension.go — modify — add GradeNA constant and its string representation",
+    "internal\/domain\/record.go — modify — add Unsupported bool field to CertificationRecord",
+    "internal\/engine\/scorer.go — modify — import language_tiers; add lang param to Score() and scoreFromMetrics(); add TierGeneric early-return; guard complexity≤5→0.95 rule; remove violation else-branch",
+    "internal\/engine\/scorer_test.go — modify — add lang arg to all Score() calls; add TierGeneric short-circuit test; add zero-complexity TierGeneric test; add violation-on-absent-dimension test",
+    "internal\/engine\/pipeline.go — modify — pass unit.ID.Language() to Score(); add nil-scores short-circuit with GradeNA\/Unsupported",
+    "internal\/engine\/pipeline_test.go — modify — add TierGeneric unit test for CertifyUnit short-circuit"
+  ],
+  "fixApproach" : "Introduce a language-tier gate at the top of Score(): if the language maps to TierGeneric (no parser available), return nil DimensionScores immediately. In the pipeline, detect nil scores and short-circuit with GradeNA + Unsupported=true. Protect the complexity→maintainability rule in scoreFromMetrics: when complexity==0 and the language is TierGeneric, skip the 0.95 boost (the 0 means \"unmeasured,\" not \"excellent\"). Remove the violation else-branch that injects dimensions at 0.80-penalty for absent-evidence dimensions — violations now only penalize dimensions that already exist. Create the missing language_tiers package and add GradeNA\/Unsupported to domain types (flagged as open question since non-goals forbid creating these, yet they are absent prerequisites). Update all engine tests to pass the new language argument and add coverage for TierGeneric short-circuit, zero-complexity guard, and absent-dimension violation handling.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "The language_tiers package and domain types (GradeNA, Unsupported field) are listed as non-goals \/ prior deliverables but do not exist in the repository. Without them, the scorer and pipeline changes cannot compile. Should these be created as part of this work item, or is there a separate PR\/issue that delivers them first?",
+    "What exact Tier constants should exist beyond TierGeneric? Based on project context (Go\/TS\/Python\/Rust have parsers, everything else is generic), a minimal set would be TierNative and TierGeneric. Confirm this is sufficient.",
+    "Should TierForLanguage derive its mapping from analysis.ForLanguage() returning nil for unsupported languages, or maintain an independent mapping table?"
+  ],
+  "steps" : [
+    "Create internal\/language_tiers\/tiers.go: define Tier type (int enum), TierGeneric and TierNative constants, and TierForLanguage(lang string) Tier function mapping Go\/TS\/Python\/Rust → TierNative, everything else → TierGeneric",
+    "Add GradeNA constant to domain\/dimension.go: value 255 (or -1) with string representation \"N\/A\", update Grade.String() switch",
+    "Add Unsupported bool field to domain.CertificationRecord in domain\/record.go",
+    "Modify internal\/engine\/scorer.go: (a) import language_tiers; (b) change Score() signature to accept lang string; (c) at top of Score(), if TierForLanguage(lang)==TierGeneric, return nil; (d) change scoreFromMetrics signature to accept lang string; (e) in scoreFromMetrics, guard complexity≤5→0.95 path: skip when complexity==0 && TierForLanguage(lang)==TierGeneric; (f) remove the violation else-branch (lines ~59-61) that injects dimensions at 0.80-penalty; (g) update doc comment",
+    "Modify internal\/engine\/pipeline.go: (a) pass unit.ID.Language() to Score() call; (b) after Score(), if scores==nil: set record.Grade=GradeNA, record.Unsupported=true, return record immediately",
+    "Update internal\/engine\/scorer_test.go: (a) add language arg (\"go\") to every existing Score() call; (b) add TestScorer_TierGenericReturnsNil: Score() with \"swift\" → nil; (c) add TestScorer_ZeroComplexityTierGenericNoMaintainabilityBoost: evidence with complexity=0, language \"swift\" → maintainability absent or not 0.95; (d) add TestScorer_ViolationOnAbsentDimensionDoesNotInject: violation on dimension with no evidence → dimension absent from scores",
+    "Update internal\/engine\/pipeline_test.go: add TestPipeline_CertifyUnit_UnsupportedLanguage: unit with language \"swift\" → record.Grade==GradeNA, record.Unsupported==true",
+    "Run go test .\/internal\/engine\/... -count=1 to verify all engine tests pass",
+    "Run go test .\/... -count=1 for full project regression",
+    "Run go build -o build\/bin\/certify .\/cmd\/certify\/ to confirm binary compiles"
+  ],
+  "stopsForOperatorApproval" : true,
+  "summary" : "Guard Score() with language-tier gate, protect complexity maintainability rule for unparseable code, remove 0.5-default violation injection, update pipeline for N\/A short-circuit, and fix all engine tests",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
