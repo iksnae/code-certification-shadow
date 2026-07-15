@@ -1,16 +1,14 @@
-From 3e0d2db956258315fcb06eb1217f8d6afe09e02f Mon Sep 17 00:00:00 2001
+From f4d90c7fafe3b45fbd91979576a24d2f109561d6 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 14:13:37 -0400
+Date: Wed, 15 Jul 2026 19:29:49 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-27#s0)
 
 ---
- internal/report/card.go               | 19 ++++++++
- internal/report/card_internal_test.go | 69 +++++++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 internal/report/card_internal_test.go
+ internal/report/card.go | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
 diff --git a/internal/report/card.go b/internal/report/card.go
-index d726534d7..ea3e6b069 100644
+index d726534d7..f1913d04e 100644
 --- a/internal/report/card.go
 +++ b/internal/report/card.go
 @@ -7,6 +7,7 @@ import (
@@ -21,111 +19,46 @@ index d726534d7..ea3e6b069 100644
  	"github.com/iksnae/code-certification/internal/domain"
  )
  
-@@ -40,6 +41,11 @@ type Card struct {
+@@ -23,11 +24,14 @@ type Card struct {
+ 	PassRate     float64 `json:"pass_rate"`
  
- 	// Package summaries (populated for report tree navigation)
- 	Packages []PackageSummary `json:"packages,omitempty"`
-+
-+	// Unsupported-unit banner
-+	UnsupportedCount     int      `json:"unsupported_count"`
-+	UnsupportedLanguages []string `json:"unsupported_languages,omitempty"`
-+	AnalyzableUnits      int      `json:"analyzable_units"`
- }
+ 	// Counts
+-	TotalUnits   int `json:"total_units"`
+-	Passing      int `json:"passing"`
+-	Failing      int `json:"failing"`
+-	Expired      int `json:"expired"`
+-	Observations int `json:"observations"`
++	TotalUnits          int      `json:"total_units"`
++	AnalyzableUnits     int      `json:"analyzable_units"`
++	UnsupportedCount    int      `json:"unsupported_count"`
++	UnsupportedLanguages []string `json:"unsupported_languages"`
++	Passing             int      `json:"passing"`
++	Failing             int      `json:"failing"`
++	Expired             int      `json:"expired"`
++	Observations        int      `json:"observations"`
  
- // IssueCard describes a single unit needing attention.
-@@ -294,6 +300,19 @@ func FormatCardMarkdown(c Card) string {
- 	return b.String()
- }
+ 	// Grade distribution
+ 	GradeDistribution map[string]int `json:"grade_distribution"`
+@@ -296,6 +300,19 @@ func FormatCardMarkdown(c Card) string {
  
-+// partitionByLanguage splits records into supported and unsupported based on
-+// whether analysis.ForLanguage returns a non-nil analyzer for the unit's language.
+ // gradeEmoji maps grades to brand-consistent status emoji.
+ // 🟢 Certified (A–B), 🟡 Observations (C), 🟠 Probationary (D), 🔴 Decertified (F), ⚪ Expired.
++// partitionByLanguage splits records into supported and unsupported slices.
++// A language is unsupported when analysis.ForLanguage returns nil.
 +func partitionByLanguage(records []domain.CertificationRecord) (supported, unsupported []domain.CertificationRecord) {
 +	for _, r := range records {
-+		if analysis.ForLanguage(r.UnitID.Language()) != nil {
-+			supported = append(supported, r)
-+		} else {
++		if analysis.ForLanguage(r.UnitID.Language()) == nil {
 +			unsupported = append(unsupported, r)
++		} else {
++			supported = append(supported, r)
 +		}
 +	}
 +	return
 +}
 +
- // gradeEmoji maps grades to brand-consistent status emoji.
- // 🟢 Certified (A–B), 🟡 Observations (C), 🟠 Probationary (D), 🔴 Decertified (F), ⚪ Expired.
  func gradeEmoji(grade string) string {
-diff --git a/inte
-...[elided 137 bytes - full stream is hash-only]...
-++ b/internal/report/card_internal_test.go
-@@ -0,0 +1,69 @@
-+package report
-+
-+import (
-+	"testing"
-+
-+	"github.com/iksnae/code-certification/internal/domain"
-+)
-+
-+func makePartitionRecord(lang, path, symbol string) domain.CertificationRecord {
-+	return domain.CertificationRecord{
-+		UnitID:   domain.NewUnitID(lang, path, symbol),
-+		UnitType: domain.UnitTypeFunction,
-+		UnitPath: path,
-+	}
-+}
-+
-+func TestPartitionByLanguage_AllSupported(t *testing.T) {
-+	records := []domain.CertificationRecord{
-+		makePartitionRecord("go", "a.go", "A"),
-+		makePartitionRecord("ts", "b.ts", "B"),
-+		makePartitionRecord("py", "c.py", "C"),
-+	}
-+
-+	supported, unsupported := partitionByLanguage(records)
-+
-+	if len(supported) != 3 {
-+		t.Errorf("supported = %d, want 3", len(supported))
-+	}
-+	if len(unsupported) != 0 {
-+		t.Errorf("unsupported = %d, want 0", len(unsupported))
-+	}
-+}
-+
-+func TestPartitionByLanguage_UnsupportedLanguage(t *testing.T) {
-+	records := []domain.CertificationRecord{
-+		makePartitionRecord("go", "a.go", "A"),
-+		makePartitionRecord("cpp", "b.cpp", "B"),
-+		makePartitionRecord("java", "c.java", "C"),
-+		makePartitionRecord("ts", "d.ts", "D"),
-+	}
-+
-+	supported, unsupported := partitionByLanguage(records)
-+
-+	if len(supported) != 2 {
-+		t.Errorf("supported = %d, want 2", len(supported))
-+	}
-+	if len(unsupported) != 2 {
-+		t.Errorf("unsupported = %d, want 2", len(unsupported))
-+	}
-+
-+	// Verify unsupported contains the expected records
-+	unsupportedLangs := map[string]bool{}
-+	for _, r := range unsupported {
-+		unsupportedLangs[r.UnitID.Language()] = true
-+	}
-+	if !unsupportedLangs["cpp"] {
-+		t.Error("cpp should be in unsupported")
-+	}
-+	if !unsupportedLangs["java"] {
-+		t.Error("java should be in unsupported")
-+	}
-+}
-+
-+func TestPartitionByLanguage_Empty(t *testing.T) {
-+	supported, unsupported := partitionByLanguage(nil)
-+	if len(supported) != 0 || len(unsupported) != 0 {
-+		t.Error("both slices should be empty for nil input")
-+	}
-+}
+ 	switch grade {
+ 	case "A", "A-", "B+", "B":
 -- 
 2.54.0 (Apple Git-156)
 
