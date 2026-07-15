@@ -1,16 +1,20 @@
 {
-  "commitRef" : "f4d90c7fafe3b45fbd91979576a24d2f109561d6",
-  "committed" : true,
+  "commitRef" : "369b94825bea77524a3a33983e378fa4c6997e5c",
+  "committed" : false,
   "correlationId" : "sweep-build-27",
   "filesChanged" : [
-    "internal\/report\/card.go"
+    "internal\/report\/card.go",
+    "internal\/report\/card_internal_test.go"
   ],
-  "implementCompleted" : true,
+  "implementCompleted" : false,
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-27#s0",
     "rcpt-build-verify-sweep-build-27#s0",
-    "rcpt-build-commit-sweep-build-27#s0"
+    "rcpt-build-commit-sweep-build-27#s0",
+    "rcpt-build-implement-sweep-build-27#s1",
+    "rcpt-build-verify-sweep-build-27#s1",
+    "rcpt-build-commit-sweep-build-27#s1"
   ],
-  "rounds" : 23,
-  "verifyPassed" : true
+  "rounds" : 31,
+  "verifyPassed" : false
 }
