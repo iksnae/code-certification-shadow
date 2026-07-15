@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Create a language-tier registry mapping every known language ID to an analysis capability tier (None\/Generic\/Lint\/Parse\/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry.",
+  "userValue" : "Exhaustive 22-language registry with CI guard test; tier assignments reflect actual collector presence and fail-safe default is correct."
+}
