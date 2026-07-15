@@ -801,3 +801,5 @@
 {"id":"27-804","outcome":{"note":{}},"ticketId":"27","phase":"review","detail":"verify failed","at":805852034.982933}
 {"detail":"incomplete build → fix-review (one retry)","id":"27-805","phase":"review","ticketId":"27","outcome":{"routedBack":{"to":"fix-review"}},"at":805852038.440765}
 {"id":"32-806","outcome":{"running":{}},"at":805852038.474168,"phase":"planning","detail":"working planning","ticketId":"32"}
+{"outcome":{"note":{}},"stat":{"modelId":"deepseek:deepseek-v4-pro","completionTokens":328,"costUSD":0.001185,"promptTokens":3054},"id":"26-808","phase":"building","detail":"deepseek-v4-pro · 3382 tok · $0.0012","at":805852040.649951,"ticketId":"26"}
+{"ticketId":"32","detail":"advanced to planned","id":"32-807","at":805852040.649932,"outcome":{"advanced":{"to":"planned"}},"phase":"planning"}
