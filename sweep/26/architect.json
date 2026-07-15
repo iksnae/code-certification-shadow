@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Plan adds five well-scoped regression tests following existing package patterns; conditional handling of aggregate function and internal access via same-package tests are idiomatic Go."
+}
