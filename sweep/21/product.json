@@ -1,0 +1,60 @@
+{
+  "acceptanceCriteria" : [
+    "When a unit's language has no registered analysis tier (no analyzer, no lint collector, no test collector), the unit is marked as \"unsupported\" with grade \"N\/A\" and is excluded from aggregate score calculations",
+    "A report-card banner surfaces the count and language name of unanalyzed units (e.g., \"213 Swift units discovered, not analyzed — no Swift analysis tier available\")",
+    "The `complexity` metric is emitted as absent\/null (not 0) when no complexity measurement was performed for the unit's language",
+    "Scoring logic never treats an unmeasured metric as evidence: `complexity: 0` (unmeasured) must not route through the same scoring path as `complexity: 0` (measured and genuinely low)",
+    "The `Score()` doc comment and persisted record behavior agree: dimensions without evidence are either absent from the record entirely OR explicitly flagged as \"unknown\" with a value that cannot be confused with a real score — not defaulted to 0.5",
+    "The Swift init template's SwiftLint policy rule (`lint-clean`: `lint_errors` threshold 0) is either wired to a working SwiftLint evidence collector OR removed from the template so it is not dead policy advertised to users",
+    "`certify doctor` emits a warning when the primary language by unit count (or any language exceeding 10% of total units) has no registered analysis tier",
+    "`internal\/discovery\/detect.go` language-detection maps are updated to include all extensions present in `certifiableExts` (at minimum: `.swift` — the subject of this issue)"
+  ],
+  "clarifications" : [
+    {
+      "options" : [
+        "Shown with a \"Limited Analysis\" badge and only git-history-based dimensions present, excluded from aggregate scores",
+        "Completely omitted from the report card (only surfaced in the banner)",
+        "Shown in the report card with all dimensions explicitly labeled \"Not Measured\" and grade N\/A"
+      ],
+      "question" : "How should unanalyzed-language units appear in the report card?",
+      "recommendation" : "Shown with a \"Limited Analysis\" badge and only git-history-based dimensions present, excluded from aggregate scores — aligns with the Vision's \"generic file-level fallback for any language\" while being honest about what was and wasn't measured"
+    },
+    {
+      "options" : [
+        "Apply to all unanalyzed languages in one pass — the scoring path is identical and systemic",
+        "Swift-only now; other languages tracked as separate issues to be addressed when reported",
+        "Swift plus any language explicitly listed in certifiableExts that also lacks an analyzer registration (defense-in-depth for the known set)"
+      ],
+      "question" : "Scope of the \"don't fabricate\" safety fix — apply to all ~15 unanalyzed languages (Ruby, Java, Kotlin, C\/C++, C#, PHP, Elixir, Scala, Lua, R, Zig, SQL, Protobuf, Shell) or Swift-only?",
+      "recommendation" : "Apply to all unanalyzed languages in one pass — the scoring bug is identical across all of them and fixing it per-language creates a whack-a-mole dynamic that undermines trust further"
+    },
+    {
+      "options" : [
+        "Remove the dead rule now; add it back when the SwiftLint collector is implemented",
+        "Leave the rule as forward-looking policy — it becomes active automatically when the collector lands",
+        "Replace with a commented-out placeholder that documents the intended rule and required collector"
+      ],
+      "question" : "Disposition of the dead SwiftLint policy rule in the init template?",
+      "recommendation" : "Remove the dead rule now — it is misleading to users who see it in their generated config and assume it is active. The rule can be reintroduced as part of the Swift tier work when the collector exists"
+    },
+    {
+      "options" : [
+        "Absent from the score entirely — they don't dilute the weighted average and the dimension count reflects only measured dimensions",
+        "Present in the score as an explicit \"unknown\" sentinel (e.g., -1 or null in JSON) so consumers can distinguish \"not measured\" from \"measured poorly\"",
+        "Absent from the numeric score but surfaced in the report card UI as \"Insufficient Data\" with the dimension name"
+      ],
+      "question" : "For dimensions where evidence is missing: absent from the score (per current doc comment) or explicitly surfaced as \"unknown\"?",
+      "recommendation" : "Absent from the numeric score entirely (per the existing doc comment contract) but surfaced in the report card UI as \"Insufficient Data\" — this gives honest visibility without diluting the average, and matches the principle of not penalizing what you can't measure"
+    }
+  ],
+  "outOfScope" : [
+    "Building a full Swift analysis tier (SwiftSyntax or tree-sitter-swift) — this is a separate feature tracked independently; this issue is about honest reporting",
+    "Adding evidence collectors for other unanalyzed languages (Ruby, Java, C#, etc.) — each language tier is its own product decision with its own ecosystem analysis",
+    "Changing the scoring formula weights or the grade thresholds for languages that DO have full analysis tiers",
+    "Adding a mechanism to suppress the \"unsupported\" banner for repos that knowingly have unanalyzed languages (that's a separate configuration feature)",
+    "Altering how git-history-based dimensions (change_risk, operational_quality) are scored — those are working as designed for the evidence they have"
+  ],
+  "priority" : "high",
+  "problemStatement" : "When certifying a Swift codebase (or any codebase in a language without a registered analysis tier), every code unit receives a fabricated grade — typically a C (~80%) — derived almost entirely from git history and line counts. A 300-line SwiftUI view and a 50-line test helper score identically. The report card looks legitimate with per-dimension scores, an overall grade, and confidence indicators, but it measures nothing about the code itself. For the 213-Swift-unit repo documented in this issue, all 213 units got the exact same grade. This is not a cosmetic problem — it means teams relying on Certify to gate releases, track quality trends, or demonstrate compliance are making decisions on hollow data. The tool's core promise is evidence-driven trust; fabricated grades destroy that trust.",
+  "userValue" : "Users trust certification scores to reflect real code quality. When the tool fabricates grades for unanalyzed languages, it betrays that trust silently — there is no warning, no banner, no indication that the C grade means \"we didn't look at your code.\" Honest reporting preserves trust: a clear \"not analyzed\" label tells the user the truth and lets them decide whether to invest in a language tier. The alternative — discovering the fabrication through their own investigation — erodes confidence in every other score the tool produces. Teams using Certify in CI\/CD pipelines, in compliance workflows, or as a quality gate need to know what was actually measured versus what was defaulted."
+}
