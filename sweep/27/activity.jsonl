@@ -105,3 +105,6 @@ y** | `certify` (built from `cmd\/certify\/`) |\n| **Test command** | `go test .
 {"at":805829680.51277,"outcome":{"advanced":{"to":"planning"}},"id":"27-877","phase":"product","ticketId":"27","detail":"advanced to planning"}
 {"id":"27-892","outcome":{"running":{}},"detail":"working planning","ticketId":"27","at":805829750.666395,"phase":"planning"}
 {"detail":"advanced to architect","at":805829753.49638,"phase":"planning","id":"27-894","ticketId":"27","outcome":{"advanced":{"to":"architect"}}}
+{"at":805829795.095276,"outcome":{"running":{}},"id":"27-904","phase":"architect","ticketId":"27","detail":"working architect"}
+{"id":"27-912","stat":{"costUSD":0.0016652900000000003,"completionTokens":1252,"latencyMs":20123,"modelId":"deepseek:deepseek-v4-pro","promptTokens":1067},"outcome":{"note":{}},"ticketId":"27","at":805829815.224383,"phase":"architect","detail":"deepseek-v4-pro · 2319 tok · 20123ms · $0.0017"}
+{"at":805829818.153456,"outcome":{"advanced":{"to":"planning"}},"phase":"architect","ticketId":"27","id":"27-913","detail":"advanced to planning"}
