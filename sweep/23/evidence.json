@@ -1,17 +1,20 @@
 {
-  "commitRef" : "27a26a95a895f30f8989bbec493930af7c764395",
-  "committed" : true,
+  "commitRef" : "05df79912f0a3074ff6a1a40acf00f3ef462fa2e",
+  "committed" : false,
   "correlationId" : "sweep-build-23",
   "filesChanged" : [
     "internal\/discovery\/generic.go",
     "internal\/discovery\/generic_test.go"
   ],
-  "implementCompleted" : true,
+  "implementCompleted" : false,
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-23#s0",
     "rcpt-build-verify-sweep-build-23#s0",
-    "rcpt-build-commit-sweep-build-23#s0"
+    "rcpt-build-commit-sweep-build-23#s0",
+    "rcpt-build-implement-sweep-build-23#s1",
+    "rcpt-build-verify-sweep-build-23#s1",
+    "rcpt-build-commit-sweep-build-23#s1"
   ],
-  "rounds" : 16,
-  "verifyPassed" : true
+  "rounds" : 26,
+  "verifyPassed" : false
 }
