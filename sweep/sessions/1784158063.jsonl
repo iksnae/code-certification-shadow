@@ -358,3 +358,12 @@
 {"outcome":{"note":{}},"id":"26-360","at":805851210.024798,"detail":"running verify…","phase":"building","ticketId":"26"}
 {"outcome":{"note":{}},"id":"26-361","at":805851210.033082,"detail":"✓ git.commit","phase":"building","ticketId":"26"}
 {"phase":"queued-build","at":805851212.375478,"outcome":{"advanced":{"to":"review"}},"id":"26-362","detail":"advanced to review","ticketId":"26"}
+{"at":805851241.116361,"ticketId":"27","id":"27-363","detail":"deepseek-v4-pro · 15072 tok · $0.0098","outcome":{"note":{}},"stat":{"promptTokens":8123,"completionTokens":6949,"costUSD":0.009837,"modelId":"deepseek:deepseek-v4-pro"},"phase":"building"}
+{"at":805851241.141387,"id":"27-364","phase":"building","ticketId":"27","outcome":{"note":{}},"detail":"thinking: Let me look more closely at what's happening. Let me check how `analysis.ForLanguage` behaves and see the domain package."}
+{"id":"27-365","tool":{"name":"list_files","summary":"internal\/analysis","failed":false},"ticketId":"27","at":805851241.148697,"outcome":{"note":{}},"phase":"building","detail":"↪ list_files internal\/analysis"}
+{"id":"27-366","tool":{"name":"list_files","summary":"","failed":true},"ticketId":"27","at":805851241.156666,"outcome":{"note":{}},"detail":"✗ list_files","phase":"building"}
+{"at":805851241.165472,"ticketId":"27","id":"27-367","detail":"↪ list_files internal\/domain","tool":{"summary":"internal\/domain","name":"list_files","failed":false},"outcome":{"note":{}},"phase":"building"}
+{"at":805851241.173047,"ticketId":"27","id":"27-368","detail":"✗ list_files","outcome":{"note":{}},"tool":{"failed":true,"name":"list_files","summary":""},"phase":"building"}
+{"outcome":{"note":{}},"detail":"model turn timed out after 120.0 seconds","at":805851368.615584,"id":"27-369","ticketId":"27","phase":"building"}
+{"at":805851368.723851,"ticketId":"27","detail":"⚠️ build failed before producing evidence: model turn timed out after 120.0 seconds","phase":"building","id":"27-370","outcome":{"note":{}}}
+{"phase":"fix-review","at":805851371.450483,"id":"27-371","outcome":{"advanced":{"to":"review"}},"ticketId":"27","detail":"advanced to review"}
