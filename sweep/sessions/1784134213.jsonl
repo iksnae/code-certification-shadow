@@ -874,3 +874,4 @@ come":{"note":{}},"detail":"deepseek-v4-pro · 92743 tok · 18339ms · $0.0254",
 {"phase":"planning","outcome":{"advanced":{"to":"architect"}},"detail":"advanced to architect","ticketId":"28","at":805829753.562951,"id":"28-896"}
 {"phase":"planning","outcome":{"running":{}},"detail":"working planning","ticketId":"25","at":805829753.562812,"id":"25-895"}
 {"detail":"working planning","at":805829753.60093,"phase":"planning","id":"24-897","ticketId":"24","outcome":{"running":{}}}
+{"detail":"advanced to architect","outcome":{"advanced":{"to":"architect"}},"id":"26-898","ticketId":"26","phase":"planning","at":805829753.717942}
