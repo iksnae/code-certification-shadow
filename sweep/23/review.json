@@ -1,0 +1,159 @@
+{
+  "checklist" : [
+    {
+      "detail" : "the implementor finished in 16 round(s)",
+      "id" : "build-completed",
+      "label" : "Build completed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "2 file(s) changed: internal\/discovery\/generic.go, internal\/discovery\/generic_test.go",
+      "id" : "change-present",
+      "label" : "Change is visible",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "expected ≥1 of: internal\/discovery\/generic.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_test.go",
+      "id" : "on-target",
+      "label" : "Changed the deliverable's target files",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "the project verify command was GREEN",
+      "id" : "verify-green",
+      "label" : "Verification passed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "committed locally on the build branch",
+      "id" : "committed",
+      "label" : "Work committed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "Plan required language_tiers.go with Tier enum, registry, and TierForLanguage helper; diff instead adds KnownLanguages() to generic.go — a completely different (and partial) implementation that does not create any tier registry, enum, or the three specified tests.",
+      "id" : "implements-the-approved-plan",
+      "label" : "Implements the approved plan",
+      "result" : {
+        "score" : {
+          "_0" : 0
+        }
+      }
+    },
+    {
+      "detail" : "Plan explicitly targeted internal\/engine\/language_tiers.go and _test.go; diff changes internal\/discovery\/generic.go and creates internal\/discovery\/generic_test.go — zero overlap with planned files.",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "score" : {
+          "_0" : 0
+        }
+      }
+    },
+    {
+      "detail" : "Tests written for KnownLanguages() are genuine (sort, dedup, determinism, expected set); no test deletion, weakening, or hard-coded expected-value gaming observed.",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "The KnownLanguages() export and its tests are not harmful or regressive, but advancing this diff would merge code that fails to deliver the approved plan's tier-registry feature — a waste of operator review and a process hazard.",
+      "id" : "safe-to-advance",
+      "label" : "Safe to advance",
+      "result" : {
+        "score" : {
+          "_0" : 0.3
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.98
+        }
+      }
+    }
+  ],
+  "claims" : [
+    {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "is\t4.391s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.412s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t3.532s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t3.372s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.669s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t2.750s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t2.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.821s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.650s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t1.090s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t2.914s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t1.253s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.075s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.291s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.051s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.339s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
+      "statement" : "the reviewer's independent re-verification passes",
+      "verdict" : "pass"
+    }
+  ],
+  "committed" : true,
+  "confidence" : 0.98,
+  "correlationId" : "sweep-build-23",
+  "dimensions" : [
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Plan required language_tiers.go with Tier enum, registry, and TierForLanguage helper; diff instead adds KnownLanguages() to generic.go — a completely different (and partial) implementation that does not create any tier registry, enum, or the three specified tests.",
+      "score" : 0
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Plan explicitly targeted internal\/engine\/language_tiers.go and _test.go; diff changes internal\/discovery\/generic.go and creates internal\/discovery\/generic_test.go — zero overlap with planned files.",
+      "score" : 0
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "Tests written for KnownLanguages() are genuine (sort, dedup, determinism, expected set); no test deletion, weakening, or hard-coded expected-value gaming observed.",
+      "score" : 1
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "The KnownLanguages() export and its tests are not harmful or regressive, but advancing this diff would merge code that fails to deliver the approved plan's tier-registry feature — a waste of operator review and a process hazard.",
+      "score" : 0.3
+    }
+  ],
+  "evidenceReceiptIds" : [
+    "rcpt-build-implement-sweep-build-23#s0",
+    "rcpt-build-verify-sweep-build-23#s0",
+    "rcpt-build-commit-sweep-build-23#s0"
+  ],
+  "failureReasons" : [
+    "Build did not implement the approved plan: the plan called for internal\/engine\/language_tiers.go (Tier enum, registry map, TierForLanguage) and internal\/engine\/language_tiers_test.go (three tier-registry tests). The diff instead adds a KnownLanguages() helper in internal\/discovery\/generic.go with unrelated property tests. No tier registry, no enum, no tier test exists.",
+    "aggregate score 0.325 below threshold 0.600"
+  ],
+  "filesReviewed" : [
+    "internal\/discovery\/generic.go",
+    "internal\/discovery\/generic_test.go"
+  ],
+  "outcome" : "needsFix",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
+}
