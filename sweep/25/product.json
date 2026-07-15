@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Guard Score() and scoreFromMetrics in scorer.go: short-circuit unsupported languages to N\/A, protect the complexity-based maintainability rule from firing on unmeasured zero values, and reconcile 0.5 dimension defaults with the Score() doc contract.",
+  "userValue" : "Plan directly addresses all three product intents: TierGeneric gate → N\/A short-circuit, zero-complexity guard on maintainability rule, and removal of 0.5 defaults so unmeasured dimensions are truly absent per the doc contract. Non-goals respected, tests updated, aggregate skip included."
+}
