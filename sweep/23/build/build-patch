@@ -1,25 +1,23 @@
-From 1cbec257d5793553202a99e468a5312a92978153 Mon Sep 17 00:00:00 2001
+From 05df79912f0a3074ff6a1a40acf00f3ef462fa2e Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 14:16:37 -0400
+Date: Wed, 15 Jul 2026 19:29:05 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-23#s0)
 
 ---
- internal/discovery/generic.go      | 16 ++++++++
- internal/discovery/generic_test.go | 60 ++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
+ internal/discovery/generic.go      | 14 +++++++++
+ internal/discovery/generic_test.go | 49 ++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
  create mode 100644 internal/discovery/generic_test.go
 
 diff --git a/internal/discovery/generic.go b/internal/discovery/generic.go
-index abcb9fa16..c3fab9f13 100644
+index abcb9fa16..cd85466fc 100644
 --- a/internal/discovery/generic.go
 +++ b/internal/discovery/generic.go
-@@ -79,6 +79,22 @@ var scanSkipDirs = map[string]bool{
+@@ -79,6 +79,20 @@ var scanSkipDirs = map[string]bool{
  	".nuxt":       true,
  }
  
-+// KnownLanguages returns the sorted, deduplicated list of all known language IDs
-+// from certifiableExts. This is the canonical registry of languages the
-+// discovery layer can recognize.
++// KnownLanguages returns all unique language identifiers from certifiableExts, sorted.
 +func KnownLanguages() []string {
 +	seen := make(map[string]bool)
 +	for _, lang := range certifiableExts {
@@ -38,67 +36,56 @@ index abcb9fa16..c3fab9f13 100644
  
 diff --git a/internal/discovery/generic_test.go b/internal/discovery/generic_test.go
 new file mode 100644
-index 000000000..928498d95
+index 000000000..3b5432cfd
 --- /dev/null
 +++ b/internal/discovery/generic_test.go
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,49 @@
 +package discovery_test
 +
 +import (
++	"sort"
 +	"testing"
 +
 +	"github.com/iksnae/code-certification/internal/discovery"
 +)
 +
-+func TestKnownLanguages_ReturnsSortedUnique(t *testing.T) {
++func TestKnownLanguages_AllUniqueSorted(t *testing.T) {
 +	langs := discovery.KnownLanguages()
 +
++	// Must be non-empty
 +	if len(langs) == 0 {
-+		t.Fatal("KnownLanguages() returned empty slice")
++		t.Fatal("KnownLanguages() should not be empty")
 +	}
 +
-+	// Verify sorted
++	// Must be sorted
++	if !sort.StringsAreSorted(langs) {
++		t.Errorf("KnownLanguages() should be sorted, got %v", langs)
++	}
++
++	// Must be deduplicated (no adjacent duplicates since sorted)
 +	for i := 1; i < len(langs); i++ {
-+		if langs[i-1] >= langs[i] {
-+			t.Errorf("KnownLanguages() not sorted: %q >= %q at positions %d, %d",
-+				langs[i-1], langs[i], i-1, i)
++		if langs[i] == langs[i-1] {
++			t.Errorf("KnownLanguages() contains duplicate %q", langs[i])
 +		}
 +	}
 +
-+	// Verify unique
-+	seen := make(map[string]bool)
-+	for _, l := range langs {
-+		if seen[l] {
-+			t.Errorf("KnownLanguages() has duplicate: %q", l)
-+		}
-+		seen[l] = true
++	// Verify the exact set of expected languages derived from certifiableExts.
++	// This test will fail CI when a new language extension is added to
++	// certifiableExts without a corresponding tier entry in the registry.
++	expected := []string{
++		"c", "cpp", "cs", "elixir", "erlang", "go", "java", "js",
++		"kt", "lua", "php", "proto", "py", "r", "rb", "rs",
++		"scala", "sh", "sql", "swift", "ts", "zig",
 +	}
 +
-+	// Verify expected languages are present (spot-check a few key ones)
-+	expected := map[string]bool{
-+		"go":      true,
-+		"ts":      true,
-+		"js":      true,
-+		"py":      true,
-+		"java":    true,
-+		"c":       true,
-+		"cpp":     true,
-+		"erlang":  true,
-+		"elixir":  true,
-+		"sql":     true,
-+		"proto":   true,
-+		"zig":     true,
++	if len(langs) != len(expected) {
++		t.Fatalf("KnownLanguages() has %d entries, want %d\ngot:  %v\nwant: %v",
++			len(langs), len(expected), langs, expected)
 +	}
-+	for lang := range expected {
-+		found := false
-+		for _, l := range langs {
-+			if l == lang {
-+				found = true
-+				break
-+			}
-+		}
-+		if !found {
-+			t.Errorf("KnownLanguages() missing expected language: %q", lang)
++
++	for i, lang := range expected {
++		if langs[i] != lang {
++			t.Errorf("KnownLanguages()[%d] = %q, want %q", i, langs[i], lang)
 +		}
 +	}
 +}
