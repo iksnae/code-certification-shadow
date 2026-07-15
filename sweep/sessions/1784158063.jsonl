@@ -492,3 +492,5 @@
 {"at":805851646.57196,"outcome":{"note":{}},"ticketId":"28","id":"28-494","phase":"review","detail":"verify failed"}
 {"phase":"building","ticketId":"26","outcome":{"note":{}},"detail":"⚠️ build failed before producing evidence: worktreeSetupFailed(path: \"\/var\/folders\/04\/38zxr82d4z9c7nw39l4zg73w0000gn\/T\/agencyx-wt-sweep-build-26\")","at":805851648.331527,"id":"26-495"}
 {"outcome":{"parked":{}},"at":805851648.355371,"phase":"fix-review","detail":"parked at fix-review — no build evidence produced this cycle (transient infra miss) — retrying","ticketId":"26","id":"26-496"}
+{"ticketId":"23","outcome":{"running":{}},"phase":"fix-review","id":"23-497","detail":"working fix-review","at":805851648.589151}
+{"outcome":{"blocked":{}},"id":"28-498","detail":"blocked — build did not complete (escalated after repeated incompletes)","ticketId":"28","phase":"review","at":805851651.781368}
