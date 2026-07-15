@@ -1,0 +1,102 @@
+[
+  {
+    "nonGoals" : [
+      "Do NOT implement any new collectors",
+      "Do NOT change scorer.go yet",
+      "Do NOT modify init_cmd.go or report generation"
+    ],
+    "objective" : "Create a language-tier registry mapping every known language ID to an analysis capability tier (None\/Generic\/Lint\/Parse\/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry.",
+    "orderIndex" : 0,
+    "planText" : "Create internal\/engine\/language_tiers.go with a Tier enum (None, Generic, Lint, Parse, Full) and a registry map[languageID]Tier. Audit existing evidence collectors under internal\/ to determine which languages have parser, lint, and test collectors vs. generic-only (git history + line counts). Mark Swift, Shell, and all other generic-only languages as TierGeneric. Mark Go as at least TierParse (has parser, lint via golangci-lint, test collector). Mark TypeScript, Python, Rust similarly based on actual collector presence. Add a helper function `TierForLanguage(lang string) Tier` that returns TierGeneric for unknown languages (fail-safe). Create internal\/engine\/language_tiers_test.go with: (a) TestTierRegistry_AllKnownLanguagesHaveTiers — iterate all known language IDs from discovery and assert each maps to a tier; (b) TestTierRegistry_UnknownLanguageReturnsGeneric — verify the fail-safe; (c) TestTierRegistry_SwiftIsGeneric — explicit regression test that Swift is TierGeneric until a real collector is added. Use `go test .\/... -count=1` as the verify command.",
+    "riskClass" : "medium",
+    "size" : "m",
+    "targetFiles" : [
+      "internal\/engine\/language_tiers.go",
+      "internal\/engine\/language_tiers_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT add a real SwiftLint collector",
+      "Do NOT change any other init template rules",
+      "Do NOT touch scorer.go or report generation"
+    ],
+    "objective" : "Remove the dead SwiftLint rule from the init template in cmd\/certify\/init_cmd.go (line ~711) since no SwiftLint collector exists to evaluate it.",
+    "orderIndex" : 1,
+    "planText" : "Open cmd\/certify\/init_cmd.go around line 711. Locate the SwiftLint rule block in the init template. Remove it entirely, or if guarding is preferred, wrap it in a comment noting: 'This rule activates only when a SwiftLint collector is present. No SwiftLint collector exists yet — see language_tiers.go.' Verify the file compiles: `go build .\/cmd\/certify\/`. Run `go test .\/... -count=1` to ensure no test references the removed rule block.",
+    "riskClass" : "low",
+    "size" : "xs",
+    "targetFiles" : [
+      "cmd\/certify\/init_cmd.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT change how measured dimensions are scored",
+      "Do NOT add new language collectors",
+      "Do NOT modify report card generation",
+      "Do NOT change init_cmd.go"
+    ],
+    "objective" : "Guard Score() and scoreFromMetrics in scorer.go: short-circuit unsupported languages to N\/A, protect the complexity-based maintainability rule from firing on unmeasured zero values, and reconcile 0.5 dimension defaults with the Score() doc contract.",
+    "orderIndex" : 2,
+    "planText" : "Modify internal\/engine\/scorer.go:\n\n1. Import language_tiers package.\n\n2. At the top of Score(), add a pre-scoring gate: look up the unit's language tier via `TierForLanguage(unit.Language)`. If the tier is TierGeneric (no analysis collectors beyond git history + line counts), short-circuit: return a result with Grade=\"N\/A\", an Unsupported=true marker, and no dimension scores. Do NOT call scoreFromMetrics for such units.\n\n3. In scoreFromMetrics, guard the complexity-based maintainability rule: before applying `if complexity <= 5 → score 0.95`, check whether the complexity value is trustworthy. If `complexity == 0` AND the language tier has no parser capability (TierGeneric or TierNone), skip the maintainability dimension entirely — do not default it to 0.95. Either omit the dimension from the record or set it to an explicit sentinel (e.g., -1) that downstream code treats as 'unmeasured'.\n\n4. Reconcile the 0.5 defaults: trace every place where `correctness=0.5` and `testability=0.5` are injected for unmeasured dimensions. Remove the injection so unmeasured dimensions are ABSENT from the output dimension map (not defaulted to 0.5). Update the Score() doc comment if the contract changes — the doc says unmeasured dimensions are omitted; make the code match.\n\n5. Ensure aggregate calculations (if any in scorer.go) skip units marked Unsupported.\n\nRun `go test .\/... -count=1` after changes.",
+    "riskClass" : "high",
+    "size" : "l",
+    "targetFiles" : [
+      "internal\/engine\/scorer.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT change production code in this step — only tests",
+      "Do NOT modify language_tiers.go",
+      "Do NOT touch report generation or init_cmd.go"
+    ],
+    "objective" : "Add comprehensive tests in scorer_test.go: unsupported language → N\/A, unmeasured complexity not scored as excellent, Swift-like generic unit produces no fabricated dimensions, and regression tests for each fix area.",
+    "orderIndex" : 3,
+    "planText" : "Add to internal\/engine\/scorer_test.go:\n\n1. TestScore_UnsupportedLanguage_ReturnsNA — construct a unit whose language is 'Swift' (or any TierGeneric language). Call Score(). Assert Grade == \"N\/A\". Assert Unsupported marker is true. Assert no dimension scores are present (or all are sentinel 'unmeasured').\n\n2. TestScore_UnmeasuredComplexity_NotScored — construct a unit with complexity=0 from a TierGeneric language. Call scoreFromMetrics (or Score). Assert that the maintainability dimension is NOT scored as 0.95 (excellent). It should be absent or marked unmeasured.\n\n3. TestScore_SupportedLanguage_StillWorks — construct a Go unit with real metrics. Call Score(). Assert it produces a real grade (A\/B\/C\/D\/F, not N\/A) and has populated dimension scores. This is a regression guard.\n\n4. TestScore_DefaultsNotInjected — construct a TierGeneric unit. Call Score(). Assert that no dimension has value 0.5 (the old default). All unmeasured dimensions should be absent from the dimension map.\n\n5. TestScore_AggregateSkipsUnsupported — if scorer.go has aggregate logic, test that unsupported units are excluded.\n\nRun `go test .\/... -count=1` and fix any failures.",
+    "riskClass" : "medium",
+    "size" : "m",
+    "targetFiles" : [
+      "internal\/engine\/scorer_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT change scorer.go or language_tiers.go",
+      "Do NOT change init_cmd.go",
+      "Do NOT change the visual design of the report card beyond adding the banner"
+    ],
+    "objective" : "Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations.",
+    "orderIndex" : 4,
+    "planText" : "Modify the report card generator in internal\/report\/report.go (or whichever file generates .certification\/REPORT_CARD.md):\n\n1. After collecting unit results, partition them: supported (Grade != \"N\/A\") vs unsupported (Unsupported==true).\n\n2. Add a banner\/section to the report card output: '⚠️ N units in unsupported languages (Swift, Shell, ...) — not analyzed. Scores for these units are withheld.' List the distinct unsupported language names.\n\n3. Exclude unsupported units from all aggregate grade calculations (overall GPA, distribution counts, averages). Only supported units with real grades contribute to aggregate stats.\n\n4. Ensure the aggregate section clearly states the denominator (e.g., 'Based on X analyzable units; Y units skipped').\n\n5. Update any badge\/summary generation that reads aggregate scores to also exclude unsupported units.\n\nRun `go test .\/... -count=1`. If the report package has tests, ensure they pass.",
+    "riskClass" : "medium",
+    "size" : "m",
+    "targetFiles" : [
+      "internal\/report\/report.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT introduce new features",
+      "Do NOT refactor unrelated code",
+      "Do NOT add the optional Swift analysis tier — that is follow-on work"
+    ],
+    "objective" : "Run the full test suite (go test .\/... -count=1), fix any regressions in existing tests that assumed all languages produce full dimension sets or non-N\/A grades, and ensure the build compiles cleanly.",
+    "orderIndex" : 5,
+    "planText" : "1. Run `go test .\/... -count=1` from the repo root.\n\n2. For each failing test, diagnose: does it assume all languages produce full dimension sets? Does it expect a non-N\/A grade for a now-unsupported language? Does it reference the removed SwiftLint init rule?\n\n3. Fix regressions by:\n   - Updating test fixtures to use supported languages (Go) where a real grade is expected\n   - Adding explicit 'N\/A' expectations for tests that iterate over all languages\n   - Updating any init template tests that referenced the SwiftLint rule\n   - Ensuring report card tests account for the unsupported banner and aggregate exclusion\n\n4. Run `go build -o build\/bin\/certify .\/cmd\/certify\/` to confirm compilation.\n\n5. Re-run `go test .\/... -count=1` until all tests pass.",
+    "riskClass" : "medium",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/engine\/scorer_test.go",
+      "internal\/report\/report_test.go",
+      "internal\/engine\/language_tiers_test.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  }
+]
