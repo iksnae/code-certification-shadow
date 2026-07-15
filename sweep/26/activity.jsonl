@@ -1,0 +1,2 @@
+{"detail":"working queued-build","ticketId":"26","phase":"queued-build","outcome":{"running":{}},"id":"26-252","at":805828602.122415}
+{"ticketId":"26","outcome":{"advanced":{"to":"planning"}},"id":"26-255","at":805828604.606733,"phase":"queued-build","detail":"advanced to planning"}

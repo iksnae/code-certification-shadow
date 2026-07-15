@@ -247,3 +247,7 @@
 {"stat":{"completionTokens":4481,"promptTokens":2923,"latencyMs":119982,"costUSD":0.005718310000000001,"modelId":"deepseek:deepseek-v4-pro"},"phase":"decompose","detail":"deepseek-v4-pro · 7404 tok · 119982ms · $0.0057","id":"21-249","at":805828549.546202,"ticketId":"21","outcome":{"note":{}}}
 {"at":805828557.511964,"phase":"decompose","ticketId":"21","detail":"split #21 into 6 atomic sub-issues (#800)","outcome":{"note":{}},"id":"21-250"}
 {"ticketId":"21","outcome":{"advanced":{"to":"split"}},"id":"21-251","at":805828560.687723,"phase":"planned","detail":"advanced to split"}
+{"outcome":{"running":{}},"at":805828602.122415,"id":"26-252","ticketId":"26","phase":"queued-build","detail":"working queued-build"}
+{"detail":"working queued-build","ticketId":"27","outcome":{"running":{}},"at":805828602.33024,"phase":"queued-build","id":"27-253"}
+{"phase":"queued-build","id":"28-254","ticketId":"28","outcome":{"running":{}},"detail":"working queued-build","at":805828602.612861}
+{"ticketId":"26","outcome":{"advanced":{"to":"planning"}},"id":"26-255","at":805828604.606733,"phase":"queued-build","detail":"advanced to planning"}
