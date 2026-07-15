@@ -1,0 +1,33 @@
+ISSUE issue:iksnae/code-certification#28: Run the full test suite (go test ./... -count=1), fix any regressions in existing tests that assumed all languages produce full dimension sets or non-N/A grades, and ensure the build compiles cleanly.
+
+Run the full test suite (go test ./... -count=1), fix any regressions in existing tests that assumed all languages produce full dimension sets or non-N/A grades, and ensure the build compiles cleanly.
+
+Split from parent issue:iksnae/code-certification#21 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/engine/scorer_test.go
+- internal/report/report_test.go
+- internal/engine/language_tiers_test.go
+
+Non-goals:
+- Do NOT introduce new features
+- Do NOT refactor unrelated code
+- Do NOT add the optional Swift analysis tier — that is follow-on work
+
+Verification command: go test ./... -count=1
+Size: s
+Risk: medium
+
+1. Run `go test ./... -count=1` from the repo root.
+
+2. For each failing test, diagnose: does it assume all languages produce full dimension sets? Does it expect a non-N/A grade for a now-unsupported language? Does it reference the removed SwiftLint init rule?
+
+3. Fix regressions by:
+   - Updating test fixtures to use supported languages (Go) where a real grade is expected
+   - Adding explicit 'N/A' expectations for tests that iterate over all languages
+   - Updating any init template tests that referenced the SwiftLint rule
+   - Ensuring report card tests account for the unsupported banner and aggregate exclusion
+
+4. Run `go build -o build/bin/certify ./cmd/certify/` to confirm compilation.
+
+5. Re-run `go test ./... -count=1` until all tests pass.
