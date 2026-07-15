@@ -1,0 +1,38 @@
+{
+  "apiOrSchemaChanges" : [
+
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.85,
+  "failingTest" : "scorer_test.go (new tests to be added)",
+  "fileMap" : [
+    "internal\/engine\/scorer_test.go — modify — add five new test functions covering unsupported language, unmeasured complexity, regression guard, no defaults injection, and aggregate skip"
+  ],
+  "fixApproach" : "Investigate the existing scorer.go, scorer_test.go, and related types (Unit, Score, Dimension, language tiers) to understand the current scoring model. Then add five focused tests: (1) unsupported language returns N\/A with no dimension scores, (2) zero complexity from TierGeneric is not scored as excellent, (3) supported Go unit still produces real grades as a regression guard, (4) TierGeneric units have no default 0.5 dimensions injected, (5) aggregate logic skips unsupported units. Use the existing test patterns and helper factories from the codebase. Run `go test .\/... -count=1` to verify.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "What are the exact field names and types of the Unit, Score, and Dimension structs?",
+    "Does Score() return a struct with Grade, Unsupported bool, and Dimensions map?",
+    "Is there an aggregate function (e.g., AggregateScores or similar) that needs testing?",
+    "What is the existing test helper pattern used to construct test units?"
+  ],
+  "steps" : [
+    "Read internal\/engine\/scorer.go to understand Score(), scoreFromMetrics(), and any aggregate function signatures, return types, and dimension map keys.",
+    "Read internal\/engine\/scorer_test.go to understand existing test patterns, helper factories, and import conventions.",
+    "Read internal\/engine\/language_tiers.go to confirm TierGeneric language identifiers and the Unsupported marker mechanism.",
+    "Read the Unit, Score, and Dimension type definitions (likely in internal\/engine\/types.go or similar).",
+    "Add TestScore_UnsupportedLanguage_ReturnsNA: construct a Unit with Language='Swift', call Score(), assert Grade=='N\/A', Unsupported==true, and no dimension scores present.",
+    "Add TestScore_UnmeasuredComplexity_NotScored: construct a TierGeneric Unit with Complexity=0, call scoreFromMetrics or Score, assert maintainability dimension is NOT 0.95 (excellent) — it should be absent or unmeasured.",
+    "Add TestScore_SupportedLanguage_StillWorks: construct a Go Unit with realistic metrics (complexity, coverage, etc.), call Score(), assert grade is one of A\/B\/C\/D\/F (not N\/A) and dimension scores are populated.",
+    "Add TestScore_DefaultsNotInjected: construct a TierGeneric Unit, call Score(), assert no dimension has value 0.5 (the old default); all unmeasured dimensions should be absent.",
+    "Add TestScore_AggregateSkipsUnsupported: if an aggregate function exists, call it with a mix including an unsupported unit, assert the unsupported unit is excluded from the result.",
+    "Run `go test .\/internal\/engine\/... -count=1` to validate the new tests compile and pass.",
+    "Run `go test .\/... -count=1` for full project verification."
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Add five comprehensive tests to scorer_test.go covering unsupported-language N\/A, unmeasured-complexity guard, supported-language regression, no-defaults-injection, and aggregate-unsupported-skip.",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
