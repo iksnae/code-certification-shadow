@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Remove dead SwiftLint lint-clean rule from swiftStandardPolicy — no collector populates lint_errors, causing fabricated grades; deletion is clean, build\/test verification steps included."
+}
