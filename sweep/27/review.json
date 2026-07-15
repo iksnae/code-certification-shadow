@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 20 round(s)",
+      "detail" : "the implementor finished in 23 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -51,19 +51,29 @@
       }
     },
     {
-      "detail" : "Plan required 5 concrete changes (partition units, add banner, exclude from aggregates, state denominator, update badges). Diff only adds 3 struct fields and a dead helper function to card.go (not the specified report.go) — none of the 5 tasks are wired into actual report output.",
+      "detail" : "Diff only adds Card struct fields and a partitionByLanguage helper; the banner output, aggregate exclusions, denominator display, and badge updates required by the plan are not visibly implemented. The FormatCardMarkdown body shows zero changes in the diff hunk.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
         "score" : {
-          "_0" : 0.1
+          "_0" : 0.2
         }
       }
     },
     {
-      "detail" : "Change is 19 lines in one file with no unrelated churn, but the plan explicitly targeted internal\/report\/report.go, and the diff landed in internal\/report\/card.go instead.",
+      "detail" : "Only 1 file changed (card.go vs plan's report.go) but plan allowed 'whichever file'; additions are focused on the task domain with no unrelated churn.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
+      "result" : {
+        "score" : {
+          "_0" : 0.8
+        }
+      }
+    },
+    {
+      "detail" : "No test modifications visible in the diff, but the implementation is so incomplete that a green test suite strongly suggests the new code paths are untested or unreachable.",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
       "result" : {
         "score" : {
           "_0" : 0.5
@@ -71,22 +81,12 @@
       }
     },
     {
-      "detail" : "No tests were modified or weakened, but the diff does not actually fix the real defect — it adds unused struct fields and a dead partitionByLanguage function that is never called, so the failing behavior is not addressed.",
-      "id" : "no-fake-or-test-gaming",
-      "label" : "No test-gaming \/ faking",
-      "result" : {
-        "score" : {
-          "_0" : 0.3
-        }
-      }
-    },
-    {
-      "detail" : "New struct fields are backward-compatible and the unused function poses no regression risk, but advancing a build that leaves the plan almost entirely unimplemented is a correctness risk in itself.",
+      "detail" : "Dead code risk: new struct fields and partitionByLanguage are never called; detection uses analysis.ForLanguage() instead of plan-specified Unsupported==true, diverging from the intended mechanism; incomplete implementation would mislead an operator reviewing the PR.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
         "score" : {
-          "_0" : 0.4
+          "_0" : 0.1
         }
       }
     },
@@ -105,7 +105,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "s\t8.546s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t5.264s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t6.010s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t4.202s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t6.183s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t6.391s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t4.472s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t6.994s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t5.516s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t7.185s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.779s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t7.337s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t7.754s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t10.399s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t7.671s\n"
+        "outputExcerpt" : "is\t6.060s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.553s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.983s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t1.437s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.477s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.808s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t3.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t2.663s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t3.108s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t2.086s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.378s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t2.472s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.485s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.351s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.513s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.397s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -121,23 +121,23 @@
   "dimensions" : [
     {
       "dimension" : "implements-the-approved-plan",
-      "evidence" : "Plan required 5 concrete changes (partition units, add banner, exclude from aggregates, state denominator, update badges). Diff only adds 3 struct fields and a dead helper function to card.go (not the specified report.go) — none of the 5 tasks are wired into actual report output.",
-      "score" : 0.1
+      "evidence" : "Diff only adds Card struct fields and a partitionByLanguage helper; the banner output, aggregate exclusions, denominator display, and badge updates required by the plan are not visibly implemented. The FormatCardMarkdown body shows zero changes in the diff hunk.",
+      "score" : 0.2
     },
     {
       "dimension" : "minimal-and-scoped",
-      "evidence" : "Change is 19 lines in one file with no unrelated churn, but the plan explicitly targeted internal\/report\/report.go, and the diff landed in internal\/report\/card.go instead.",
-      "score" : 0.5
+      "evidence" : "Only 1 file changed (card.go vs plan's report.go) but plan allowed 'whichever file'; additions are focused on the task domain with no unrelated churn.",
+      "score" : 0.8
     },
     {
       "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "No tests were modified or weakened, but the diff does not actually fix the real defect — it adds unused struct fields and a dead partitionByLanguage function that is never called, so the failing behavior is not addressed.",
-      "score" : 0.3
+      "evidence" : "No test modifications visible in the diff, but the implementation is so incomplete that a green test suite strongly suggests the new code paths are untested or unreachable.",
+      "score" : 0.5
     },
     {
       "dimension" : "safe-to-advance",
-      "evidence" : "New struct fields are backward-compatible and the unused function poses no regression risk, but advancing a build that leaves the plan almost entirely unimplemented is a correctness risk in itself.",
-      "score" : 0.4
+      "evidence" : "Dead code risk: new struct fields and partitionByLanguage are never called; detection uses analysis.ForLanguage() instead of plan-specified Unsupported==true, diverging from the intended mechanism; incomplete implementation would mislead an operator reviewing the PR.",
+      "score" : 0.1
     }
   ],
   "evidenceReceiptIds" : [
@@ -146,10 +146,11 @@
     "rcpt-build-commit-sweep-build-27#s0"
   ],
   "failureReasons" : [
-    "Plan specified 5 concrete changes: partition units, render unsupported-units banner, exclude unsupported from aggregates, state the denominator, and update badges. The diff only adds 3 struct fields (UnsupportedCount, UnsupportedLanguages, AnalyzableUnits) and a dead partitionByLanguage helper — none of these are called or rendered into the report card output.",
-    "Target file mismatch: plan said internal\/report\/report.go; change landed in internal\/report\/card.go.",
-    "The partitionByLanguage function splits on analysis.ForLanguage() != nil, but the plan specified Grade != \"N\/A\" and Unsupported==true as criteria.",
-    "aggregate score 0.325 below threshold 0.600"
+    "The diff does not implement the banner output, aggregate exclusion logic, denominator display, or badge updates required by the plan — only struct fields and an uncalled helper function were added.",
+    "The partitionByLanguage function uses analysis.ForLanguage() instead of the plan-specified Unsupported==true field, diverging from the approved approach.",
+    "The FormatCardMarkdown function body shows no changes in the diff, meaning the report card output was not modified at all.",
+    "23 implementation rounds produced an incomplete change that would not satisfy the plan requirements.",
+    "aggregate score 0.400 below threshold 0.600"
   ],
   "filesReviewed" : [
     "internal\/report\/card.go"
