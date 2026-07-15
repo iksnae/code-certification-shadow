@@ -380,3 +380,4 @@
 {"detail":"working planning","phase":"planning","outcome":{"running":{}},"at":805851411.863308,"id":"32-382","ticketId":"32"}
 {"phase":"planning","outcome":{"advanced":{"to":"architect"}},"detail":"advanced to architect","ticketId":"32","at":805851413.98193,"id":"32-383"}
 {"detail":"working planning","phase":"planning","id":"31-384","ticketId":"31","outcome":{"running":{}},"at":805851413.998754}
+{"id":"31-385","ticketId":"31","detail":"advanced to architect","phase":"planning","outcome":{"advanced":{"to":"architect"}},"at":805851416.546907}
