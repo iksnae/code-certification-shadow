@@ -111,3 +111,6 @@ Id":"28","outcome":{"note":{}}}
 {"outcome":{"advanced":{"to":"planning"}},"id":"28-883","ticketId":"28","phase":"product","detail":"advanced to planning","at":805829691.650035}
 {"id":"28-891","outcome":{"running":{}},"detail":"working planning","ticketId":"28","at":805829750.66585,"phase":"planning"}
 {"phase":"planning","outcome":{"advanced":{"to":"architect"}},"detail":"advanced to architect","ticketId":"28","at":805829753.562951,"id":"28-896"}
+{"at":805829795.095033,"outcome":{"running":{}},"id":"28-903","phase":"architect","ticketId":"28","detail":"working architect"}
+{"stat":{"completionTokens":825,"latencyMs":13096,"promptTokens":1046,"modelId":"deepseek:deepseek-v4-pro","costUSD":0.0011899200000000001},"ticketId":"28","outcome":{"note":{}},"id":"28-907","detail":"deepseek-v4-pro · 1871 tok · 13096ms · $0.0012","at":805829808.198972,"phase":"architect"}
+{"at":805829810.938145,"outcome":{"advanced":{"to":"planning"}},"phase":"architect","ticketId":"28","id":"28-910","detail":"advanced to planning"}
