@@ -1,0 +1,51 @@
+{
+  "apiOrSchemaChanges" : [
+    "Possible new Grade constant: GradeNA = \"N\/A\" in internal\/domain\/dimension.go",
+    "Possible new field on certification record or report struct to flag unsupported-language units"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.82,
+  "failingTest" : "TestLanguagePolicy_AllSupported",
+  "fileMap" : [
+    "cmd\/certify\/init_cmd.go — modify — remove swiftStandardPolicy constant and its case in languagePolicy()",
+    "cmd\/certify\/cli_test.go — modify — remove \"swift\" from TestLanguagePolicy_AllSupported iteration",
+    "internal\/config\/policy_test.go — modify — update pack count 7→6, drop swift-standard from expected names",
+    "testdata\/policies\/swift-standard.yml — delete — Swift is now unsupported; no policy pack needed",
+    "internal\/engine\/language_tiers_test.go — create — verify ForLanguage returns nil for swift, non-nil for go\/ts\/js\/py\/rs",
+    "internal\/report\/card_test.go — modify — add N\/A-grade and unsupported-banner expectations",
+    "internal\/report\/full_test.go — modify — add test verifying unsupported languages excluded from aggregates",
+    "internal\/report\/card.go — modify — add unsupported banner logic if not already present",
+    "internal\/report\/full.go — modify — exclude unsupported-language records from aggregate scoring",
+    "internal\/engine\/certifier.go — modify — ensure unsupported-language units emit N\/A grade, not F"
+  ],
+  "fixApproach" : "The language-tier split from the parent issue (#21) removes Swift from supported languages (it has no structural analyzer). This fix: (1) strips Swift-specific production code — the swiftStandardPolicy constant and its case in languagePolicy(), plus the testdata YAML file; (2) updates existing tests that still iterate over Swift as a supported language or count swift-standard as a policy pack; (3) adds a new language_tiers_test.go to lock in the analyzer-registry contract; (4) adds N\/A-grade and unsupported-banner expectations to report tests so unsupported-language units are explicitly tested rather than accidentally passing with misleading F grades. Production changes in certifier.go and the report layer ensure unsupported-language records receive N\/A (not score-0→F) and are excluded from aggregate scoring. No new features or Swift analysis tier are introduced.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "Should testdata\/policies\/swift-standard.yml be deleted outright, or kept but excluded by the policy loader? Preferred: delete.",
+    "How should N\/A grade be represented in the domain model — a new Grade constant (e.g. GradeNA) in internal\/domain\/dimension.go, or a string sentinel in the report layer only?",
+    "What is the exact format of the unsupported banner in report cards — is it already designed\/specified somewhere, or does it need to be designed as part of this work?",
+    "Does the policy pack loader (internal\/config) need to filter packs by supported-language list, or is removing the YAML file sufficient?"
+  ],
+  "steps" : [
+    "Remove swiftStandardPolicy constant and `case \"swift\"` from languagePolicy() in cmd\/certify\/init_cmd.go",
+    "Delete testdata\/policies\/swift-standard.yml",
+    "Update cmd\/certify\/cli_test.go: remove \"swift\" from TestLanguagePolicy_AllSupported slice",
+    "Update internal\/config\/policy_test.go: change pack count 7→6, remove \"swift-standard\" from expected-name list",
+    "Ensure internal\/engine\/certifier.go marks units in unsupported languages with N\/A grade (not score-0→F)",
+    "Ensure internal\/report\/card.go renders an unsupported banner when unsupported-language units are present",
+    "Ensure internal\/report\/full.go excludes unsupported-language records from aggregate score calculations (buildLanguageDetail)",
+    "Create internal\/engine\/language_tiers_test.go: test ForLanguage returns nil for swift, non-nil for go\/ts\/js\/py\/rs, and certifier yields N\/A for swift units",
+    "Add N\/A-grade and unsupported-banner test cases to internal\/report\/card_test.go",
+    "Add unsupported-exclusion test cases to internal\/report\/full_test.go",
+    "Run go build -o build\/bin\/certify .\/cmd\/certify\/ to confirm compilation",
+    "Run go test .\/... -count=1 and iterate until all tests pass"
+  ],
+  "stopsForOperatorApproval" : true,
+  "summary" : "Fix test regressions from language-tier split: remove Swift from supported-languages lists, update policy-pack counts, create language_tiers_test.go, and add N\/A-grade expectations to report tests.",
+  "uiStateNotes" : [
+    "Report card text gains an \"unsupported\" banner section when unsupported-language units are present",
+    "Language detail rows show Grade: N\/A for unsupported languages instead of a misleading letter grade",
+    "Aggregate score excludes unsupported languages so overall grade is not pulled down by N\/A units"
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
