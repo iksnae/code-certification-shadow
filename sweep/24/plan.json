@@ -1,0 +1,30 @@
+{
+  "apiOrSchemaChanges" : [
+
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.98,
+  "failingTest" : "N\/A — behavioral issue: fabricated identical scores across 213 Swift units because `lint_errors` metric is never collected (parent issue #21)",
+  "fileMap" : [
+    "cmd\/certify\/init_cmd.go — modify — remove dead lint-clean rule block (lines 709-716) from swiftStandardPolicy constant; no collector exists to supply the lint_errors metric"
+  ],
+  "fixApproach" : "Delete the 8-line `lint-clean` rule block (lines 709–716 + trailing blank) from the `swiftStandardPolicy` constant. This rule references `metric: lint_errors` but no SwiftLint collector exists anywhere in the codebase, so the metric is never populated — causing every Swift unit to trigger \"missing evidence\" violations and receive identical fabricated grades. Removal is preferred over comment-wrapping because the suggested comment references `language_tiers.go` which does not exist. The remaining `swiftStandardPolicy` will have 3 live rules: `test-pass`, `no-todos`, and `max-complexity`. No test directly inspects Swift policy content, so no test changes are needed.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+
+  ],
+  "steps" : [
+    "Open cmd\/certify\/init_cmd.go and locate the swiftStandardPolicy constant (around line 704)",
+    "Delete the 8-line lint-clean rule block (7 YAML lines + 1 trailing blank line) from within the rules: section",
+    "Verify the resulting swiftStandardPolicy has 3 rules: test-pass, no-todos, max-complexity",
+    "Run go build -o build\/bin\/certify .\/cmd\/certify\/ to confirm clean compilation",
+    "Run go test .\/... -count=1 to confirm no tests break",
+    "Run a full-text search for 'SwiftLint' across .go files to confirm zero remaining references"
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Remove the dead SwiftLint `lint-clean` rule (8 lines) from the `swiftStandardPolicy` constant in `cmd\/certify\/init_cmd.go` — no collector exists to evaluate it, causing fabricated grades for Swift repositories.",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
