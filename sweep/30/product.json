@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Add GradeNA constant and Unsupported field to domain types to support the N\/A short-circuit path",
+  "userValue" : "Additive domain-type changes only: GradeNA constant and Unsupported bool field are zero-risk, respect all non-goals, and directly enable the N\/A short-circuit path."
+}
