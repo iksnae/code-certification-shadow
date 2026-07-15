@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 26 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 44 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "2 file(s) changed: internal\/discovery\/generic.go, internal\/discovery\/generic_test.go",
+      "detail" : "4 file(s) changed: internal\/discovery\/generic.go, internal\/discovery\/scanner_test.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,77 +31,114 @@
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Core requirements all met: Tier enum, registry, TierForLanguage, and all 3 required tests (dynamic KnownLanguages loop, unknown→Generic, Swift→Generic). Discovery changes (KnownLanguages()) were not listed as target files but directly enable the plan's mandate to 'iterate all known language IDs from discovery' — reasonable supporting work.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.9
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Plan listed 2 target files; build touched 4. Extra discovery changes are small (48 lines, one utility + one test), directly serve the plan's objective, and contain zero unrelated churn.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.9
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Test iterates discovery.KnownLanguages() dynamically — any new language without a tier entry will fail CI. No hardcoded expected values to force green. Swift explicitly checked as TierGeneric. Unknown-language fail-safe verified. No test weakening or deletion.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "All changes additive only. KnownLanguages() is read-only. Tier registry has no side effects. Tests are guardrails, not risks. No correctness, security, or regression concerns.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.9
         }
       }
     }
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "is\t5.117s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.947s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.601s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t1.805s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.548s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.458s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t2.794s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.310s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t2.489s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t3.328s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t2.945s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t3.124s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.505s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.383s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.366s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.140s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
-  "confidence" : 0,
+  "committed" : true,
+  "confidence" : 0.9,
   "correlationId" : "sweep-build-23",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Core requirements all met: Tier enum, registry, TierForLanguage, and all 3 required tests (dynamic KnownLanguages loop, unknown→Generic, Swift→Generic). Discovery changes (KnownLanguages()) were not listed as target files but directly enable the plan's mandate to 'iterate all known language IDs from discovery' — reasonable supporting work.",
+      "score" : 0.9
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Plan listed 2 target files; build touched 4. Extra discovery changes are small (48 lines, one utility + one test), directly serve the plan's objective, and contain zero unrelated churn.",
+      "score" : 0.9
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "Test iterates discovery.KnownLanguages() dynamically — any new language without a tier entry will fail CI. No hardcoded expected values to force green. Swift explicitly checked as TierGeneric. Unknown-language fail-safe verified. No test weakening or deletion.",
+      "score" : 1
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "All changes additive only. KnownLanguages() is read-only. Tier registry has no side effects. Tests are guardrails, not risks. No correctness, security, or regression concerns.",
+      "score" : 1
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-23#s0",
@@ -109,16 +146,21 @@
     "rcpt-build-commit-sweep-build-23#s0",
     "rcpt-build-implement-sweep-build-23#s1",
     "rcpt-build-verify-sweep-build-23#s1",
-    "rcpt-build-commit-sweep-build-23#s1"
+    "rcpt-build-commit-sweep-build-23#s1",
+    "rcpt-build-implement-sweep-build-23#s2",
+    "rcpt-build-verify-sweep-build-23#s2",
+    "rcpt-build-commit-sweep-build-23#s2"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 26 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+
   ],
   "filesReviewed" : [
     "internal\/discovery\/generic.go",
-    "internal\/discovery\/generic_test.go"
+    "internal\/discovery\/scanner_test.go",
+    "internal\/engine\/language_tiers.go",
+    "internal\/engine\/language_tiers_test.go"
   ],
-  "outcome" : "blocked",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "pass",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
