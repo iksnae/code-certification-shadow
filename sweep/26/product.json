@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Add comprehensive tests in scorer_test.go: unsupported language → N\/A, unmeasured complexity not scored as excellent, Swift-like generic unit produces no fabricated dimensions, and regression tests for each fix area.",
+  "userValue" : "Five focused tests directly fulfill the four stated requirements (unsupported→N\/A, unmeasured complexity guard, no fabricated dimensions, regressions) while respecting all non-goals."
+}
