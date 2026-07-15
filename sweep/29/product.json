@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking",
+  "userValue" : "Plan directly fulfills the request: new package with Tier enum and TierForLanguage backed by analysis.ForLanguage, plus table-driven tests — all non-goals respected."
+}
