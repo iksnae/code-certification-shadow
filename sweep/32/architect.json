@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Backward-compatible field addition with correct guard+denominator adjustments in all four report consumers; test coverage ensures unsupported records contribute nothing to aggregates."
+}
