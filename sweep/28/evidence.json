@@ -1,16 +1,23 @@
 {
+  "commitRef" : "dbb706ba1157b69526cbdf588602d573dea7ce71",
   "committed" : false,
   "correlationId" : "sweep-build-28",
   "filesChanged" : [
-    "cmd\/certify\/init_cmd.go",
+    "internal\/domain\/dimension.go",
+    "internal\/domain\/dimension_test.go",
+    "internal\/domain\/record.go",
+    "internal\/domain\/record_test.go",
     "testdata\/policies\/swift-standard.yml"
   ],
   "implementCompleted" : false,
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-28#s0",
     "rcpt-build-verify-sweep-build-28#s0",
-    "rcpt-build-commit-sweep-build-28#s0"
+    "rcpt-build-commit-sweep-build-28#s0",
+    "rcpt-build-implement-sweep-build-28#s1",
+    "rcpt-build-verify-sweep-build-28#s1",
+    "rcpt-build-commit-sweep-build-28#s1"
   ],
-  "rounds" : 14,
+  "rounds" : 43,
   "verifyPassed" : false
 }
