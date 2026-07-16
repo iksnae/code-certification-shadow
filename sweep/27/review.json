@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 31 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 86 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "2 file(s) changed: internal\/report\/card.go, internal\/report\/card_internal_test.go",
+      "detail" : "10 file(s) changed: internal\/report\/badge_test.go, internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/full.go, internal\/report\/health.go, internal\/report\/partition_test.go, testdata\/unsupported\/, testdata\/unsupported\/hello.swift",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,77 +31,114 @@
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "All 5 plan requirements met: partitionByLanguage splits by analyzer registration (card.go:307-318), banner added to both FormatCardText (card.go:198-207) and FormatCardMarkdown (card.go:266-276), aggregates use supported-only in GenerateCard\/Health\/Detailed\/Full, denominator surfaced via AnalyzableUnits and banner text, badge tests confirm supported-only totals. Minor: uses analyzer-check instead of Unsupported==true flag, and banner wording differs from plan's exact example.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.85
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Plan listed target file as report.go but diff touches 10 files (card.go, detailed.go, full.go, health.go, plus 5 test files, plus testdata fixture). All changes are thematically required for the 5 plan objectives and there is no unrelated churn, but the spread exceeds the single-file expectation.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.8
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Tests exercise real scenarios (mixed\/all-supported\/all-unsupported) with concrete score assertions (e.g., OverallScore = (0.95+0.85+0.20)\/3, TotalUnits=3 for supported-only). No test deletion, no weakened assertions, no hard-coded expected values. New tests in card_test.go, badge_test.go, detailed_test.go, partition_test.go all validate genuine behavior.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "All-unsupported edge case returns N\/A gracefully (card.go:79-83). Health handles empty supported slice (health.go:29). FullReport tags unsupported units as N\/A with (unsupported) suffix rather than silently dropping them. Partition criterion uses analyzer registration which is the upstream source-of-truth, though differs from plan's 'Unsupported==true' description. No security or regression concerns; tests pass.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.9
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.85
         }
       }
     }
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "is\t4.974s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t1.577s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.085s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t3.279s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.309s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t2.987s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.916s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.929s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t2.547s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t3.507s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t1.748s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t2.380s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.624s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.517s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.058s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.290s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
-  "confidence" : 0,
+  "committed" : true,
+  "confidence" : 0.85,
   "correlationId" : "sweep-build-27",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "All 5 plan requirements met: partitionByLanguage splits by analyzer registration (card.go:307-318), banner added to both FormatCardText (card.go:198-207) and FormatCardMarkdown (card.go:266-276), aggregates use supported-only in GenerateCard\/Health\/Detailed\/Full, denominator surfaced via AnalyzableUnits and banner text, badge tests confirm supported-only totals. Minor: uses analyzer-check instead of Unsupported==true flag, and banner wording differs from plan's exact example.",
+      "score" : 0.85
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Plan listed target file as report.go but diff touches 10 files (card.go, detailed.go, full.go, health.go, plus 5 test files, plus testdata fixture). All changes are thematically required for the 5 plan objectives and there is no unrelated churn, but the spread exceeds the single-file expectation.",
+      "score" : 0.8
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "Tests exercise real scenarios (mixed\/all-supported\/all-unsupported) with concrete score assertions (e.g., OverallScore = (0.95+0.85+0.20)\/3, TotalUnits=3 for supported-only). No test deletion, no weakened assertions, no hard-coded expected values. New tests in card_test.go, badge_test.go, detailed_test.go, partition_test.go all validate genuine behavior.",
+      "score" : 1
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "All-unsupported edge case returns N\/A gracefully (card.go:79-83). Health handles empty supported slice (health.go:29). FullReport tags unsupported units as N\/A with (unsupported) suffix rather than silently dropping them. Partition criterion uses analyzer registration which is the upstream source-of-truth, though differs from plan's 'Unsupported==true' description. No security or regression concerns; tests pass.",
+      "score" : 0.9
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-27#s0",
@@ -109,16 +146,36 @@
     "rcpt-build-commit-sweep-build-27#s0",
     "rcpt-build-implement-sweep-build-27#s1",
     "rcpt-build-verify-sweep-build-27#s1",
-    "rcpt-build-commit-sweep-build-27#s1"
+    "rcpt-build-commit-sweep-build-27#s1",
+    "rcpt-build-implement-sweep-build-27#s2",
+    "rcpt-build-verify-sweep-build-27#s2",
+    "rcpt-build-commit-sweep-build-27#s2",
+    "rcpt-build-implement-sweep-build-27#s3",
+    "rcpt-build-verify-sweep-build-27#s3",
+    "rcpt-build-commit-sweep-build-27#s3",
+    "rcpt-build-implement-sweep-build-27#s4",
+    "rcpt-build-verify-sweep-build-27#s4",
+    "rcpt-build-commit-sweep-build-27#s4",
+    "rcpt-build-implement-sweep-build-27#s5",
+    "rcpt-build-verify-sweep-build-27#s5",
+    "rcpt-build-commit-sweep-build-27#s5"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 31 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+
   ],
   "filesReviewed" : [
+    "internal\/report\/badge_test.go",
     "internal\/report\/card.go",
-    "internal\/report\/card_internal_test.go"
+    "internal\/report\/card_test.go",
+    "internal\/report\/detailed.go",
+    "internal\/report\/detailed_test.go",
+    "internal\/report\/full.go",
+    "internal\/report\/health.go",
+    "internal\/report\/partition_test.go",
+    "testdata\/unsupported\/",
+    "testdata\/unsupported\/hello.swift"
   ],
-  "outcome" : "blocked",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "pass",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
