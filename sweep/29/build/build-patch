@@ -1,41 +1,39 @@
-From aa2d8187d6866a3ac3efdc5416b528c3d6a14408 Mon Sep 17 00:00:00 2001
+From bd87941c5fd5c3c3a4b10c6dae2a49c1336b49a6 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Thu, 16 Jul 2026 14:49:26 -0400
+Date: Thu, 16 Jul 2026 15:20:36 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-29#s0)
 
 ---
- internal/language_tiers/language_tiers.go     | 26 +++++++++++++++
+ internal/language_tiers/language_tiers.go     | 24 ++++++++++++++
  .../language_tiers/language_tiers_test.go     | 33 +++++++++++++++++++
- 2 files changed, 59 insertions(+)
+ 2 files changed, 57 insertions(+)
  create mode 100644 internal/language_tiers/language_tiers.go
  create mode 100644 internal/language_tiers/language_tiers_test.go
 
 diff --git a/internal/language_tiers/language_tiers.go b/internal/language_tiers/language_tiers.go
 new file mode 100644
-index 000000000..1797b4d63
+index 000000000..70998a47d
 --- /dev/null
 +++ b/internal/language_tiers/language_tiers.go
-@@ -0,0 +1,26 @@
+@@ -0,0 +1,24 @@
 +package language_tiers
 +
 +import "github.com/iksnae/code-certification/internal/analysis"
 +
-+// Tier represents the level of language support in the certification system.
++// Tier represents the capability tier for a programming language.
 +type Tier int
 +
 +const (
-+	// TierGeneric covers languages not explicitly registered in the analysis
-+	// package. These languages receive basic, generic certification support.
++	// TierGeneric is the base tier for languages without specialized analysis support.
 +	TierGeneric Tier = iota
-+
-+	// TierFull covers languages that are explicitly registered with a dedicated
-+	// analyzer (go, ts, py, rs, js). These languages receive full certification.
++	// TierFull is the tier for languages with full parser-based analysis.
 +	TierFull
 +)
 +
-+// TierForLanguage returns the certification tier for the given language
-+// identifier. Languages registered in the analysis package return TierFull;
-+// all others return TierGeneric.
++// TierForLanguage returns the capability tier for the given language.
++//
++// If analysis.ForLanguage returns a non-nil analyzer, the language is TierFull.
++// Otherwise, the language is TierGeneric.
 +func TierForLanguage(lang string) Tier {
 +	if analysis.ForLanguage(lang) != nil {
 +		return TierFull
@@ -44,7 +42,7 @@ index 000000000..1797b4d63
 +}
 diff --git a/internal/language_tiers/language_tiers_test.go b/internal/language_tiers/language_tiers_test.go
 new file mode 100644
-index 000000000..208968f67
+index 000000000..a690bd691
 --- /dev/null
 +++ b/internal/language_tiers/language_tiers_test.go
 @@ -0,0 +1,33 @@
@@ -59,17 +57,17 @@ index 000000000..208968f67
 +		want Tier
 +	}{
 +		// Registered languages → TierFull
-+		{name: "go", lang: "go", want: TierFull},
-+		{name: "typescript", lang: "ts", want: TierFull},
-+		{name: "python", lang: "py", want: TierFull},
-+		{name: "rust", lang: "rs", want: TierFull},
-+		{name: "javascript", lang: "js", want: TierFull},
++		{name: "Go", lang: "go", want: TierFull},
++		{name: "TypeScript", lang: "ts", want: TierFull},
++		{name: "Python", lang: "py", want: TierFull},
++		{name: "Rust", lang: "rs", want: TierFull},
++		{name: "JavaScript", lang: "js", want: TierFull},
 +
 +		// Unregistered languages → TierGeneric
-+		{name: "ruby", lang: "ruby", want: TierGeneric},
-+		{name: "swift", lang: "swift", want: TierGeneric},
-+		{name: "c", lang: "c", want: TierGeneric},
-+		{name: "empty string", lang: "", want: TierGeneric},
++		{name: "Ruby", lang: "ruby", want: TierGeneric},
++		{name: "Swift", lang: "swift", want: TierGeneric},
++		{name: "C", lang: "c", want: TierGeneric},
++		{name: "Empty", lang: "", want: TierGeneric},
 +	}
 +
 +	for _, tt := range tests {
