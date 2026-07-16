@@ -1,0 +1,20 @@
+ISSUE issue:iksnae/code-certification#29: Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking
+
+Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking
+
+Split from parent issue:iksnae/code-certification#25 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/language_tiers/language_tiers.go
+- internal/language_tiers/language_tiers_test.go
+
+Non-goals:
+- Do not modify scorer.go, pipeline.go, or any report files
+- Do not add the Unsupported field to CertificationRecord
+- Do not change Score() signature
+
+Verification command: go test ./... -count=1
+Size: s
+Risk: low
+
+Create internal/language_tiers/language_tiers.go: define a Tier type (TierGeneric, TierFull), implement TierForLanguage(lang string) Tier using analysis.ForLanguage() to check parser availability — languages with a registered analyzer (go, ts, py, rs) are TierFull, everything else is TierGeneric. Create internal/language_tiers/language_tiers_test.go with table-driven tests covering each supported language returning TierFull and unsupported languages returning TierGeneric.
