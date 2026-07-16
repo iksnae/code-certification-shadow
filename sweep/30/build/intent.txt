@@ -1,0 +1,20 @@
+ISSUE issue:iksnae/code-certification#30: Add GradeNA constant and Unsupported field to domain types to support the N/A short-circuit path
+
+Add GradeNA constant and Unsupported field to domain types to support the N/A short-circuit path
+
+Split from parent issue:iksnae/code-certification#25 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/domain/dimension.go
+- internal/domain/record.go
+
+Non-goals:
+- Do not modify scorer.go, pipeline.go, or any report files
+- Do not change GradeFromScore logic
+- Do not alter any existing grade constants
+
+Verification command: go test ./... -count=1
+Size: xs
+Risk: low
+
+In internal/domain/dimension.go, add GradeNA Grade = "N/A" constant alongside existing grade constants. In internal/domain/record.go, add Unsupported bool field to CertificationRecord struct. Both changes are purely additive — zero-value bool defaults to false preserving existing behaviour.
