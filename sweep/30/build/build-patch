@@ -1,22 +1,22 @@
-From 4d4da124af63faefbc6e90c5264dac56bc88ea8b Mon Sep 17 00:00:00 2001
+From 3b7bf65aecce95af6c32bb0fb5a1cd20d0e04544 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Thu, 16 Jul 2026 15:20:28 -0400
+Date: Thu, 16 Jul 2026 15:42:02 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-30#s0)
 
 ---
- internal/domain/dimension.go      | 3 +++
- internal/domain/dimension_test.go | 1 +
- 2 files changed, 4 insertions(+)
+ internal/domain/dimension.go      |  3 +++
+ internal/domain/dimension_test.go | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
 
 diff --git a/internal/domain/dimension.go b/internal/domain/dimension.go
-index 6bf97beec..3e0a42c1c 100644
+index 6bf97beec..17e0068ef 100644
 --- a/internal/domain/dimension.go
 +++ b/internal/domain/dimension.go
 @@ -113,6 +113,8 @@ const (
  	GradeF                   // < 0.60
  )
  
-+const GradeNA Grade = -1 // N/A — not applicable / short-circuit
++const GradeNA Grade = -1
 +
  var gradeStrings = map[Grade]string{
  	GradeA:      "A",
@@ -30,65 +30,74 @@ index 6bf97beec..3e0a42c1c 100644
  
  // String returns the letter grade string.
 diff --git a/internal/domain/dimension_test.go b/internal/domain/dimension_test.go
-index dca0de968..41b8906e0 100644
+index dca0de968..56ce63126 100644
 --- a/internal/domain/dimension_test.go
 +++ b/internal/domain/dimension_test.go
-@@ -128,6 +128,7 @@ func TestGrade_String(t *testing.T) {
- 		{domain.GradeC, "C"},
- 		{domain.GradeD, "D"},
- 		{domain.GradeF, "F"},
-+		{domain.GradeNA, "N/A"},
+@@ -116,6 +116,18 @@ func TestDimensionScores_Grade(t *testing.T) {
  	}
- 	for _, tt := range tests {
- 		if got := tt.g.String(); got != tt.want {
+ }
+ 
++func TestGradeNA_Value(t *testing.T) {
++	if int(domain.GradeNA) != -1 {
++		t.Errorf("GradeNA = %d, want -1", int(domain.GradeNA))
++	}
++}
++
++func TestGradeNA_String(t *testing.T) {
++	if got := domain.GradeNA.String(); got != "N/A" {
++		t.Errorf("GradeNA.String() = %q, want %q", got, "N/A")
++	}
++}
++
+ func TestGrade_String(t *testing.T) {
+ 	tests := []struct {
+ 		g    domain.Grade
 -- 
 2.54.0 (Apple Git-156)
 
-From 373a6e01c2858e20020c5846729c36c0647f0fb1 Mon Sep 17 00:00:00 2001
+From 963889ffba5671b4639de0700aebd1bb65f7441e Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Thu, 16 Jul 2026 15:21:25 -0400
+Date: Thu, 16 Jul 2026 15:43:09 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-30#s1)
 
 ---
- internal/domain/record.go      |  2 ++
- internal/domain/record_test.go | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+)
+ internal/domain/record.go      |  1 +
+ internal/domain/record_test.go | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
 diff --git a/internal/domain/record.go b/internal/domain/record.go
-index 48968a280..da96ff9c0 100644
+index 48968a280..7be67e045 100644
 --- a/internal/domain/record.go
 +++ b/internal/domain/record.go
-@@ -91,6 +91,8 @@ type CertificationRecord struct {
+@@ -91,6 +91,7 @@ type CertificationRecord struct {
  	Source  string `json:"source"` // "deterministic", "agent", "combined"
  	RunID   string `json:"run_id,omitempty"`
  	Version int    `json:"version"` // record schema version
-+
-+	Unsupported bool `json:"unsupported,omitempty"`
++	Unsupported bool `json:"unsupported,omitempty"` // N/A short-circuit flag
  }
  
  // CertificationRun captures metadata about a single certification invocation.
 diff --git a/internal/domain/record_test.go b/internal/domain/record_test.go
-index c28f51895..6e5005d00 100644
+index c28f51895..81d548631 100644
 --- a/internal/domain/record_test.go
 +++ b/internal/domain/record_test.go
-@@ -105,6 +105,23 @@ func TestGenerateRunID(t *testing.T) {
+@@ -105,6 +105,22 @@ func TestGenerateRunID(t *testing.T) {
  	}
  }
  
-+func TestCertificationRecord_UnsupportedField(t *testing.T) {
++func TestCertificationRecord_Unsupported(t *testing.T) {
++	// Zero value — Unsupported defaults to false, preserving existing behavior
 +	rec := domain.CertificationRecord{
-+		UnitID: domain.NewUnitID("go", "test/pkg", ""),
-+		Status: domain.StatusCertified,
++		UnitID: domain.NewUnitID("go", "internal/domain/record.go", "CertificationRecord"),
 +	}
-+	// Zero-value default must be false
 +	if rec.Unsupported {
-+		t.Error("Unsupported field should default to false")
++		t.Error("Unsupported should default to false")
 +	}
 +
-+	// Explicitly setting to true must be preserved
++	// Explicitly set to true
 +	rec.Unsupported = true
 +	if !rec.Unsupported {
-+		t.Error("Unsupported field should be settable to true")
++		t.Error("Unsupported should be true after being set")
 +	}
 +}
 +
