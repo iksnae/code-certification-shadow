@@ -1,0 +1,22 @@
+ISSUE issue:iksnae/code-certification#32: Update report consumers to skip Unsupported records in aggregate calculations
+
+Update report consumers to skip Unsupported records in aggregate calculations
+
+Split from parent issue:iksnae/code-certification#25 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/report/detailed.go
+- internal/report/full.go
+- internal/report/health.go
+- internal/report/card.go
+
+Non-goals:
+- Do not modify scorer.go, pipeline.go, or domain types
+- Do not change the N/A rendering logic (already handled by existing gradeEmoji fallback)
+- Do not add new report output formats
+
+Verification command: go test ./... -count=1
+Size: s
+Risk: low
+
+In internal/report/detailed.go computeDimensionAverages: skip records where Unsupported == true when summing and counting. In internal/report/full.go buildLanguageDetail: skip Unsupported records when computing per-language averages. In internal/report/health.go Health(): skip Unsupported records in pass/fail counts and score averaging. In internal/report/card.go: skip Unsupported records from the total count used in GenerateCard(). Existing tests in card_test.go already handle N/A for empty records and should continue to pass.
