@@ -1,21 +1,21 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 73 round(s)",
+      "detail" : "ran all 16 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "7 file(s) changed: internal\/domain\/record.go, internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/health.go, internal\/report\/health_test.go",
+      "detail" : "no files were changed",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -25,17 +25,17 @@
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "the project verify command was GREEN",
+      "detail" : "the project verify command was RED",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -109,30 +109,16 @@
     "rcpt-build-commit-sweep-build-32#s0",
     "rcpt-build-implement-sweep-build-32#s1",
     "rcpt-build-verify-sweep-build-32#s1",
-    "rcpt-build-commit-sweep-build-32#s1",
-    "rcpt-build-implement-sweep-build-32#s2",
-    "rcpt-build-verify-sweep-build-32#s2",
-    "rcpt-build-commit-sweep-build-32#s2",
-    "rcpt-build-implement-sweep-build-32#s3",
-    "rcpt-build-verify-sweep-build-32#s3",
-    "rcpt-build-commit-sweep-build-32#s3",
-    "rcpt-build-implement-sweep-build-32#s4",
-    "rcpt-build-verify-sweep-build-32#s4",
-    "rcpt-build-commit-sweep-build-32#s4"
+    "rcpt-build-commit-sweep-build-32#s1"
   ],
   "failureReasons" : [
-    "The work passed verification but was not committed."
+    "Implementation did not complete — the build used all 16 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
+    "No files were changed."
   ],
   "filesReviewed" : [
-    "internal\/domain\/record.go",
-    "internal\/report\/card.go",
-    "internal\/report\/card_test.go",
-    "internal\/report\/detailed.go",
-    "internal\/report\/detailed_test.go",
-    "internal\/report\/health.go",
-    "internal\/report\/health_test.go"
+
   ],
-  "outcome" : "needsFix",
+  "outcome" : "blocked",
   "rubricId" : "",
   "rubricVersion" : 0
 }
