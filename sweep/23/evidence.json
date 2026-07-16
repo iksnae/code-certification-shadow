@@ -1,5 +1,5 @@
 {
-  "commitRef" : "341d115490fe847f8a9f6694f05599d4d4d6a5c3",
+  "commitRef" : "58222619e6fd6e42cf420bff67d7f748686d8209",
   "committed" : true,
   "correlationId" : "sweep-build-23",
   "filesChanged" : [
@@ -20,6 +20,6 @@
     "rcpt-build-verify-sweep-build-23#s2",
     "rcpt-build-commit-sweep-build-23#s2"
   ],
-  "rounds" : 44,
+  "rounds" : 35,
   "verifyPassed" : true
 }
