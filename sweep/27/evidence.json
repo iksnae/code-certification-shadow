@@ -1,20 +1,40 @@
 {
-  "commitRef" : "369b94825bea77524a3a33983e378fa4c6997e5c",
-  "committed" : false,
+  "commitRef" : "ebcd751ab6e56ddecf18822086efe3ab505e49d0",
+  "committed" : true,
   "correlationId" : "sweep-build-27",
   "filesChanged" : [
+    "internal\/report\/badge_test.go",
     "internal\/report\/card.go",
-    "internal\/report\/card_internal_test.go"
+    "internal\/report\/card_test.go",
+    "internal\/report\/detailed.go",
+    "internal\/report\/detailed_test.go",
+    "internal\/report\/full.go",
+    "internal\/report\/health.go",
+    "internal\/report\/partition_test.go",
+    "testdata\/unsupported\/",
+    "testdata\/unsupported\/hello.swift"
   ],
-  "implementCompleted" : false,
+  "implementCompleted" : true,
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-27#s0",
     "rcpt-build-verify-sweep-build-27#s0",
     "rcpt-build-commit-sweep-build-27#s0",
     "rcpt-build-implement-sweep-build-27#s1",
     "rcpt-build-verify-sweep-build-27#s1",
-    "rcpt-build-commit-sweep-build-27#s1"
+    "rcpt-build-commit-sweep-build-27#s1",
+    "rcpt-build-implement-sweep-build-27#s2",
+    "rcpt-build-verify-sweep-build-27#s2",
+    "rcpt-build-commit-sweep-build-27#s2",
+    "rcpt-build-implement-sweep-build-27#s3",
+    "rcpt-build-verify-sweep-build-27#s3",
+    "rcpt-build-commit-sweep-build-27#s3",
+    "rcpt-build-implement-sweep-build-27#s4",
+    "rcpt-build-verify-sweep-build-27#s4",
+    "rcpt-build-commit-sweep-build-27#s4",
+    "rcpt-build-implement-sweep-build-27#s5",
+    "rcpt-build-verify-sweep-build-27#s5",
+    "rcpt-build-commit-sweep-build-27#s5"
   ],
-  "rounds" : 31,
-  "verifyPassed" : false
+  "rounds" : 86,
+  "verifyPassed" : true
 }
