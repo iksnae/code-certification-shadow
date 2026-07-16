@@ -1,12 +1,24 @@
 {
   "carryForward" : [
-
+    {
+      "at" : 805919441.751913,
+      "issue" : "27",
+      "text" : "Consider a runtime configuration mechanism for the unsupported-languages list so new languages can be added without code changes."
+    },
+    {
+      "at" : 805919441.751913,
+      "issue" : "27",
+      "text" : "Monitor whether the unsupported count banner drives user action (language migration) or just noise; may warrant an analytics hook."
+    }
   ],
-  "cumulativeFilesChanged" : 0,
-  "cumulativeRounds" : 0,
-  "cumulativeSpendUSD" : 1.3533662199999998,
-  "deliveredCount" : 0,
+  "cumulativeFilesChanged" : 10,
+  "cumulativeRounds" : 86,
+  "cumulativeSpendUSD" : 1.38414466,
+  "deliveredCount" : 1,
+  "lastActivity" : 805919441.751913,
+  "lastConfidence" : 0.85,
   "lifecycle" : "active",
-  "maxRounds" : 0,
-  "verifyGreenStreak" : 0
+  "maxRounds" : 86,
+  "minConfidence" : 0.85,
+  "verifyGreenStreak" : 1
 }
