@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 57 round(s) without finishing — deliverable left partial",
+      "detail" : "ran all 47 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "detail" : "8 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/domain\/record.go, internal\/domain\/record_test.go, internal\/engine\/scorer_test.go, internal\/language_tiers\/, internal\/language_tiers\/tiers.go, internal\/language_tiers\/tiers_test.go",
+      "detail" : "7 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/domain\/record.go, internal\/domain\/record_test.go, internal\/language_tiers\/, internal\/language_tiers\/tiers.go, internal\/language_tiers\/tiers_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -118,14 +118,13 @@
     "rcpt-build-commit-sweep-build-31#s3"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 57 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "Implementation did not complete — the build used all 47 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
     "internal\/domain\/dimension.go",
     "internal\/domain\/dimension_test.go",
     "internal\/domain\/record.go",
     "internal\/domain\/record_test.go",
-    "internal\/engine\/scorer_test.go",
     "internal\/language_tiers\/",
     "internal\/language_tiers\/tiers.go",
     "internal\/language_tiers\/tiers_test.go"
