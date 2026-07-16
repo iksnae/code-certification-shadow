@@ -1,0 +1,22 @@
+{
+  "commitRef" : "a1d0d0924d3345441a851d6853a991ab9dcb4350",
+  "committed" : true,
+  "correlationId" : "sweep-build-31",
+  "filesChanged" : [
+    "internal\/domain\/dimension.go",
+    "internal\/domain\/record.go",
+    "internal\/language_tiers\/",
+    "internal\/language_tiers\/tiers.go"
+  ],
+  "implementCompleted" : true,
+  "receiptIds" : [
+    "rcpt-build-implement-sweep-build-31#s0",
+    "rcpt-build-verify-sweep-build-31#s0",
+    "rcpt-build-commit-sweep-build-31#s0",
+    "rcpt-build-implement-sweep-build-31#s1",
+    "rcpt-build-verify-sweep-build-31#s1",
+    "rcpt-build-commit-sweep-build-31#s1"
+  ],
+  "rounds" : 24,
+  "verifyPassed" : true
+}
