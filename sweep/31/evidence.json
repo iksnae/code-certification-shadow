@@ -1,5 +1,5 @@
 {
-  "commitRef" : "fcdb7b0635b9ba691101c50cb3711138a1027724",
+  "commitRef" : "5c0ae327a2f83fc30f2763ebe30ad818424a499d",
   "committed" : false,
   "correlationId" : "sweep-build-31",
   "filesChanged" : [
@@ -7,7 +7,6 @@
     "internal\/domain\/dimension_test.go",
     "internal\/domain\/record.go",
     "internal\/domain\/record_test.go",
-    "internal\/engine\/scorer_test.go",
     "internal\/language_tiers\/",
     "internal\/language_tiers\/tiers.go",
     "internal\/language_tiers\/tiers_test.go"
@@ -27,6 +26,6 @@
     "rcpt-build-verify-sweep-build-31#s3",
     "rcpt-build-commit-sweep-build-31#s3"
   ],
-  "rounds" : 57,
+  "rounds" : 47,
   "verifyPassed" : false
 }
