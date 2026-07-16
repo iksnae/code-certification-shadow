@@ -1,0 +1,105 @@
+From 2a9c9c6ea6b98d6f137194522ffe1809bfdaf147 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Wed, 15 Jul 2026 20:11:40 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-31#s0)
+
+---
+ internal/language_tiers/tiers.go | 38 ++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 internal/language_tiers/tiers.go
+
+diff --git a/internal/language_tiers/tiers.go b/internal/language_tiers/tiers.go
+new file mode 100644
+index 000000000..3d09dcb1a
+--- /dev/null
++++ b/internal/language_tiers/tiers.go
+@@ -0,0 +1,38 @@
++// Package language_tiers classifies programming languages into tiers
++// that control which certification features apply. TierNative languages
++// enjoy full certification support; TierGeneric languages receive a
++// reduced set of checks.
++package language_tiers
++
++import "strings"
++
++// Tier represents the certification tier for a programming language.
++type Tier int
++
++const (
++	// TierGeneric is the default tier for languages without native
++	// certification support. Only universal checks apply.
++	TierGeneric Tier = 0
++
++	// TierNative is the tier for languages with full native
++	// certification support, including language-specific rules.
++	TierNative Tier = 1
++)
++
++// TierForLanguage returns the certification [Tier] for the given
++// language identifier. The match is case-insensitive. Languages with
++// native support return [TierNative]; all others return [TierGeneric].
++func TierForLanguage(lang string) Tier {
++	switch {
++	case strings.EqualFold(lang, "go"):
++		return TierNative
++	case strings.EqualFold(lang, "typescript"):
++		return TierNative
++	case strings.EqualFold(lang, "python"):
++		return TierNative
++	case strings.EqualFold(lang, "rust"):
++		return TierNative
++	default:
++		return TierGeneric
++	}
++}
+-- 
+2.54.0 (Apple Git-156)
+
+From a1d0d0924d3345441a851d6853a991ab9dcb4350 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Wed, 15 Jul 2026 20:12:32 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-31#s1)
+
+---
+ internal/domain/dimension.go | 3 +++
+ internal/domain/record.go    | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/internal/domain/dimension.go b/internal/domain/dimension.go
+index 6bf97beec..90d1b09ea 100644
+--- a/internal/domain/dimension.go
++++ b/internal/domain/dimension.go
+@@ -111,6 +111,8 @@ const (
+ 	GradeC                   // 0.70+
+ 	GradeD                   // 0.60+
+ 	GradeF                   // < 0.60
++
++	GradeNA Grade = 255 // No parser available for this unit's language
+ )
+ 
+ var gradeStrings = map[Grade]string{
+@@ -121,6 +123,7 @@ var gradeStrings = map[Grade]string{
+ 	GradeC:      "C",
+ 	GradeD:      "D",
+ 	GradeF:      "F",
++	GradeNA:     "N/A",
+ }
+ 
+ // String returns the letter grade string.
+diff --git a/internal/domain/record.go b/internal/domain/record.go
+index 48968a280..7b18799ed 100644
+--- a/internal/domain/record.go
++++ b/internal/domain/record.go
+@@ -87,6 +87,9 @@ type CertificationRecord struct {
+ 	CertifiedAt time.Time `json:"certified_at"`
+ 	ExpiresAt   time.Time `json:"expires_at"`
+ 
++	// Unsupported indicates the unit's language has no parser available.
++	Unsupported bool `json:"unsupported"`
++
+ 	// Metadata
+ 	Source  string `json:"source"` // "deterministic", "agent", "combined"
+ 	RunID   string `json:"run_id,omitempty"`
+-- 
+2.54.0 (Apple Git-156)
+

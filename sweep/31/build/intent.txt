@@ -1,0 +1,22 @@
+ISSUE issue:iksnae/code-certification#31: Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests
+
+Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests
+
+Split from parent issue:iksnae/code-certification#25 by Tier-1 auto-split (#800).
+
+Target files:
+- internal/engine/scorer.go
+- internal/engine/scorer_test.go
+- internal/engine/pipeline.go
+- internal/engine/pipeline_test.go
+
+Non-goals:
+- Do not modify report/detailed.go, report/full.go, report/health.go, or report/card.go
+- Do not add aggregate-skip logic outside the engine package
+- Do not create the language_tiers package or domain types (those are prior deliverables)
+
+Verification command: go test ./... -count=1
+Size: l
+Risk: medium
+
+Modify internal/engine/scorer.go: (a) Import language_tiers and domain packages. (b) Change Score() signature to accept a language string parameter. (c) At the top of Score(), call language_tiers.TierForLanguage(lang); if TierGeneric, return domain.DimensionScores(nil) — caller will handle the N/A short-circuit. (d) In scoreFromMetrics, guard the complexity ≤ 5 → 0.95 maintainability rule: skip when complexity == 0 AND the evidence's language has no parser (TierGeneric). Pass language into scoreFromMetrics. (e) Remove the violation else-branch that injects dimensions at 0.80 minus penalty (lines 65-74); only the if-branch that applies penalties to existing dimensions remains. (f) Update the Score() doc comment to state that dimensions without evidence are absent and TierGeneric units receive nil scores. Modify internal/engine/pipeline.go: (a) Pass unit.ID.Language() to Score(). (b) After Score() returns, if scores == nil, set record.Grade = domain.GradeNA, record.Unsupported = true, and return immediately without computing avg/status. Update internal/engine/scorer_test.go: update all Score() calls to pass a language string; add test cases for TierGeneric short-circuit (swift → nil scores), zero-complexity guard (generic file with complexity=0 must NOT get maintainability=0.95), and violation handling without 0.5 injection (violation on absent dimension → no dimension entry). Update internal/engine/pipeline_test.go if needed.
