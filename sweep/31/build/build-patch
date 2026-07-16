@@ -1,84 +1,121 @@
-From 2a9c9c6ea6b98d6f137194522ffe1809bfdaf147 Mon Sep 17 00:00:00 2001
+From f218f2457e783882b27b58c5d1127df92af98c7a Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 20:11:40 -0400
+Date: Thu, 16 Jul 2026 14:38:05 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s0)
 
 ---
- internal/language_tiers/tiers.go | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ internal/language_tiers/tiers.go      | 33 +++++++++++++++++++++++++++
+ internal/language_tiers/tiers_test.go | 33 +++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+)
  create mode 100644 internal/language_tiers/tiers.go
+ create mode 100644 internal/language_tiers/tiers_test.go
 
 diff --git a/internal/language_tiers/tiers.go b/internal/language_tiers/tiers.go
 new file mode 100644
-index 000000000..3d09dcb1a
+index 000000000..5634ed41d
 --- /dev/null
 +++ b/internal/language_tiers/tiers.go
-@@ -0,0 +1,38 @@
-+// Package language_tiers classifies programming languages into tiers
-+// that control which certification features apply. TierNative languages
-+// enjoy full certification support; TierGeneric languages receive a
-+// reduced set of checks.
+@@ -0,0 +1,33 @@
++// Package language_tiers classifies programming languages into tiers that
++// determine which scoring and analysis rules are applied during certification.
 +package language_tiers
 +
 +import "strings"
 +
-+// Tier represents the certification tier for a programming language.
++// Tier represents the level of analysis support for a programming language.
 +type Tier int
 +
 +const (
 +	// TierGeneric is the default tier for languages without native
-+	// certification support. Only universal checks apply.
++	// tree-sitter grammar support. Generic-tier languages receive
++	// conservative scoring and reduced rule sets.
 +	TierGeneric Tier = 0
 +
-+	// TierNative is the tier for languages with full native
-+	// certification support, including language-specific rules.
++	// TierNative is the tier for languages with full native tree-sitter
++	// grammar support. Native-tier languages receive the complete set of
++	// analysis rules and precise scoring.
 +	TierNative Tier = 1
 +)
 +
-+// TierForLanguage returns the certification [Tier] for the given
-+// language identifier. The match is case-insensitive. Languages with
-+// native support return [TierNative]; all others return [TierGeneric].
++// TierForLanguage returns the analysis [Tier] for the given language name.
++// The match is case-insensitive. Languages with native tree-sitter support
++// (go, typescript, python, rust) return [TierNative]; all others return
++// [TierGeneric].
 +func TierForLanguage(lang string) Tier {
-+	switch {
-+	case strings.EqualFold(lang, "go"):
-+		return TierNative
-+	case strings.EqualFold(lang, "typescript"):
-+		return TierNative
-+	case strings.EqualFold(lang, "python"):
-+		return TierNative
-+	case strings.EqualFold(lang, "rust"):
++	switch strings.ToLower(lang) {
++	case "go", "typescript", "python", "rust":
 +		return TierNative
 +	default:
 +		return TierGeneric
 +	}
 +}
+diff --git a/internal/language_tiers/tiers_test.go b/internal/language_tiers/tiers_test.go
+new file mode 100644
+index 000000000..044800392
+--- /dev/null
++++ b/internal/language_tiers/tiers_test.go
+@@ -0,0 +1,33 @@
++package language_tiers
++
++import "testing"
++
++func TestTierForLanguage_Native(t *testing.T) {
++	native := []string{"go", "Go", "GO", "typescript", "TypeScript", "TYPESCRIPT",
++		"python", "Python", "PYTHON", "rust", "Rust", "RUST"}
++	for _, lang := range native {
++		got := TierForLanguage(lang)
++		if got != TierNative {
++			t.Errorf("TierForLanguage(%q) = %d, want %d (TierNative)", lang, got, TierNative)
++		}
++	}
++}
++
++func TestTierForLanguage_Generic(t *testing.T) {
++	generic := []string{"javascript", "java", "c", "cpp", "ruby", "", "unknown"}
++	for _, lang := range generic {
++		got := TierForLanguage(lang)
++		if got != TierGeneric {
++			t.Errorf("TierForLanguage(%q) = %d, want %d (TierGeneric)", lang, got, TierGeneric)
++		}
++	}
++}
++
++func TestTierConstants(t *testing.T) {
++	if TierGeneric != 0 {
++		t.Errorf("TierGeneric = %d, want 0", TierGeneric)
++	}
++	if TierNative != 1 {
++		t.Errorf("TierNative = %d, want 1", TierNative)
++	}
++}
 -- 
 2.54.0 (Apple Git-156)
 
-From a1d0d0924d3345441a851d6853a991ab9dcb4350 Mon Sep 17 00:00:00 2001
+From fcdb7b0635b9ba691101c50cb3711138a1027724 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 20:12:32 -0400
+Date: Thu, 16 Jul 2026 14:39:17 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s1)
 
 ---
- internal/domain/dimension.go | 3 +++
- internal/domain/record.go    | 3 +++
- 2 files changed, 6 insertions(+)
+ internal/domain/dimension.go      |  2 ++
+ internal/domain/dimension_test.go |  1 +
+ internal/domain/record.go         |  3 +++
+ internal/domain/record_test.go    | 14 ++++++++++++++
+ 4 files changed, 20 insertions(+)
 
 diff --git a/internal/domain/dimension.go b/internal/domain/dimension.go
-index 6bf97beec..90d1b09ea 100644
+index 6bf97beec..0d57fea07 100644
 --- a/internal/domain/dimension.go
 +++ b/internal/domain/dimension.go
-@@ -111,6 +111,8 @@ const (
+@@ -111,6 +111,7 @@ const (
  	GradeC                   // 0.70+
  	GradeD                   // 0.60+
  	GradeF                   // < 0.60
-+
-+	GradeNA Grade = 255 // No parser available for this unit's language
++	GradeNA      Grade = 255 // Not applicable (unsupported language)
  )
  
  var gradeStrings = map[Grade]string{
-@@ -121,6 +123,7 @@ var gradeStrings = map[Grade]string{
+@@ -121,6 +122,7 @@ var gradeStrings = map[Grade]string{
  	GradeC:      "C",
  	GradeD:      "D",
  	GradeF:      "F",
@@ -86,20 +123,57 @@ index 6bf97beec..90d1b09ea 100644
  }
  
  // String returns the letter grade string.
+diff --git a/internal/domain/dimension_test.go b/internal/domain/dimension_test.go
+index dca0de968..41b8906e0 100644
+--- a/internal/domain/dimension_test.go
++++ b/internal/domain/dimension_test.go
+@@ -128,6 +128,7 @@ func TestGrade_String(t *testing.T) {
+ 		{domain.GradeC, "C"},
+ 		{domain.GradeD, "D"},
+ 		{domain.GradeF, "F"},
++		{domain.GradeNA, "N/A"},
+ 	}
+ 	for _, tt := range tests {
+ 		if got := tt.g.String(); got != tt.want {
 diff --git a/internal/domain/record.go b/internal/domain/record.go
-index 48968a280..7b18799ed 100644
+index 48968a280..79c1d6348 100644
 --- a/internal/domain/record.go
 +++ b/internal/domain/record.go
-@@ -87,6 +87,9 @@ type CertificationRecord struct {
- 	CertifiedAt time.Time `json:"certified_at"`
- 	ExpiresAt   time.Time `json:"expires_at"`
- 
-+	// Unsupported indicates the unit's language has no parser available.
-+	Unsupported bool `json:"unsupported"`
-+
- 	// Metadata
+@@ -91,6 +91,9 @@ type CertificationRecord struct {
  	Source  string `json:"source"` // "deterministic", "agent", "combined"
  	RunID   string `json:"run_id,omitempty"`
+ 	Version int    `json:"version"` // record schema version
++
++	// Unsupported indicates the unit's language has no parser available.
++	Unsupported bool `json:"unsupported"`
+ }
+ 
+ // CertificationRun captures metadata about a single certification invocation.
+diff --git a/internal/domain/record_test.go b/internal/domain/record_test.go
+index c28f51895..2f6108537 100644
+--- a/internal/domain/record_test.go
++++ b/internal/domain/record_test.go
+@@ -105,6 +105,20 @@ func TestGenerateRunID(t *testing.T) {
+ 	}
+ }
+ 
++func TestCertificationRecord_Unsupported(t *testing.T) {
++	record := domain.CertificationRecord{
++		Unsupported: true,
++	}
++	if !record.Unsupported {
++		t.Error("Unsupported should be true")
++	}
++
++	record2 := domain.CertificationRecord{}
++	if record2.Unsupported {
++		t.Error("Unsupported should default to false")
++	}
++}
++
+ func TestCertificationRun_Fields(t *testing.T) {
+ 	now := time.Now()
+ 	run := domain.CertificationRun{
 -- 
 2.54.0 (Apple Git-156)
 
