@@ -1,0 +1,98 @@
+From 48a0b671ed0a9a019bc648bdae64a4cb357ad447 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 16 Jul 2026 15:53:55 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-30#s0)
+
+---
+ internal/domain/dimension.go      | 3 +++
+ internal/domain/dimension_test.go | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/internal/domain/dimension.go b/internal/domain/dimension.go
+index 6bf97beec..f4ee9c929 100644
+--- a/internal/domain/dimension.go
++++ b/internal/domain/dimension.go
+@@ -113,6 +113,8 @@ const (
+ 	GradeF                   // < 0.60
+ )
+ 
++const GradeNA Grade = -1 // N/A (not applicable)
++
+ var gradeStrings = map[Grade]string{
+ 	GradeA:      "A",
+ 	GradeAMinus: "A-",
+@@ -121,6 +123,7 @@ var gradeStrings = map[Grade]string{
+ 	GradeC:      "C",
+ 	GradeD:      "D",
+ 	GradeF:      "F",
++	GradeNA:     "N/A",
+ }
+ 
+ // String returns the letter grade string.
+diff --git a/internal/domain/dimension_test.go b/internal/domain/dimension_test.go
+index dca0de968..41b8906e0 100644
+--- a/internal/domain/dimension_test.go
++++ b/internal/domain/dimension_test.go
+@@ -128,6 +128,7 @@ func TestGrade_String(t *testing.T) {
+ 		{domain.GradeC, "C"},
+ 		{domain.GradeD, "D"},
+ 		{domain.GradeF, "F"},
++		{domain.GradeNA, "N/A"},
+ 	}
+ 	for _, tt := range tests {
+ 		if got := tt.g.String(); got != tt.want {
+-- 
+2.54.0 (Apple Git-156)
+
+From 5923390feb744c5ae0ffee2ba276af3f1dff38d5 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 16 Jul 2026 15:54:46 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-30#s1)
+
+---
+ internal/domain/record.go      |  3 +++
+ internal/domain/record_test.go | 14 ++++++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/internal/domain/record.go b/internal/domain/record.go
+index 48968a280..afd89a07c 100644
+--- a/internal/domain/record.go
++++ b/internal/domain/record.go
+@@ -91,6 +91,9 @@ type CertificationRecord struct {
+ 	Source  string `json:"source"` // "deterministic", "agent", "combined"
+ 	RunID   string `json:"run_id,omitempty"`
+ 	Version int    `json:"version"` // record schema version
++
++	// N/A short-circuit
++	Unsupported bool `json:"unsupported,omitempty"`
+ }
+ 
+ // CertificationRun captures metadata about a single certification invocation.
+diff --git a/internal/domain/record_test.go b/internal/domain/record_test.go
+index c28f51895..c254f8045 100644
+--- a/internal/domain/record_test.go
++++ b/internal/domain/record_test.go
+@@ -105,6 +105,20 @@ func TestGenerateRunID(t *testing.T) {
+ 	}
+ }
+ 
++func TestCertificationRecord_Unsupported(t *testing.T) {
++	// Zero-value default is false
++	rec := domain.CertificationRecord{}
++	if rec.Unsupported {
++		t.Error("Unsupported should default to false")
++	}
++
++	// Can be set to true
++	rec.Unsupported = true
++	if !rec.Unsupported {
++		t.Error("Unsupported should be true after setting")
++	}
++}
++
+ func TestCertificationRun_Fields(t *testing.T) {
+ 	now := time.Now()
+ 	run := domain.CertificationRun{
+-- 
+2.54.0 (Apple Git-156)
+
