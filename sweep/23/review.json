@@ -51,52 +51,42 @@
       }
     },
     {
-      "detail" : "Core requirements all met: Tier enum, registry, TierForLanguage, and all 3 required tests (dynamic KnownLanguages loop, unknown→Generic, Swift→Generic). Discovery changes (KnownLanguages()) were not listed as target files but directly enable the plan's mandate to 'iterate all known language IDs from discovery' — reasonable supporting work.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "score" : {
-          "_0" : 0.9
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Plan listed 2 target files; build touched 4. Extra discovery changes are small (48 lines, one utility + one test), directly serve the plan's objective, and contain zero unrelated churn.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "score" : {
-          "_0" : 0.9
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Test iterates discovery.KnownLanguages() dynamically — any new language without a tier entry will fail CI. No hardcoded expected values to force green. Swift explicitly checked as TierGeneric. Unknown-language fail-safe verified. No test weakening or deletion.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "score" : {
-          "_0" : 1
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "All changes additive only. KnownLanguages() is read-only. Tier registry has no side effects. Tests are guardrails, not risks. No correctness, security, or regression concerns.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "score" : {
-          "_0" : 1
-        }
-      }
-    },
-    {
-      "detail" : "at or above the confidence bar",
-      "id" : "judge-confidence",
-      "label" : "Judge confidence",
-      "result" : {
-        "score" : {
-          "_0" : 0.9
+        "skipped" : {
+
         }
       }
     }
@@ -105,40 +95,21 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "is\t5.117s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.947s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.601s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t1.805s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.548s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.458s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t2.794s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.310s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t2.489s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t3.328s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t2.945s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t3.124s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.505s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.383s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t5.366s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.140s\n"
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.718s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t3.084s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t1.568s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t34.768s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t1.127s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.655s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.700s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.856s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t3.679s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t3.515s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.334s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t2.825s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t2.338s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t1.987s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t2.125s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.221s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.235s\n--- FAIL: TestGenerateSite_LargeScale (18.33s)\n    site_test.go:391: site generation took 16.336424s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t21.907s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t2.963s\nFAIL\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
         "kind" : "testsPass"
       },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "pass"
+      "verdict" : "fail"
     }
   ],
   "committed" : true,
-  "confidence" : 0.9,
+  "confidence" : 0,
   "correlationId" : "sweep-build-23",
   "dimensions" : [
-    {
-      "dimension" : "implements-the-approved-plan",
-      "evidence" : "Core requirements all met: Tier enum, registry, TierForLanguage, and all 3 required tests (dynamic KnownLanguages loop, unknown→Generic, Swift→Generic). Discovery changes (KnownLanguages()) were not listed as target files but directly enable the plan's mandate to 'iterate all known language IDs from discovery' — reasonable supporting work.",
-      "score" : 0.9
-    },
-    {
-      "dimension" : "minimal-and-scoped",
-      "evidence" : "Plan listed 2 target files; build touched 4. Extra discovery changes are small (48 lines, one utility + one test), directly serve the plan's objective, and contain zero unrelated churn.",
-      "score" : 0.9
-    },
-    {
-      "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "Test iterates discovery.KnownLanguages() dynamically — any new language without a tier entry will fail CI. No hardcoded expected values to force green. Swift explicitly checked as TierGeneric. Unknown-language fail-safe verified. No test weakening or deletion.",
-      "score" : 1
-    },
-    {
-      "dimension" : "safe-to-advance",
-      "evidence" : "All changes additive only. KnownLanguages() is read-only. Tier registry has no side effects. Tests are guardrails, not risks. No correctness, security, or regression concerns.",
-      "score" : 1
-    }
+
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-23#s0",
@@ -152,7 +123,7 @@
     "rcpt-build-commit-sweep-build-23#s2"
   ],
   "failureReasons" : [
-
+    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.718s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t3.084s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t1.568s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t34.768s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t1.127s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.655s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.700s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.856s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t3.679s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t3.515s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.334s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t2.825s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t2.338s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t1.987s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t2.125s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t3.221s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.235s\n--- FAIL: TestGenerateSite_LargeScale (18.33s)\n    site_test.go:391: site generation took 16.336424s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t21.907s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t2.963s\nFAIL"
   ],
   "filesReviewed" : [
     "internal\/discovery\/generic.go",
@@ -160,7 +131,7 @@
     "internal\/engine\/language_tiers.go",
     "internal\/engine\/language_tiers_test.go"
   ],
-  "outcome" : "pass",
-  "rubricId" : "build-review",
-  "rubricVersion" : 1
+  "outcome" : "needsFix",
+  "rubricId" : "",
+  "rubricVersion" : 0
 }
