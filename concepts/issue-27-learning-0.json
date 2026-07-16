@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/27.md",
+  "id" : "issue-27-learning-0",
+  "relations" : [
+
+  ],
+  "summary" : "Consider a runtime configuration mechanism for the unsupported-languages list so new languages can be added without code changes.",
+  "title" : "Consider a runtime configuration mechanism for the unsupport",
+  "type" : "learning"
+}

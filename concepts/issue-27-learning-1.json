@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/27.md",
+  "id" : "issue-27-learning-1",
+  "relations" : [
+
+  ],
+  "summary" : "Monitor whether the unsupported count banner drives user action (language migration) or just noise; may warrant an analytics hook.",
+  "title" : "Monitor whether the unsupported count banner drives user act",
+  "type" : "learning"
+}

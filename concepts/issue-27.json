@@ -1,0 +1,17 @@
+{
+  "artifactPath" : "closeouts\/27.md",
+  "id" : "issue-27",
+  "relations" : [
+    {
+      "target" : "issue-27-learning-0",
+      "type" : "produced"
+    },
+    {
+      "target" : "issue-27-learning-1",
+      "type" : "produced"
+    }
+  ],
+  "summary" : "Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations. — delivered via PR #33 (5f1530ef); 10 files changed.",
+  "title" : "Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations.",
+  "type" : "deliverable"
+}
