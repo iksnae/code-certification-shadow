@@ -1,0 +1,130 @@
+{
+  "checklist" : [
+    {
+      "detail" : "the implementor finished in 15 round(s)",
+      "id" : "build-completed",
+      "label" : "Build completed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "3 file(s) changed: internal\/language_tiers\/, internal\/language_tiers\/language_tiers.go, internal\/language_tiers\/language_tiers_test.go",
+      "id" : "change-present",
+      "label" : "Change is visible",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "expected ≥1 of: internal\/language_tiers\/language_tiers.go, internal\/language_tiers\/language_tiers_test.go",
+      "id" : "on-target",
+      "label" : "Changed the deliverable's target files",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "the project verify command was GREEN",
+      "id" : "verify-green",
+      "label" : "Verification passed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "committed locally on the build branch",
+      "id" : "committed",
+      "label" : "Work committed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "implements-the-approved-plan",
+      "label" : "Implements the approved plan",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "safe-to-advance",
+      "label" : "Safe to advance",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    }
+  ],
+  "claims" : [
+    {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.698s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t1.549s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t2.275s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t47.182s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t2.196s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.113s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.805s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.406s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t2.391s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t3.464s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.986s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.780s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.612s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t3.152s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t1.288s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.561s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t6.786s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t7.012s\n--- FAIL: TestGenerateSite_LargeScale (28.02s)\n    site_test.go:391: site generation took 24.067930166s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t36.200s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t7.328s\nFAIL\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
+      "statement" : "the reviewer's independent re-verification passes",
+      "verdict" : "fail"
+    }
+  ],
+  "committed" : true,
+  "confidence" : 0,
+  "correlationId" : "sweep-build-29",
+  "dimensions" : [
+
+  ],
+  "evidenceReceiptIds" : [
+    "rcpt-build-implement-sweep-build-29#s0",
+    "rcpt-build-verify-sweep-build-29#s0",
+    "rcpt-build-commit-sweep-build-29#s0"
+  ],
+  "failureReasons" : [
+    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.698s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t1.549s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t2.275s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t47.182s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t2.196s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.113s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.805s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.406s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t2.391s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t3.464s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.986s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.780s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.612s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t3.152s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t1.288s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.561s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t6.786s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t7.012s\n--- FAIL: TestGenerateSite_LargeScale (28.02s)\n    site_test.go:391: site generation took 24.067930166s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t36.200s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t7.328s\nFAIL"
+  ],
+  "filesReviewed" : [
+    "internal\/language_tiers\/",
+    "internal\/language_tiers\/language_tiers.go",
+    "internal\/language_tiers\/language_tiers_test.go"
+  ],
+  "outcome" : "needsFix",
+  "rubricId" : "",
+  "rubricVersion" : 0
+}
