@@ -1,123 +1,128 @@
-From 96545c6439fc4fe0c55a139a82bd93c057ff5e82 Mon Sep 17 00:00:00 2001
+From e74d40871b0b139fc7d326c2385801d921a42b15 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 19:42:00 -0400
+Date: Thu, 16 Jul 2026 15:13:07 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-23#s0)
 
 ---
- internal/discovery/generic.go      | 16 +++++++++++++++
- internal/discovery/scanner_test.go | 32 ++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ internal/discovery/generic.go      | 14 ++++++++++
+ internal/discovery/scanner_test.go | 44 ++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
 
 diff --git a/internal/discovery/generic.go b/internal/discovery/generic.go
-index abcb9fa16..dd78c15c4 100644
+index abcb9fa16..960a86675 100644
 --- a/internal/discovery/generic.go
 +++ b/internal/discovery/generic.go
-@@ -82,6 +82,22 @@ var scanSkipDirs = map[string]bool{
- // Backward-compatible alias
- var languageFromExt = certifiableExts
+@@ -79,6 +79,20 @@ var scanSkipDirs = map[string]bool{
+ 	".nuxt":       true,
+ }
  
-+// KnownLanguages returns every unique language ID from certifiableExts,
-+// deduplicated and sorted. It is the single source of truth for which
-+// languages the discovery layer can recognize.
++// KnownLanguages returns every unique language ID from certifiableExts, deduplicated and sorted.
 +func KnownLanguages() []string {
-+	seen := make(map[string]bool)
++	set := make(map[string]bool, len(certifiableExts))
 +	for _, lang := range certifiableExts {
-+		seen[lang] = true
++		set[lang] = true
 +	}
-+	langs := make([]string, 0, len(seen))
-+	for lang := range seen {
++	langs := make([]string, 0, len(set))
++	for lang := range set {
 +		langs = append(langs, lang)
 +	}
 +	sort.Strings(langs)
 +	return langs
 +}
 +
- // GenericScanner discovers all files as file-level units.
- type GenericScanner struct {
- 	include []string // glob patterns to include (nil = all)
+ // Backward-compatible alias
+ var languageFromExt = certifiableExts
+ 
 diff --git a/internal/discovery/scanner_test.go b/internal/discovery/scanner_test.go
-index c3b229c66..b195d3f42 100644
+index c3b229c66..18dbe2dee 100644
 --- a/internal/discovery/scanner_test.go
 +++ b/internal/discovery/scanner_test.go
-@@ -248,3 +248,35 @@ func TestScanners_RegistryMatchesDetectedAdapters(t *testing.T) {
- 		}
+@@ -237,6 +237,50 @@ func TestScanners_Registry(t *testing.T) {
  	}
  }
-+
+ 
 +func TestKnownLanguages(t *testing.T) {
 +	langs := discovery.KnownLanguages()
 +
-+	if len(langs) == 0 {
-+		t.Fatal("KnownLanguages() returned empty slice")
++	// Every extension in certifiableExts should map to a language returned by KnownLanguages
++	langSet := make(map[string]bool, len(langs))
++	for _, l := range langs {
++		langSet[l] = true
 +	}
 +
-+	// Must be sorted and deduplicated
++	// Verify all language IDs from certifiableExts are present
++	// These are the unique language IDs extracted manually from certifiableExts:
++	expected := map[string]bool{
++		"go": true, "ts": true, "js": true, "py": true, "rb": true,
++		"rs": true, "java": true, "kt": true, "sh": true, "c": true,
++		"cpp": true, "cs": true, "swift": true, "php": true, "elixir": true,
++		"erlang": true, "scala": true, "lua": true, "r": true, "zig": true,
++		"sql": true, "proto": true,
++	}
++
++	for lang := range expected {
++		if !langSet[lang] {
++			t.Errorf("KnownLanguages() missing language %q that exists in certifiableExts", lang)
++		}
++	}
++
++	for lang := range langSet {
++		if !expected[lang] {
++			t.Errorf("KnownLanguages() returned unexpected language %q not in certifiableExts", lang)
++		}
++	}
++
++	// Should be sorted
 +	for i := 1; i < len(langs); i++ {
-+		if langs[i] <= langs[i-1] {
-+			t.Errorf("KnownLanguages() not sorted/deduplicated at index %d: %q <= %q", i, langs[i], langs[i-1])
++		if langs[i-1] >= langs[i] {
++			t.Errorf("KnownLanguages() not sorted: %q >= %q at index %d", langs[i-1], langs[i], i)
 +		}
 +	}
 +
-+	// Every language known to certifiableExts must appear
-+	expected := []string{
-+		"c", "cpp", "cs", "elixir", "erlang", "go", "java", "js", "kt", "lua",
-+		"php", "proto", "py", "r", "rb", "rs", "scala", "sh", "sql", "swift",
-+		"ts", "zig",
-+	}
-+
-+	if len(langs) != len(expected) {
-+		t.Errorf("KnownLanguages() returned %d languages, want %d; got=%v", len(langs), len(expected), langs)
-+	}
-+
-+	for i, want := range expected {
-+		if i >= len(langs) || langs[i] != want {
-+			t.Errorf("KnownLanguages()[%d] = %q, want %q", i, langs[i], want)
-+		}
++	// Must not be empty
++	if len(langs) == 0 {
++		t.Error("KnownLanguages() returned empty slice")
 +	}
 +}
++
+ func TestScanners_RegistryMatchesDetectedAdapters(t *testing.T) {
+ 	// All adapter names returned by DetectedAdapters should exist in the registry
+ 	scanners := discovery.Scanners()
 -- 
 2.54.0 (Apple Git-156)
 
-From 8faba2cbe4b2174172459de8bae5f91d94eb226a Mon Sep 17 00:00:00 2001
+From 58222619e6fd6e42cf420bff67d7f748686d8209 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 19:43:16 -0400
+Date: Thu, 16 Jul 2026 15:14:09 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-23#s1)
 
 ---
- internal/engine/language_tiers.go      | 70 +++++++++++++++++++
- internal/engine/language_tiers_test.go | 96 ++++++++++++++++++++++++++
- 2 files changed, 166 insertions(+)
+ internal/engine/language_tiers.go      | 67 ++++++++++++++++++++
+ internal/engine/language_tiers_test.go | 84 ++++++++++++++++++++++++++
+ 2 files changed, 151 insertions(+)
  create mode 100644 internal/engine/language_tiers.go
  create mode 100644 internal/engine/language_tiers_test.go
 
 diff --git a/internal/engine/language_tiers.go b/internal/engine/language_tiers.go
 new file mode 100644
-index 000000000..118c32e20
+index 000000000..fc4ba618d
 --- /dev/null
 +++ b/internal/engine/language_tiers.go
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,67 @@
 +package engine
 +
 +import "fmt"
 +
-+// Tier represents the analysis capability tier for a programming language.
++// Tier represents the analysis capability level for a programming language.
 +type Tier int
 +
 +const (
-+	TierNone    Tier = iota // 0 — language is not recognized
-+	TierGeneric             // basic file metrics only (lines, size, binary detection)
-+	TierLint                // linter-based evidence available
-+	TierParse               // AST or parse-tree level analysis available
-+	TierFull                // full semantic analysis (types, call graphs, etc.)
++	TierNone    Tier = iota // 0 – no analysis possible
++	TierGeneric             // basic/generic analysis only
++	TierLint                // lint-level analysis
++	TierParse               // parse/ AST-level analysis
++	TierFull                // full semantic analysis
 +)
-+
-+// String returns a human-readable name for the tier.
-+func (t Tier) String() string {
-+	if s, ok := tierNames[t]; ok {
-+		return s
-+	}
-+	return fmt.Sprintf("Tier(%d)", t)
-+}
 +
 +var tierNames = map[Tier]string{
 +	TierNone:    "None",
@@ -127,64 +132,91 @@ index 000000000..118c32e20
 +	TierFull:    "Full",
 +}
 +
-+// languageTiers maps every known language ID to its analysis capability tier.
-+// When discovery gains support for a new language extension, a corresponding
-+// entry MUST be added here — the test suite enforces this invariant.
-+var languageTiers = map[string]Tier{
-+	// Full analysis
-+	"go": TierFull,
-+	"ts": TierFull,
-+	"js": TierFull,
-+	"py": TierFull,
-+	"rs": TierFull,
++// String returns a human-readable name for the tier.
++func (t Tier) String() string {
++	if name, ok := tierNames[t]; ok {
++		return name
++	}
++	return fmt.Sprintf("Tier(%d)", int(t))
++}
 +
-+	// Generic analysis
++// languageTiers maps every known language ID to its analysis capability tier.
++// When you add a new language to the discovery package, you MUST also add an
++// entry here — otherwise TierForLanguage will default to TierGeneric.
++var languageTiers = map[string]Tier{
++	"go":     TierFull,
++	"ts":     TierFull,
++	"js":     TierFull,
++	"py":     TierFull,
++	"rs":     TierFull,
 +	"rb":     TierGeneric,
 +	"java":   TierGeneric,
-+	"kt
-...[elided 1924 bytes - full stream is hash-only]...
-to":  TierGeneric,
-+	}
-+
-+	if len(expected) != 22 {
-+		t.Errorf("expected exactly 22 language→tier entries in the test table, got %d", len(expected))
-+	}
-+
-+	for lang, wantTier := range expected {
-+		gotTier := TierForLanguage(lang)
-+		if gotTier != wantTier {
-+			t.Errorf("TierForLanguage(%q) = %s, want %s", lang, gotTier, wantTier)
-+		}
-+	}
-+
-+	// Detect unknown languages: if the registry has more keys than we test for,
-+	// it means a language was added to discovery without a corresponding test entry.
-+	for lang := range languageTiers {
-+		if _, ok := expected[lang]; !ok {
-+			t.Errorf("languageTiers has key %q which is not in the test table — add it to the expected map in TestLanguageTiersRegistryHasAllKnownLanguages and assign a tier", lang)
-+		}
-+	}
-+
-+	// Detect missing keys: if we expect a language that isn't in the registry,
-+	// the TierForLanguage call already failed above — but also flag the registry size.
-+	if len(languageTiers) != len(expected) {
-+		t.Errorf("languageTiers has %d entries, test expects %d — registry and test are out of sync", len(languageTiers), len(expected))
++	"kt":     TierGeneric,
++	"sh":     TierGeneric,
++	"c":      TierGeneric,
++	"cpp":    TierGeneric,
++	"c
+...[elided 858 bytes - full stream is hash-only]...
+y 22 known language entries.
++	// When you add a new language extension to the discovery package,
++	// you MUST also add it to languageTiers in language_tiers.go —
++	// this assertion will fail CI and remind you.
++	const expected = 22
++	if got := len(languageTiers); got != expected {
++		t.Errorf("languageTiers has %d entries, want %d — did you add a language "+
++			"to discovery without a tier entry?", got, expected)
 +	}
 +}
 +
-+func TestTierForLanguageUnknownReturnsGeneric(t *testing.T) {
-+	got := TierForLanguage("haskell")
-+	if got != TierGeneric {
-+		t.Errorf("TierForLanguage(%q) = %s, want %s (unknown languages should default to TierGeneric)", "haskell", got, TierGeneric)
++func TestLanguageTiers_KnownLanguages(t *testing.T) {
++	tests := []struct {
++		lang string
++		tier Tier
++	}{
++		// TierFull
++		{"go", TierFull},
++		{"ts", TierFull},
++		{"js", TierFull},
++		{"py", TierFull},
++		{"rs", TierFull},
++		// TierGeneric
++		{"rb", TierGeneric},
++		{"java", TierGeneric},
++		{"kt", TierGeneric},
++		{"sh", TierGeneric},
++		{"c", TierGeneric},
++		{"cpp", TierGeneric},
++		{"cs", TierGeneric},
++		{"swift", TierGeneric},
++		{"php", TierGeneric},
++		{"elixir", TierGeneric},
++		{"erlang", TierGeneric},
++		{"scala", TierGeneric},
++		{"lua", TierGeneric},
++		{"r", TierGeneric},
++		{"zig", TierGeneric},
++		{"sql", TierGeneric},
++		{"proto", TierGeneric},
 +	}
 +
-+	got = TierForLanguage("")
-+	if got != TierGeneric {
-+		t.Errorf("TierForLanguage(%q) = %s, want %s (empty string should default to TierGeneric)", "", got, TierGeneric)
++	for _, tt := range tests {
++		t.Run(tt.lang, func(t *testing.T) {
++			got := TierForLanguage(tt.lang)
++			if got != tt.tier {
++				t.Errorf("TierForLanguage(%q) = %s, want %s", tt.lang, got, tt.tier)
++			}
++		})
 +	}
 +}
 +
-+func TestTierString(t *testing.T) {
++func TestLanguageTiers_UnknownDefaultsToGeneric(t *testing.T) {
++	got := TierForLanguage("nonsense-lang")
++	if got != TierGeneric {
++		t.Errorf("TierForLanguage(\"nonsense-lang\") = %s, want %s", got, TierGeneric)
++	}
++}
++
++func TestTier_String(t *testing.T) {
 +	tests := []struct {
 +		tier Tier
 +		want string
@@ -200,134 +232,10 @@ to":  TierGeneric,
 +	for _, tt := range tests {
 +		got := tt.tier.String()
 +		if got != tt.want {
-+			t.Errorf("Tier(%d).String() = %q, want %q", tt.tier, got, tt.want)
++			t.Errorf("(%s).String() = %q, want %q", tt.want, got, tt.want)
 +		}
 +	}
 +}
--- 
-2.54.0 (Apple Git-156)
-
-From 341d115490fe847f8a9f6694f05599d4d4d6a5c3 Mon Sep 17 00:00:00 2001
-From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 19:44:18 -0400
-Subject: [PATCH] Build: implement approved plan (sweep-build-23#s2)
-
----
- internal/engine/language_tiers_test.go | 99 +++++---------------------
- 1 file changed, 17 insertions(+), 82 deletions(-)
-
-diff --git a/internal/engine/language_tiers_test.go b/internal/engine/language_tiers_test.go
-index 5949d8d6c..cf60cdd1f 100644
---- a/internal/engine/language_tiers_test.go
-+++ b/internal/engine/language_tiers_test.go
-@@ -1,96 +1,31 @@
--package engine
-+package engine_test
- 
- import (
- 	"testing"
--)
--
--func TestLanguageTiersRegistryHasAllKnownLanguages(t *testing.T) {
--	// All 22 language IDs that the discovery package can produce MUST have a tier entry.
--	// When discovery gains a new language extension, this test will FAIL,
--	// forcing the operator to assign a tier before the change ships.
--	expected := map[string]Tier{
--		// Full analysis: parsers are implemented and scoring is rich
--		"go": TierFull,
--		"ts": TierFull,
--		"js": TierFull,
--		"py": TierFull,
--		"rs": TierFull,
--
--		// Generic: we can collect basic metrics but no language-specific parser yet
--		"rb":     TierGeneric,
--		"java":   TierGeneric,
--		"kt":     TierGeneric,
--		"sh":     TierGeneric,
--		"c":      TierGeneric,
--		"cpp":    TierGeneric,
--		"cs":     TierGeneric,
--		"swift":  TierGeneric,
--		"php":    TierGeneric,
--		"elixir": TierGeneric,
--		"erlang": TierGeneric,
--		"scala":  TierGeneric,
--		"lua":    TierGeneric,
--		"r":      TierGeneric,
--		"zig":    TierGeneric,
--		"sql":    TierGeneric,
--		"proto":  TierGeneric,
--	}
- 
--	if len(expected) != 22 {
--		t.Errorf("expected exactly 22 language→tier entries in the test table, got %d", len(expected))
--	}
--
--	for lang, wantTier := range expected {
--		gotTier := TierForLanguage(lang)
--		if gotTier != wantTier {
--			t.Errorf("TierForLanguage(%q) = %s, want %s", lang, gotTier, wantTier)
--		}
--	}
-+	"github.com/iksna
-...[elided 497 bytes - full stream is hash-only]...
-gn a tier", lang)
-+func TestTierRegistry_AllKnownLanguagesHaveTiers(t *testing.T) {
-+	for _, lang := range discovery.KnownLanguages() {
-+		tier := engine.TierForLanguage(lang)
-+		if tier == engine.TierNone {
-+			t.Errorf("language %q has no tier entry (got TierNone); every known language must have a defined tier", lang)
- 		}
- 	}
--
--	// Detect missing keys: if we expect a language that isn't in the registry,
--	// the TierForLanguage call already failed above — but also flag the registry size.
--	if len(languageTiers) != len(expected) {
--		t.Errorf("languageTiers has %d entries, test expects %d — registry and test are out of sync", len(languageTiers), len(expected))
--	}
- }
- 
--func TestTierForLanguageUnknownReturnsGeneric(t *testing.T) {
--	got := TierForLanguage("haskell")
--	if got != TierGeneric {
--		t.Errorf("TierForLanguage(%q) = %s, want %s (unknown languages should default to TierGeneric)", "haskell", got, TierGeneric)
--	}
--
--	got = TierForLanguage("")
--	if got != TierGeneric {
--		t.Errorf("TierForLanguage(%q) = %s, want %s (empty string should default to TierGeneric)", "", got, TierGeneric)
-+func TestTierRegistry_UnknownLanguageReturnsGeneric(t *testing.T) {
-+	got := engine.TierForLanguage("nonsense-language")
-+	if got != engine.TierGeneric {
-+		t.Errorf("TierForLanguage(%q) = %v, want TierGeneric", "nonsense-language", got)
- 	}
- }
- 
--func TestTierString(t *testing.T) {
--	tests := []struct {
--		tier Tier
--		want string
--	}{
--		{TierNone, "None"},
--		{TierGeneric, "Generic"},
--		{TierLint, "Lint"},
--		{TierParse, "Parse"},
--		{TierFull, "Full"},
--		{Tier(99), "Tier(99)"},
--	}
--
--	for _, tt := range tests {
--		got := tt.tier.String()
--		if got != tt.want {
--			t.Errorf("Tier(%d).String() = %q, want %q", tt.tier, got, tt.want)
--		}
-+func TestTierRegistry_SwiftIsGeneric(t *testing.T) {
-+	got := engine.TierForLanguage("swift")
-+	if got != engine.TierGeneric {
-+		t.Errorf("TierForLanguage(%q) = %v, want TierGeneric", "swift", got)
- 	}
- }
 -- 
 2.54.0 (Apple Git-156)
 
