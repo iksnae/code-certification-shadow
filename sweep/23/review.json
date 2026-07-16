@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 47 round(s)",
+      "detail" : "the implementor finished in 49 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "detail" : "4 file(s) changed: internal\/discovery\/generic.go, internal\/discovery\/scanner_test.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_test.go",
+      "detail" : "5 file(s) changed: internal\/discovery\/generic.go, internal\/discovery\/generic_test.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_registry_test.go, internal\/engine\/language_tiers_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -95,7 +95,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t1.426s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t2.241s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t3.325s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t51.788s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t2.940s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t3.318s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t3.557s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.184s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t4.568s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t5.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t5.614s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t4.133s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t6.619s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t5.798s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t7.095s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t7.343s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t7.256s\n--- FAIL: TestGenerateSite_LargeScale (31.23s)\n    site_test.go:391: site generation took 26.693048792s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.669s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t6.550s\nFAIL\n"
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t4.093s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t4.167s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t4.964s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t60.995s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t4.696s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t4.922s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t5.193s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t5.530s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t5.745s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t5.324s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t6.059s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t6.615s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t5.892s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.292s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t6.587s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.835s\n--- FAIL: TestGenerateSite_LargeScale (33.70s)\n    site_test.go:391: site generation took 27.821894084s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.799s\nFAIL\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -123,12 +123,13 @@
     "rcpt-build-commit-sweep-build-23#s2"
   ],
   "failureReasons" : [
-    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t1.426s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t2.241s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t3.325s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t51.788s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t2.940s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t3.318s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t3.557s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.184s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t4.568s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t5.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t5.614s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t4.133s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t6.619s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t5.798s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t7.095s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t7.343s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t7.256s\n--- FAIL: TestGenerateSite_LargeScale (31.23s)\n    site_test.go:391: site generation took 26.693048792s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.669s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t6.550s\nFAIL"
+    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t4.093s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t4.167s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t4.964s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t60.995s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t4.696s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t4.922s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t5.193s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t5.530s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t5.745s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t5.324s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t6.059s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t6.615s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t5.892s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.292s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t6.587s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.835s\n--- FAIL: TestGenerateSite_LargeScale (33.70s)\n    site_test.go:391: site generation took 27.821894084s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.799s\nFAIL"
   ],
   "filesReviewed" : [
     "internal\/discovery\/generic.go",
-    "internal\/discovery\/scanner_test.go",
+    "internal\/discovery\/generic_test.go",
     "internal\/engine\/language_tiers.go",
+    "internal\/engine\/language_tiers_registry_test.go",
     "internal\/engine\/language_tiers_test.go"
   ],
   "outcome" : "needsFix",
