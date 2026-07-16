@@ -1,20 +1,26 @@
-From 3a29ddf44ccb0a0ba41cd5037480bacb1393aed1 Mon Sep 17 00:00:00 2001
+From db41c881f840db7c0a3fe4898c65d02f6aed9f52 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 20:10:53 -0400
+Date: Thu, 16 Jul 2026 14:36:12 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-32#s0)
 
 ---
- internal/domain/record.go | 3 +++
- 1 file changed, 3 insertions(+)
+ internal/domain/record.go | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/internal/domain/record.go b/internal/domain/record.go
-index 48968a280..09d141355 100644
+index 48968a280..5fa5308ad 100644
 --- a/internal/domain/record.go
 +++ b/internal/domain/record.go
-@@ -91,6 +91,9 @@ type CertificationRecord struct {
- 	Source  string `json:"source"` // "deterministic", "agent", "combined"
- 	RunID   string `json:"run_id,omitempty"`
- 	Version int    `json:"version"` // record schema version
+@@ -88,9 +88,12 @@ type CertificationRecord struct {
+ 	ExpiresAt   time.Time `json:"expires_at"`
+ 
+ 	// Metadata
+-	Source  string `json:"source"` // "deterministic", "agent", "combined"
+-	RunID   string `json:"run_id,omitempty"`
+-	Version int    `json:"version"` // record schema version
++	Source      string `json:"source"` // "deterministic", "agent", "combined"
++	RunID       string `json:"run_id,omitempty"`
++	Version     int    `json:"version"` // record schema version
 +
 +	// Unsupported records are excluded from aggregate calculations.
 +	Unsupported bool `json:"unsupported,omitempty"`
@@ -24,27 +30,32 @@ index 48968a280..09d141355 100644
 -- 
 2.54.0 (Apple Git-156)
 
-From e8fefa8e052f3d98ff9dce79a0207b044245852f Mon Sep 17 00:00:00 2001
+From 32496bf1c93bc980175bbe39227102c18fc572a2 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 20:11:38 -0400
+Date: Thu, 16 Jul 2026 14:38:55 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-32#s1)
 
 ---
- internal/report/health.go      | 15 +++++++--
- internal/report/health_test.go | 56 ++++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+), 3 deletions(-)
+ internal/report/health.go      | 20 +++++----
+ internal/report/health_test.go | 82 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 8 deletions(-)
 
 diff --git a/internal/report/health.go b/internal/report/health.go
-index bea22e1ae..3270373ae 100644
+index bea22e1ae..4b5403134 100644
 --- a/internal/report/health.go
 +++ b/internal/report/health.go
-@@ -29,12 +29,16 @@ func Health(records []domain.CertificationRecord) HealthReport {
- 	}
+@@ -24,17 +24,16 @@ type HealthReport struct {
  
+ // Health computes a health report from certification records.
+ func Health(records []domain.CertificationRecord) HealthReport {
+-	if len(records) == 0 {
+-		return HealthReport{}
+-	}
+-
  	var h HealthReport
 -	h.TotalUnits = len(records)
+-
 +	var counted int
- 
  	var totalScore float64
  	var passing int
  
@@ -56,7 +67,7 @@ index bea22e1ae..3270373ae 100644
  		totalScore += r.Score
  
  		switch r.Status {
-@@ -56,8 +60,13 @@ func Health(records []domain.CertificationRecord) HealthReport {
+@@ -56,8 +55,13 @@ func Health(records []domain.CertificationRecord) HealthReport {
  		}
  	}
  
@@ -73,81 +84,218 @@ index bea22e1ae..3270373ae 100644
  	return h
  }
 diff --git a/internal/report/health_test.go b/internal/report/health_test.go
-index 26eaff929..18c09e61a 100644
+index 26eaff929..a5936ea66 100644
 --- a/internal/report/health_test.go
 +++ b/internal/report/health_test.go
-@@ -104,3 +104,59 @@ func TestFormatText(t *testing.T) {
- 		t.Error("FormatText should produce output")
+@@ -63,6 +63,88 @@ func TestHealthReport_Empty(t *testing.T) {
  	}
  }
+ 
++func TestHealthReport_SkipsUnsupported(t *testing.T) {
++	now := time.Now()
++	makeRec := func(path, symbol string, status domain.Status, score float64, unsupported bool) domain.CertificationRecord {
++		return domain.CertificationRecord{
++			UnitID:      domain.NewUnitID("go", path, symbol),
++			UnitType:    dom
+...[elided 688 bytes - full stream is hash-only]...
+	makeRec("d.go", "D", domain.StatusProbationary, 0.4, true),
++			},
++			wantTotalUnits: 2,
++			wantPassRate:   1.0,
++			wantAvgScore:   0.9,
++		},
++		{
++			name: "all unsupported",
++			recs: []domain.CertificationRecord{
++				makeRec("x.go", "X", domain.StatusCertified, 0.9, true),
++				makeRec("y.go", "Y", domain.StatusDecertified, 0.1, true),
++			},
++			wantTotalUnits: 0,
++			wantPassRate:   0,
++			wantAvgScore:   0,
++		},
++	}
 +
-+func TestHealthReport_UnsupportedMixed(t *testing.T) {
-+	// Mix of supported and unsupported records; unsupported must not affect aggregates.
-+	records := []domain.CertificationRecord{
-+		makeRecord("a.go", "A", domain.StatusCertified, 0.9),
-+		makeRecord("b.go", "B", domain.StatusCertified, 0.8),
-+	}
-+	// Append unsupported records manually (makeRecord doesn't expose Unsupported).
-+	unsupported := []domain.CertificationRecord{
-+		{UnitID: domain.NewUnitID("go", "c.go", "C"), UnitType: domain.UnitTypeFunction, UnitPath: "c.go", Status: domain.StatusCertified, Score: 0.99, Unsupported: true},
-+		{UnitID: domain.NewUnitID("go", "d.go", "D"), UnitType: domain.UnitTypeFunction, UnitPath: "d.go", Status: domain.StatusDecertified, Score: 0.01, Unsupported: true},
-+	}
-+	records = append(records, unsupported...)
++	for _, tt := range tests {
++		t.Run(tt.name, func(t *testing.T) {
++			h := report.Health(tt.recs)
 +
-+	h := report.Health(records)
++			if h.TotalUnits != tt.wantTotalUnits {
++				t.Errorf("TotalUnits = %d, want %d", h.TotalUnits, tt.wantTotalUnits)
++			}
++			if h.PassRate != tt.wantPassRate {
++				t.Errorf("PassRate = %f, want %f", h.PassRate, tt.wantPassRate)
++			}
++			if h.AverageScore != tt.wantAvgScore {
++				t.Errorf("AverageScore = %f, want %f", h.AverageScore, tt.wantAvgScore)
++			}
 +
-+	if h.TotalUnits != 2 {
-+		t.Errorf("TotalUnits = %d, want 2 (unsupported excluded)", h.TotalUnits)
-+	}
-+	if h.Certified != 2 {
-+		t.Errorf("Certified = %d, want 2 (unsupported certified not counted)", h.Certified)
-+	}
-+	if h.Decertified != 0 {
-+		t.Errorf("Decertified = %d, want 0 (unsupported decertified not counted)", h.Decertified)
-+	}
-+	if h.PassRate != 1.0 {
-+		t.Errorf("PassRate = %f, want 1.0 (only supported records count)", h.PassRate)
-+	}
-+	// AverageScore should be (0.9+0.8)/2 = 0.85, not affected by the unsupported scores.
-+	if h.AverageScore < 0.849 || h.AverageScore > 0.851 {
-+		t.Errorf("AverageScore = %f, want ~0.85", h.AverageScore)
++			// Cert counts must come only from supported records.
++			if h.Certified != 2 && tt.name == "mixed supported and unsupported" {
++				t.Errorf("Certified = %d, want 2 (unsupported should not count)", h.Certified)
++			}
++			if h.Probationary != 0 && tt.name == "mixed supported and unsupported" {
++				t.Errorf("Probationary = %d, want 0 (unsupported should not count)", h.Probationary)
++			}
++				if h.Decertified != 0 && tt.name == "mixed supported and unsupported" {
++				t.Errorf("Decertified = %d, want 0 (unsupported should not count)", h.Decertified)
++			}
++
++			// For all-unsupported, everything should be zero.
++			if tt.name == "all unsupported" {
++				if h.Certified != 0 || h.CertifiedWithObs != 0 || h.Probationary != 0 || h.Expired != 0 || h.Decertified != 0 || h.Exempt != 0 {
++					t.Errorf("all status counts should be 0 when all records are unsupported, got %+v", h)
++				}
++			}
++		})
 +	}
 +}
 +
-+func TestHealthReport_AllUnsupported(t *testing.T) {
-+	records := []domain.CertificationRecord{
-+		{UnitID: domain.NewUnitID("go", "x.go", "X"), UnitType: domain.UnitTypeFunction, UnitPath: "x.go", Status: domain.StatusCertified, Score: 0.95, Unsupported: true},
-+		{UnitID: domain.NewUnitID("go", "y.go", "Y"), UnitType: domain.UnitTypeFunction, UnitPath: "y.go", Status: domain.StatusDecertified, Score: 0.10, Unsupported: true},
-+	}
-+
-+	h := report.Health(records)
-+
-+	// All unsupported → empty HealthReport.
-+	if h.TotalUnits != 0 {
-+		t.Errorf("TotalUnits = %d, want 0", h.TotalUnits)
-+	}
-+	if h.Certified != 0 {
-+		t.Errorf("Certified = %d, want 0", h.Certified)
-+	}
-+	if h.PassRate != 0 {
-+		t.Errorf("PassRate = %f, want 0", h.PassRate)
-+	}
-+	if h.AverageScore != 0 {
-+		t.Errorf("AverageScore = %f, want 0", h.AverageScore)
-+	}
-+}
+ func TestHealthReport_AllCertified(t *testing.T) {
+ 	records := []domain.CertificationRecord{
+ 		makeRecord("a.go", "A", domain.StatusCertified, 0.95),
 -- 
 2.54.0 (Apple Git-156)
 
-From f0b4959405e987a4fbd0acaab8ad750e93e45aa5 Mon Sep 17 00:00:00 2001
+From 399106396bdde66f08a89f99dfae03e18af97953 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 20:13:05 -0400
+Date: Thu, 16 Jul 2026 14:40:38 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-32#s2)
+
+---
+ internal/report/card.go      | 19 ++++++++++--
+ internal/report/card_test.go | 59 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 75 insertions(+), 3 deletions(-)
+
+diff --git a/internal/report/card.go b/internal/report/card.go
+index 1c597a7e1..84260fd73 100644
+--- a/internal/report/card.go
++++ b/internal/report/card.go
+@@ -70,10 +70,14 @@ func GenerateCard(records []domain.CertificationRecord, repo, commit string, now
+ 		return c
+ 	}
+ 
+-	c.TotalUnits = len(records)
+ 	var totalScore float64
++	counted := 0
+ 
+ 	for _, r := range records {
++		if r.Unsupported {
++			continue
++		}
++		counted++
+ 		totalScore += r.Score
+ 		c.GradeDistribution[r.Grade.String()]++
+ 
+@@ -90,9 +94,15 @@ func GenerateCard(records []domain.CertificationRecord, repo, commit string, now
+ 		}
+ 	}
+ 
+-	c.OverallScore = totalScore / float64(c.TotalUnits)
++	if counted == 0 {
++		c.OverallGrade = "N/A"
++		return c
++	}
++
++	c.TotalUnits = counted
++	c.OverallScore = totalScore / float64(counted)
+ 	c.OverallGrade = domain.GradeFromScore(c.OverallScore).String()
+-	c.PassRate = float64(c.Passing) / float64(c.TotalUnits)
++	c.PassRate = float64(c.Passing) / float64(counted)
+ 	c.Languages = buildLanguageDetail(records)
+ 	c.TopIssues = buildTopIssues(records)
+ 
+@@ -109,6 +119,9 @@ func buildTopIssues(records []domain.CertificationRecord) []IssueCard {
+ 
+ 	var issues []IssueCard
+ 	for _, r := range sorted {
++		if r.Unsupported {
++			continue
++		}
+ 		if len(issues) >= 10 {
+ 			break
+ 		}
+diff --git a/internal/report/card_test.go b/internal/report/card_test.go
+index c3f2180c2..59405af5b 100644
+--- a/internal/report/card_test.go
++++ b/internal/report/card_test.go
+@@ -121,6 +121,65 @@ func TestFormatCardText(t *testing.T) {
+ 	}
+ }
+ 
++func TestGenerateCard_UnsupportedMixed(t *testing.T) {
++	// Unsuppo
+...[elided 166 bytes - full stream is hash-only]...
+eCardRecord("go", "b.go", "B", domain.StatusCertified, 0.85),
++		{Unsupported: true, UnitID: domain.NewUnitID("zz", "unsup.go", "fn"), Status: domain.StatusDecertified, Score: 0.01},
++	}
++
++	c := report.GenerateCard(records, "test/repo", "abc123", time.Now())
++
++	if c.TotalUnits != 2 {
++		t.Errorf("TotalUnits = %d, want 2", c.TotalUnits)
++	}
++	if c.Passing != 2 {
++		t.Errorf("Passing = %d, want 2", c.Passing)
++	}
++	if c.Failing != 0 {
++		t.Errorf("Failing = %d, want 0", c.Failing)
++	}
++	// OverallScore: (0.95 + 0.85) / 2 = 0.90
++	if c.OverallScore < 0.89 || c.OverallScore > 0.91 {
++		t.Errorf("OverallScore = %f, want ~0.90", c.OverallScore)
++	}
++	// PassRate: 2/2 = 1.0
++	if c.PassRate < 0.99 {
++		t.Errorf("PassRate = %f, want 1.0", c.PassRate)
++	}
++	// Grade distribution should only include supported
++	totalGraded := 0
++	for _, count := range c.GradeDistribution {
++		totalGraded += count
++	}
++	if totalGraded != 2 {
++		t.Errorf("grade distribution total = %d, want 2", totalGraded)
++	}
++	// TopIssues should not include unsupported
++	for _, iss := range c.TopIssues {
++		if strings.Contains(iss.UnitID, "unsup") {
++			t.Errorf("TopIssues should not contain unsupported unit, got %s", iss.UnitID)
++		}
++	}
++}
++
++func TestGenerateCard_AllUnsupported(t *testing.T) {
++	records := []domain.CertificationRecord{
++		{Unsupported: true, UnitID: domain.NewUnitID("zz", "a.go", "fnA"), Status: domain.StatusDecertified, Score: 0.01},
++		{Unsupported: true, UnitID: domain.NewUnitID("zz", "b.go", "fnB"), Status: domain.StatusDecertified, Score: 0.02},
++	}
++
++	c := report.GenerateCard(records, "test/repo", "abc123", time.Now())
++
++	if c.OverallGrade != "N/A" {
++		t.Errorf("OverallGrade = %s, want N/A", c.OverallGrade)
++	}
++	if c.TotalUnits != 0 {
++		t.Errorf("TotalUnits = %d, want 0", c.TotalUnits)
++	}
++}
++
+ func TestFormatCardMarkdown(t *testing.T) {
+ 	records := []domain.CertificationRecord{
+ 		makeCardRecord("go", "a.go", "A", domain.StatusCertified, 0.90),
+-- 
+2.54.0 (Apple Git-156)
+
+From 4b38fa75f942fc3460e97720d158b42c0bcbaad7 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 16 Jul 2026 14:42:23 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-32#s3)
 
 ---
- internal/report/detailed.go      |  6 ++++++
- internal/report/detailed_test.go | 33 ++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+ internal/report/detailed.go      |  6 +++++
+ internal/report/detailed_test.go | 42 ++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
 diff --git a/internal/report/detailed.go b/internal/report/detailed.go
 index 6e92ceb91..03fb5d3bf 100644
@@ -174,42 +322,51 @@ index 6e92ceb91..03fb5d3bf 100644
  		totals[lang]++
  		scores[lang] += r.Score
 diff --git a/internal/report/detailed_test.go b/internal/report/detailed_test.go
-index 83da3c7d7..2597335a7 100644
+index 83da3c7d7..40fcb42e6 100644
 --- a/internal/report/detailed_test.go
 +++ b/internal/report/detailed_test.go
-@@ -48,6 +48,21 @@ func TestDetailedReport_DimensionAverages(t *testing.T) {
+@@ -48,6 +48,27 @@ func TestDetailedReport_DimensionAverages(t *testing.T) {
  	if v, ok := d.Dimensions["maintainability"]; !ok || v < 0.69 || v > 0.71 {
  		t.Errorf("maintainability avg = %v, want ~0.7", v)
  	}
 +
-+	// Unsupported records should contribute zero to dimension averages.
-+	t.Run("unsupported excluded from dimension averages", func(t *testing.T) {
-+		unsuppDims := domain.DimensionScores{
-+			domain.DimCorrectness: 0.1, // would drag down average if counted
++	// Unsupported records should be excluded from dimension averages
++	t.Run("unsupported excluded", func(t *testing.T) {
++		unsupDims := domain.DimensionScores{
++			domain.DimCorrectness:     0.1,
++			domain.DimMaintainability: 0.1,
 +		}
-+		unsupp := makeDetailedRecord("go", "skip.go", "Skip", domain.StatusCertified, 0.1, unsuppDims, 90*24*time.Hour)
-+		unsupp.Unsupported = true
-+		recordsWithUnsupp := append(records, unsupp)
-+		d2 := report.Detailed(recordsWithUnsupp, time.Now())
-+		// Same two supported records only => averages unchanged
-+		if v := d2.Dimensions["correctness"]; v < 0.79 || v > 0.81 {
++		unsupRec := makeDetailedRecord("go", "unsup.go", "Unsup", domain.StatusCertified, 0.1, unsupDims, 90*24*time.Hour)
++		unsupRec.Unsupported = true
++
++		recordsWithUnsup := append([]domain.CertificationRecord{unsupRec}, records...)
++		d2 := report.Detailed(recordsWithUnsup, time.Now())
++
++		// The averages should still be ~0.8 and ~0.7 — unsupported record must not drag them down
++		if v, ok := d2.Dimensions["correctness"]; !ok || v < 0.79 || v > 0.81 {
 +			t.Errorf("correctness avg with unsupported = %v, want ~0.8 (unsupported excluded)", v)
++		}
++		if v, ok := d2.Dimensions["maintainability"]; !ok || v < 0.69 || v > 0.71 {
++			t.Errorf("maintainability avg with unsupported = %v, want ~0.7 (unsupported excluded)", v)
 +		}
 +	})
  }
  
  func TestDetailedReport_ByLanguage(t *testing.T) {
-@@ -77,6 +92,24 @@ func TestDetailedReport_ByLanguage(t *testing.T) {
+@@ -77,6 +98,27 @@ func TestDetailedReport_ByLanguage(t *testing.T) {
  	if tsLang.Passing != 0 {
  		t.Errorf("ts passing = %d, want 0", tsLang.Passing)
  	}
 +
-+	// Unsupported records should contribute zero to language breakdowns.
-+	t.Run("unsupported excluded from language breakdowns", func(t *testing.T) {
-+		unsupp := makeDetailedRecord("go", "skip.go", "Skip", domain.StatusCertified, 0.1, nil, 90*24*time.Hour)
-+		unsupp.Unsupported = true
-+		recordsWithUnsupp := append(records, unsupp)
-+		d2 := report.Detailed(recordsWithUnsupp, time.Now())
++	// Unsupported records should be excluded from language breakdowns
++	t.Run("unsupported excluded", func(t *testing.T) {
++		unsupRec := makeDetailedRecord("go", "unsup.go", "Unsup", domain.StatusCertified, 0.99, nil, 90*24*time.Hour)
++		unsupRec.Unsupported = true
++
++		recordsWithUnsup := append([]domain.CertificationRecord{unsupRec}, records...)
++		d2 := report.Detailed(recordsWithUnsup, time.Now())
++
++		// go still has 2 units, 2 passing, avg ~0.85 — unsupported record excluded
 +		goLang2 := d2.ByLanguage["go"]
 +		if goLang2.Units != 2 {
 +			t.Errorf("go total with unsupported = %d, want 2 (unsupported excluded)", goLang2.Units)
