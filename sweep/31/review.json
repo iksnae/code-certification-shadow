@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 24 round(s)",
+      "detail" : "ran all 57 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "4 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/record.go, internal\/language_tiers\/, internal\/language_tiers\/tiers.go",
+      "detail" : "8 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/domain\/record.go, internal\/domain\/record_test.go, internal\/engine\/scorer_test.go, internal\/language_tiers\/, internal\/language_tiers\/tiers.go, internal\/language_tiers\/tiers_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,21 +31,21 @@
       }
     },
     {
-      "detail" : "the project verify command was GREEN",
+      "detail" : "the project verify command was RED",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "committed locally on the build branch",
+      "detail" : "verification result was not committed",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -93,19 +93,11 @@
   ],
   "claims" : [
     {
-      "evidence" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t4.378s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.395s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t2.162s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t55.841s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t1.438s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.874s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.293s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t10.397s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t2.779s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.699s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.384s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t1.577s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t2.049s\n?   \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t[no test files]\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t2.564s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t3.420s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t2.955s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.335s\n--- FAIL: TestGenerateSite_LargeScale (33.88s)\n    site_test.go:391: site generation took 29.73208s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.129s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t2.997s\nFAIL\n"
-      },
-      "oracle" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "kind" : "testsPass"
-      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "fail"
+      "verdict" : "unsure"
     }
   ],
-  "committed" : true,
+  "committed" : false,
   "confidence" : 0,
   "correlationId" : "sweep-build-31",
   "dimensions" : [
@@ -117,18 +109,28 @@
     "rcpt-build-commit-sweep-build-31#s0",
     "rcpt-build-implement-sweep-build-31#s1",
     "rcpt-build-verify-sweep-build-31#s1",
-    "rcpt-build-commit-sweep-build-31#s1"
+    "rcpt-build-commit-sweep-build-31#s1",
+    "rcpt-build-implement-sweep-build-31#s2",
+    "rcpt-build-verify-sweep-build-31#s2",
+    "rcpt-build-commit-sweep-build-31#s2",
+    "rcpt-build-implement-sweep-build-31#s3",
+    "rcpt-build-verify-sweep-build-31#s3",
+    "rcpt-build-commit-sweep-build-31#s3"
   ],
   "failureReasons" : [
-    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t4.378s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.395s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t2.162s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t55.841s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t1.438s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t1.874s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t2.293s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t10.397s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t2.779s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.699s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.384s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t1.577s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t2.049s\n?   \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t[no test files]\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t2.564s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t3.420s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t2.955s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.335s\n--- FAIL: TestGenerateSite_LargeScale (33.88s)\n    site_test.go:391: site generation took 29.73208s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.129s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t2.997s\nFAIL"
+    "Implementation did not complete — the build used all 57 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
     "internal\/domain\/dimension.go",
+    "internal\/domain\/dimension_test.go",
     "internal\/domain\/record.go",
+    "internal\/domain\/record_test.go",
+    "internal\/engine\/scorer_test.go",
     "internal\/language_tiers\/",
-    "internal\/language_tiers\/tiers.go"
+    "internal\/language_tiers\/tiers.go",
+    "internal\/language_tiers\/tiers_test.go"
   ],
-  "outcome" : "needsFix",
+  "outcome" : "blocked",
   "rubricId" : "",
   "rubricVersion" : 0
 }
