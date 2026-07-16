@@ -1,12 +1,11 @@
 {
-  "commitRef" : "bb960e2941ddf75261287c3222d1472c755bff34",
+  "commitRef" : "22a19b3419c19fc56b3ea627a2a79d96f45e543f",
   "committed" : true,
   "correlationId" : "sweep-build-23",
   "filesChanged" : [
     "internal\/discovery\/generic.go",
-    "internal\/discovery\/generic_test.go",
+    "internal\/discovery\/scanner_test.go",
     "internal\/engine\/language_tiers.go",
-    "internal\/engine\/language_tiers_registry_test.go",
     "internal\/engine\/language_tiers_test.go"
   ],
   "implementCompleted" : true,
