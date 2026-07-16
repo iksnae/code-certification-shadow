@@ -1,22 +1,22 @@
-From 38792b344ebacd454280df3836107d9e15c9c078 Mon Sep 17 00:00:00 2001
+From 4d4da124af63faefbc6e90c5264dac56bc88ea8b Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Thu, 16 Jul 2026 14:49:22 -0400
+Date: Thu, 16 Jul 2026 15:20:28 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-30#s0)
 
 ---
- internal/domain/dimension.go      |  3 +++
- internal/domain/dimension_test.go | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
+ internal/domain/dimension.go      | 3 +++
+ internal/domain/dimension_test.go | 1 +
+ 2 files changed, 4 insertions(+)
 
 diff --git a/internal/domain/dimension.go b/internal/domain/dimension.go
-index 6bf97beec..879047db7 100644
+index 6bf97beec..3e0a42c1c 100644
 --- a/internal/domain/dimension.go
 +++ b/internal/domain/dimension.go
 @@ -113,6 +113,8 @@ const (
  	GradeF                   // < 0.60
  )
  
-+const GradeNA Grade = -1 // N/A short-circuit
++const GradeNA Grade = -1 // N/A — not applicable / short-circuit
 +
  var gradeStrings = map[Grade]string{
  	GradeA:      "A",
@@ -30,29 +30,10 @@ index 6bf97beec..879047db7 100644
  
  // String returns the letter grade string.
 diff --git a/internal/domain/dimension_test.go b/internal/domain/dimension_test.go
-index dca0de968..5f6922f35 100644
+index dca0de968..41b8906e0 100644
 --- a/internal/domain/dimension_test.go
 +++ b/internal/domain/dimension_test.go
-@@ -116,6 +116,18 @@ func TestDimensionScores_Grade(t *testing.T) {
- 	}
- }
- 
-+func TestGradeNA_Value(t *testing.T) {
-+	if got := int(domain.GradeNA); got != -1 {
-+		t.Errorf("int(GradeNA) = %d, want -1", got)
-+	}
-+}
-+
-+func TestGradeNA_String(t *testing.T) {
-+	if got := domain.GradeNA.String(); got != "N/A" {
-+		t.Errorf("GradeNA.String() = %q, want %q", got, "N/A")
-+	}
-+}
-+
- func TestGrade_String(t *testing.T) {
- 	tests := []struct {
- 		g    domain.Grade
-@@ -128,6 +140,7 @@ func TestGrade_String(t *testing.T) {
+@@ -128,6 +128,7 @@ func TestGrade_String(t *testing.T) {
  		{domain.GradeC, "C"},
  		{domain.GradeD, "D"},
  		{domain.GradeF, "F"},
@@ -63,15 +44,15 @@ index dca0de968..5f6922f35 100644
 -- 
 2.54.0 (Apple Git-156)
 
-From ad7d98e5a67743a4916bfc7888d7e511d33cb8b4 Mon Sep 17 00:00:00 2001
+From 373a6e01c2858e20020c5846729c36c0647f0fb1 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Thu, 16 Jul 2026 14:50:13 -0400
+Date: Thu, 16 Jul 2026 15:21:25 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-30#s1)
 
 ---
  internal/domain/record.go      |  2 ++
- internal/domain/record_test.go | 20 ++++++++++++++++++++
- 2 files changed, 22 insertions(+)
+ internal/domain/record_test.go | 17 +++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
 diff --git a/internal/domain/record.go b/internal/domain/record.go
 index 48968a280..da96ff9c0 100644
@@ -87,30 +68,27 @@ index 48968a280..da96ff9c0 100644
  
  // CertificationRun captures metadata about a single certification invocation.
 diff --git a/internal/domain/record_test.go b/internal/domain/record_test.go
-index c28f51895..8ce0a7aaf 100644
+index c28f51895..6e5005d00 100644
 --- a/internal/domain/record_test.go
 +++ b/internal/domain/record_test.go
-@@ -105,6 +105,26 @@ func TestGenerateRunID(t *testing.T) {
+@@ -105,6 +105,23 @@ func TestGenerateRunID(t *testing.T) {
  	}
  }
  
 +func TestCertificationRecord_UnsupportedField(t *testing.T) {
 +	rec := domain.CertificationRecord{
-+		UnitID:   domain.NewUnitID("go", "/test/path", ""),
-+		UnitType: domain.UnitTypeFile,
-+		UnitPath: "/test/path",
-+		Version:  1,
++		UnitID: domain.NewUnitID("go", "test/pkg", ""),
++		Status: domain.StatusCertified,
++	}
++	// Zero-value default must be false
++	if rec.Unsupported {
++		t.Error("Unsupported field should default to false")
 +	}
 +
-+	if rec.Unsupported != false {
-+		t.Errorf("Unsupported should default to false, got %v", rec.Unsupported)
-+	}
-+
-+	rec2 := domain.CertificationRecord{
-+		Unsupported: true,
-+	}
-+	if rec2.Unsupported != true {
-+		t.Errorf("Unsupported should be true when set, got %v", rec2.Unsupported)
++	// Explicitly setting to true must be preserved
++	rec.Unsupported = true
++	if !rec.Unsupported {
++		t.Error("Unsupported field should be settable to true")
 +	}
 +}
 +
