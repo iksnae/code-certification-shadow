@@ -1,9 +1,11 @@
 {
-  "commitRef" : "f0b4959405e987a4fbd0acaab8ad750e93e45aa5",
+  "commitRef" : "4b38fa75f942fc3460e97720d158b42c0bcbaad7",
   "committed" : false,
   "correlationId" : "sweep-build-32",
   "filesChanged" : [
     "internal\/domain\/record.go",
+    "internal\/report\/card.go",
+    "internal\/report\/card_test.go",
     "internal\/report\/detailed.go",
     "internal\/report\/detailed_test.go",
     "internal\/report\/health.go",
@@ -27,6 +29,6 @@
     "rcpt-build-verify-sweep-build-32#s4",
     "rcpt-build-commit-sweep-build-32#s4"
   ],
-  "rounds" : 47,
+  "rounds" : 73,
   "verifyPassed" : true
 }
