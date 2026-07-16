@@ -1,0 +1,136 @@
+{
+  "checklist" : [
+    {
+      "detail" : "the implementor finished in 47 round(s)",
+      "id" : "build-completed",
+      "label" : "Build completed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "5 file(s) changed: internal\/domain\/record.go, internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/health.go, internal\/report\/health_test.go",
+      "id" : "change-present",
+      "label" : "Change is visible",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "expected ≥1 of: internal\/domain\/record.go, internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/full.go, internal\/report\/full_test.go, internal\/report\/health.go, internal\/report\/health_test.go",
+      "id" : "on-target",
+      "label" : "Changed the deliverable's target files",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "the project verify command was GREEN",
+      "id" : "verify-green",
+      "label" : "Verification passed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "verification result was not committed",
+      "id" : "committed",
+      "label" : "Work committed",
+      "result" : {
+        "fail" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "implements-the-approved-plan",
+      "label" : "Implements the approved plan",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "id" : "safe-to-advance",
+      "label" : "Safe to advance",
+      "result" : {
+        "skipped" : {
+
+        }
+      }
+    }
+  ],
+  "claims" : [
+    {
+      "statement" : "the reviewer's independent re-verification passes",
+      "verdict" : "unsure"
+    }
+  ],
+  "committed" : false,
+  "confidence" : 0,
+  "correlationId" : "sweep-build-32",
+  "dimensions" : [
+
+  ],
+  "evidenceReceiptIds" : [
+    "rcpt-build-implement-sweep-build-32#s0",
+    "rcpt-build-verify-sweep-build-32#s0",
+    "rcpt-build-commit-sweep-build-32#s0",
+    "rcpt-build-implement-sweep-build-32#s1",
+    "rcpt-build-verify-sweep-build-32#s1",
+    "rcpt-build-commit-sweep-build-32#s1",
+    "rcpt-build-implement-sweep-build-32#s2",
+    "rcpt-build-verify-sweep-build-32#s2",
+    "rcpt-build-commit-sweep-build-32#s2",
+    "rcpt-build-implement-sweep-build-32#s3",
+    "rcpt-build-verify-sweep-build-32#s3",
+    "rcpt-build-commit-sweep-build-32#s3",
+    "rcpt-build-implement-sweep-build-32#s4",
+    "rcpt-build-verify-sweep-build-32#s4",
+    "rcpt-build-commit-sweep-build-32#s4"
+  ],
+  "failureReasons" : [
+    "The work passed verification but was not committed."
+  ],
+  "filesReviewed" : [
+    "internal\/domain\/record.go",
+    "internal\/report\/detailed.go",
+    "internal\/report\/detailed_test.go",
+    "internal\/report\/health.go",
+    "internal\/report\/health_test.go"
+  ],
+  "outcome" : "needsFix",
+  "rubricId" : "",
+  "rubricVersion" : 0
+}
