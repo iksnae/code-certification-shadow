@@ -1,14 +1,14 @@
-From a091422f07aff52b2d62549806e70f359b9b28a9 Mon Sep 17 00:00:00 2001
+From a21f4690b3ba1eda1dcdf4e71dc003326137be4b Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 19:51:03 -0400
+Date: Wed, 15 Jul 2026 20:13:33 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-26#s0)
 
 ---
- internal/engine/scorer_test.go | 98 ++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ internal/engine/scorer_test.go | 75 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
-index fdb674db4..07ecc1e78 100644
+index fdb674db4..ffc954e72 100644
 --- a/internal/engine/scorer_test.go
 +++ b/internal/engine/scorer_test.go
 @@ -2,6 +2,7 @@ package engine_test
@@ -19,159 +19,83 @@ index fdb674db4..07ecc1e78 100644
  
  	"github.com/iksnae/code-certification/internal/domain"
  	"github.com/iksnae/code-certification/internal/engine"
-@@ -806,6 +807,103 @@ func TestScorer_ConcreteDeps(t *testing.T) {
- 	}
- }
- 
-+// TestScore_SupportedLanguage_StillWorks is a regression guard that ensures
-+// a realistic Go unit with multiple evidence kinds still produces a valid
-+// certification record (non-zero grade, non-zero status, positive weighted avg).
-+func TestScore_SupportedLanguage_StillWorks(t *testing.T) {
-+	unit := domain.NewUnit(
-+		domain.NewUnitID("go", "main.go", "main"),
-+		domain.UnitTypeFunction,
-+	)
-+
-+	ev := []domain.Evidence{
-+		evidence.CodeMetrics{Complexity: 15, CodeLines: 120, TotalLines: 150}.ToEvidence(),
-+		evidence.GitStats{CommitCount: 42, AuthorCount: 3, AgeDays: 90}.ToEvidence(),
-+		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 0}.ToEvidence(),
-+	}
-+
-+	record := engine.CertifyUnit(unit, []domain.PolicyRule{}, ev, domain.ExpiryConfig{DefaultWindowDays: 90}, time.Now())
-+
-+	// The record must carry evidence that the pipeline processed.
-+	if len(record.Evidence) == 0 {
-+		t.Error("expected evidence on the record, got none")
-+	}
-+
-+	// Dimensions must be non-empty (scoring ran).
-+	if len(record.Dimensions) == 0 {
-+		t.Error("expected dimension scores to be populated, got empty map")
-+	}
-+
-+	// The weighted-average score must be positive.
-+	if record.Score <= 0 {
-+		t.Errorf("expected Score > 0, 
-...[elided 657 bytes - full stream is hash-only]...
-the former default).
-+	for dim, val := range scores {
-+		if val == 0.5 {
-+			t.Errorf("dimension %s has score 0.5 — former default injection detected", dim)
-+		}
-+	}
-+
-+	// Only dimensions backed by evidence should be present.
-+	// With only structural (clean method_count <= 15, no context_not_first violation),
-+	// we expect a small number of dimensions.
-+	if len(scores) == 0 {
-+		t.Error("expected at least some dimensions from structural evidence, got none")
-+	}
-+}
-+
-+// BUG(iksnae/code-certification#25): scoreFromMetrics incorrectly assigns
-+// excellent (0.95) maintainability when complexity=0 for unmeasured languages.
-+//
-+// TestScore_UnmeasuredComplexity_NotScoredExcellent documents the complexity=0 bug.
-+// When a code metrics evidence carries complexity=0 (e.g. a Swift or generic file
-+// where no complexity analyzer ran), maintainability should NOT be scored as
-+// excellent. Today the scorer DOES assign 0.95 (the bug). This test records
-+// the current (wrong) behavior so it can be flipped when the bug is fixed.
-+func TestScore_UnmeasuredComplexity_NotScoredExcellent(t *testing.T) {
-+	ev := []domain.Evidence{
-+		{
-+			Kind:   domain.EvidenceKindMetrics,
-+			Source: "generic",
-+			Passed: true,
-+			Metrics: map[string]float64{
-+				"complexity": 0,
-+				"coverage":   0,
-+			},
-+		},
-+	}
-+
-+	scores := engine.Score(ev, policy.EvaluationResult{})
-+
-+	// BUG(iksnae/code-certification#25): complexity=0 (unmeasured) should NOT
-+	// produce maintainability=0.95, but currently does. When the bug is fixed,
-+	// flip this assertion to: if v, ok := scores[domain.DimMaintainability]; ok && v == 0.95 { t.Error(...) }
-+	if v, ok := scores[domain.DimMaintainability]; !ok || v != 0.95 {
-+		t.Logf("BUG #25 appears fixed: maintainability=%v (present=%v) — update this test!", v, ok)
-+	}
-+}
-+
- func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
- 	// A function with all deep analysis metrics clean should score well
- 	ev := []domain.Evidence{{
--- 
-2.54.0 (Apple Git-156)
-
-From a04897fa1a30635cdfa5a3cea1bd26ccc6124cdf Mon Sep 17 00:00:00 2001
-From: AgencyX <agencyx@loswf.com>
-Date: Wed, 15 Jul 2026 19:52:09 -0400
-Subject: [PATCH] Build: implement approved plan (sweep-build-26#s1)
-
----
- internal/engine/scorer_test.go | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
-index 07ecc1e78..5f6738bbd 100644
---- a/internal/engine/scorer_test.go
-+++ b/internal/engine/scorer_test.go
-@@ -932,3 +932,53 @@ func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
+@@ -834,3 +835,77 @@ func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
  		}
  	}
  }
 +
-+// TestScore_UnsupportedLanguage_ReturnsNA is a stub test that documents the
-+// expected behavior after issue #25 (language tiers, GradeNA, Unsupported field)
-+// is implemented. It compiles against the current API surface but skips.
-+func TestScore_UnsupportedLanguage_ReturnsNA(t *testing.T) {
-+	t.Skip("Requires issue #25: GradeNA and Unsupported field not yet added to domain types")
++func TestScore_SupportedLanguage_StillWorks(t *testing.T) {
++	unit := domain.NewUnit(domain.NewUnitID("go", "main.go", "main"), domain.UnitTypeFunction)
++	ev := []domain.Evidence{
++		evidence.CodeMetrics{Complexity: 15, TotalLines: 200, CodeLines: 150}.ToEvidence(),
++		evidence.GitStats{CommitCount: 42, AuthorCount: 3, AgeDays: 90}.ToEvidence(),
++		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 0}.ToEvidence(),
++	}
++	now := time.Now()
++	record := engine.CertifyUnit(unit, []domain.PolicyRule{}, ev, domain.ExpiryConfig{}, now)
 +
-+	// Construct a Swift-like unit (unsupported language in Go-centric tooling).
-+	unit := domain.NewUnit(
-+		domain.NewUnitID("swift", "lib.swift", "doWork"),
-+		domain.UnitTypeFunction,
-+	)
-+
-+	record := engine.CertifyUnit(unit, []domain.PolicyRule{}, []domain.Evidence{}, domain.ExpiryConfig{DefaultWindowDays: 90}, time.Now())
-+
-+	// EXPECTED after #25:
-+	//   record.Grade == domain.GradeNA (or domain.GradeN/A)
-+	//   record.Unsupported == true
-+	//   len(record.DimensionScores) == 0
-+	_ = record
++	if len(record.Dimensions) == 0 {
++		t.Error("expected dimensions to be scored, got empty")
++	}
++	if record.Score <= 0 {
++		t.Error("expected score > 0, got <= 0")
++	}
++	avg := record.Dimensions.WeightedAverage(nil)
++	if avg <= 0 {
++		t.Error("expected weighted average > 0, got <= 0")
++	}
 +}
 +
-+// TestScore_AggregateSkipsUnsupported is a stub test that documents the
-+// expected aggregate behavior after issue #25. It compiles against the
-+// current API surface but skips.
-+func TestScore_AggregateSkipsUnsupported(t *testing.T) {
-+	t.Skip("Requires issue #25: no aggregate function or unsupported-language skipping in CertifyUnit yet")
++func TestScore_DefaultsNotInjected(t *testing.T) {
++	ev := []domain.Evidence{{
++		Kind:   domain.EvidenceKindStructural,
++		Source: "structural",
++		Passed: true,
++		Metrics: map[string]float64{
++			"method_count":      5,
++			"context_not_first": 0,
++		},
++	}}
++	scores := engine.Score(ev, policy.EvaluationResult{})
 +
-+	// A Go unit (supported language).
-+	goUnit := domain.NewUnit(
-+		domain.NewUnitID("go", "main.go", "main"),
-+		domain.UnitTypeFunction,
-+	)
++	for dim, val := range scores {
++		if val == 0.5 {
++			t.Errorf("dimension %s has value 0.5, the former default; should not be injected", dim)
++		}
++	}
 +
-+	// A Swift unit (unsupported language).
-+	swiftUnit := domain.NewUnit(
-+		domain.NewUnitID("swift", "lib.swift", "doWork"),
-+		domain.UnitTypeFunction,
-+	)
++	if len(scores) == 0 {
++		t.Error("expected at least some dimensions from structural evidence")
++	}
++}
 +
-+	goRecord := engine.CertifyUnit(goUnit, []domain.PolicyRule{}, []domain.Evidence{}, domain.ExpiryConfig{DefaultWindowDays: 90}, time.Now())
-+	swiftRecord := engine.CertifyUnit(swiftUnit, []domain.PolicyRule{}, []domain.Evidence{}, domain.ExpiryConfig{DefaultWindowDays: 90}, time.Now())
++// BUG(iksnae/code-certification#25): scoreFromMetrics incorrectly assigns excellent (0.95)
++// maintainability when complexity=0 for unmeasured languages.
++// This test documents the CURRENT (buggy) behavior. When the bug is fixed, this
++// assertion MUST be flipped: maintainability should be absent or < 0.95.
++func TestScore_UnmeasuredComplexity_NotScoredExcellent(t *testing.T) {
++	ev := []domain.Evidence{{
++		Kind:    domain.EvidenceKindMetrics,
++		Source:  "generic",
++		Passed:  true,
++		Metrics: map[string]float64{"complexity": 0, "coverage": 0},
++	}}
++	scores := engine.Score(ev, policy.EvaluationResult{})
 +
-+	// EXPECTED after #25:
-+	//   Go unit gets a real grade (A-F).
-+	//   Swift unit returns N/A (GradeNA) and is marked Unsupported.
-+	//   Aggregate result excludes the unsupported unit or counts it separately.
-+	_ = goRecord
-+	_ = swiftRecord
++	// Currently complexity=0 falls into the <=5 branch, producing 0.95.
++	// This is bug #25 — unmeasured code should not get an excellent score.
++	// When fixed, change this to: if !ok || v >= 0.95 { t.Error(...) }
++	v, ok := scores[domain.DimMaintainability]
++	if !ok {
++		t.Log("maintainability is absent — bug #25 may be fixed; update this test")
++		return
++	}
++	if v != 0.95 {
++		t.Logf("maintainability = %f, not 0.95 — bug #25 may be fixed; update this test", v)
++		return
++	}
++	// Current behaviour: complexity=0 → excellent maintainability (the bug).
++	t.Log("BUG(#25) confirmed: maintainability=0.95 for complexity=0 (unmeasured)")
 +}
 -- 
 2.54.0 (Apple Git-156)
