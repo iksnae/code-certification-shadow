@@ -1,39 +1,34 @@
 {
   "apiOrSchemaChanges" : [
-    "CertificationRecord gains field `Unsupported bool` (default false, backward-compatible)"
+
   ],
   "cannotBeSatisfied" : false,
-  "confidence" : 0.85,
-  "failingTest" : "(none yet — the field doesn't exist, so no test can reference it; tests will be added as part of this work)",
+  "confidence" : 0.93,
+  "failingTest" : "",
   "fileMap" : [
-    "internal\/domain\/record.go — modify — add `Unsupported bool` field to CertificationRecord struct",
-    "internal\/report\/detailed.go — modify — skip Unsupported records in computeDimensionAverages and computeLanguageBreakdowns",
-    "internal\/report\/full.go — modify — skip Unsupported records in buildLanguageDetail",
-    "internal\/report\/health.go — modify — skip Unsupported records in Health() with adjusted denominator",
-    "internal\/report\/card.go — modify — skip Unsupported records in GenerateCard() with adjusted TotalUnits",
-    "internal\/report\/detailed_test.go — modify — add subtests verifying Unsupported records are excluded from dimension\/language aggregates",
-    "internal\/report\/full_test.go — modify — add subtests verifying Unsupported records are excluded from per-language aggregates",
-    "internal\/report\/health_test.go — modify — add subtests verifying Unsupported records are excluded from pass-rate\/score",
-    "internal\/report\/card_test.go — modify — add subtests verifying Unsupported records are excluded from card aggregates"
+    "internal\/report\/health.go — modify — add analysis import, guard loop in Health() with counted denominator",
+    "internal\/report\/detailed.go — modify — add analysis import, guard computeDimensionAverages and computeLanguageBreakdowns loops",
+    "internal\/report\/full.go — modify — add analysis import, guard buildLanguageDetail loop",
+    "internal\/report\/card.go — modify — guard GenerateCard loop with counted denominator (import already present)"
   ],
-  "fixApproach" : "Add `Unsupported bool` to `domain.CertificationRecord` (default `false`, backward-compatible), then guard each of the four report-aggregation loops — `computeDimensionAverages`, `buildLanguageDetail`, `Health`, `GenerateCard` (and the local `computeLanguageBreakdowns` in detailed.go) — with `if r.Unsupported { continue }`. Adjust denominator counters (`TotalUnits`, `counts`, `accum` entry totals) so unsupported records are excluded from averages, pass rates, and grade distributions. Add table-driven subtests to existing test files that insert one or more `Unsupported: true` records and assert they contribute nothing to aggregates. Existing tests continue to pass because the new field defaults to `false`.",
+  "fixApproach" : "Guard every records-iteration loop across the four report consumer files with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` at the loop body's top. For loops that use `len(records)` as a denominator for rates\/scores\/averages (Health, GenerateCard), introduce a `counted` integer incremented after the guard and use it instead of `len(records)`. For loops that accumulate sums and per-language totals without a total-count denominator (computeDimensionAverages, computeLanguageBreakdowns, buildLanguageDetail), the guard alone suffices since unsupported records simply won't contribute to the running sums\/counts. No domain types, scorer, or pipeline files are changed. The `partitionByLanguage` helper in card.go already uses this detection mechanism and serves as a reference pattern.",
   "impossibilityReason" : "",
   "openQuestions" : [
-    "The Unsupported field does not exist on CertificationRecord yet. The non-goal says \"Do not modify domain types,\" but this work requires adding the field — is adding Unsupported to CertificationRecord acceptable, or should we wait for parent issue #25 to land first?",
-    "Should Unsupported records still be counted in TotalUnits for display purposes (even if excluded from averages), or fully excluded from all counts?",
-    "Should the Unsupported field be serialized\/deserialized in JSON (evidence output), or is it a runtime-only flag?"
+
   ],
   "steps" : [
-    "Add `Unsupported bool` field to `domain.CertificationRecord` struct in `internal\/domain\/record.go` (defaults to false, backward-compatible)",
-    "In `internal\/report\/detailed.go`: guard `computeDimensionAverages` loop with `if r.Unsupported { continue }`; apply same guard in the local `computeLanguageBreakdowns` function",
-    "In `internal\/report\/full.go`: guard `buildLanguageDetail` loop with `if r.Unsupported { continue }` so unsupported records are excluded from per-language score\/grades\/passing aggregates",
-    "In `internal\/report\/health.go`: guard `Health()` loop with `if r.Unsupported { continue }`; use a separate counted-total for denominators instead of `len(records)` so PassRate and AverageScore exclude unsupported records",
-    "In `internal\/report\/card.go`: guard `GenerateCard()` loop with `if r.Unsupported { continue }`; compute `TotalUnits` as the counted (non-unsupported) total so OverallScore, PassRate, and GradeDistribution exclude unsupported records",
-    "Add subtests to `internal\/report\/card_test.go`, `internal\/report\/health_test.go`, `internal\/report\/full_test.go`, and `internal\/report\/detailed_test.go` that insert `Unsupported: true` records and assert zero contribution to aggregates",
-    "Run `go test .\/... -count=1` and confirm all existing and new tests pass"
+    "Add `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` import to internal\/report\/health.go",
+    "Add `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` import to internal\/report\/detailed.go",
+    "Add `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` import to internal\/report\/full.go",
+    "In internal\/report\/health.go Health(): add a `counted` variable; at top of records loop, guard with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }`; increment `counted` after guard; replace `len(records)` denominator with `counted` for passRate and overallScore calculations",
+    "In internal\/report\/detailed.go computeDimensionAverages: at top of records loop, guard with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before summing dimensions and incrementing counts",
+    "In internal\/report\/detailed.go computeLanguageBreakdowns: at top of records loop, guard with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before per-language accumulation",
+    "In internal\/report\/full.go buildLanguageDetail: at top of the records loop, guard with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before computing per-language sums and counts",
+    "In internal\/report\/card.go GenerateCard(): add a `counted` variable; at top of records loop, guard with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }`; increment `counted` after guard; replace `len(records)` denominator with `counted` for TotalUnits and pass\/average\/overall score calculations",
+    "Run `go test .\/... -count=1` to verify all existing tests pass and no regressions introduced"
   ],
   "stopsForOperatorApproval" : false,
-  "summary" : "Add Unsupported field to CertificationRecord and skip unsupported records in report aggregate calculations across four report consumers",
+  "summary" : "Guard five aggregation loops across four report files to skip records where analysis.ForLanguage returns nil, using a counted denominator in Health and GenerateCard",
   "uiStateNotes" : [
 
   ],
