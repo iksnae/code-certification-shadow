@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 16 round(s) without finishing — deliverable left partial",
+      "detail" : "ran all 15 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,21 +11,21 @@
       }
     },
     {
-      "detail" : "no files were changed",
+      "detail" : "1 file(s) changed: internal\/report\/health.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "expected ≥1 of: internal\/domain\/record.go, internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/full.go, internal\/report\/full_test.go, internal\/report\/health.go, internal\/report\/health_test.go",
+      "detail" : "expected ≥1 of: internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/full.go, internal\/report\/full_test.go, internal\/report\/health.go, internal\/report\/health_test.go",
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -106,17 +106,13 @@
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-32#s0",
     "rcpt-build-verify-sweep-build-32#s0",
-    "rcpt-build-commit-sweep-build-32#s0",
-    "rcpt-build-implement-sweep-build-32#s1",
-    "rcpt-build-verify-sweep-build-32#s1",
-    "rcpt-build-commit-sweep-build-32#s1"
+    "rcpt-build-commit-sweep-build-32#s0"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 16 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
-    "No files were changed."
+    "Implementation did not complete — the build used all 15 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
-
+    "internal\/report\/health.go"
   ],
   "outcome" : "blocked",
   "rubricId" : "",
