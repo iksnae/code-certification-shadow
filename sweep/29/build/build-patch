@@ -1,38 +1,39 @@
-From de73f19315d2333cc87d9b0d4177576669e783b3 Mon Sep 17 00:00:00 2001
+From bfbd4121815029286d2675a5da66d7ab0da6545e Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Tue, 21 Jul 2026 14:34:56 -0400
+Date: Tue, 21 Jul 2026 14:36:42 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-29#s0)
 
 ---
- internal/language_tiers/language_tiers.go     | 23 ++++++++++++++
+ internal/language_tiers/language_tiers.go     | 24 +++++++++++++++
  .../language_tiers/language_tiers_test.go     | 30 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
+ 2 files changed, 54 insertions(+)
  create mode 100644 internal/language_tiers/language_tiers.go
  create mode 100644 internal/language_tiers/language_tiers_test.go
 
 diff --git a/internal/language_tiers/language_tiers.go b/internal/language_tiers/language_tiers.go
 new file mode 100644
-index 000000000..59f4569d0
+index 000000000..5d2866318
 --- /dev/null
 +++ b/internal/language_tiers/language_tiers.go
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,24 @@
++// Package language_tiers classifies languages into certification tiers.
 +package language_tiers
 +
 +import "github.com/iksnae/code-certification/internal/analysis"
 +
-+// Tier represents the certification tier for a language.
++// Tier represents a certification tier for a programming language.
 +type Tier int
 +
 +const (
 +	// TierGeneric is the default tier for unregistered languages.
 +	TierGeneric Tier = iota
-+	// TierFull is the tier for languages with full parser support.
++	// TierFull is the tier for languages with full analysis support.
 +	TierFull
 +)
 +
-+// TierForLanguage returns the certification tier for the given language.
-+// It delegates to analysis.ForLanguage to determine if the language is
-+// registered with a full parser.
++// TierForLanguage returns the certification tier for a given language.
++// Registered languages (those with an analysis.Analyzer) return TierFull;
++// all others return TierGeneric.
 +func TierForLanguage(lang string) Tier {
 +	if analysis.ForLanguage(lang) != nil {
 +		return TierFull
@@ -41,7 +42,7 @@ index 000000000..59f4569d0
 +}
 diff --git a/internal/language_tiers/language_tiers_test.go b/internal/language_tiers/language_tiers_test.go
 new file mode 100644
-index 000000000..5807154db
+index 000000000..cf8bb799f
 --- /dev/null
 +++ b/internal/language_tiers/language_tiers_test.go
 @@ -0,0 +1,30 @@
@@ -70,7 +71,7 @@ index 000000000..5807154db
 +		t.Run(tt.name, func(t *testing.T) {
 +			got := TierForLanguage(tt.lang)
 +			if got != tt.want {
-+				t.Errorf("TierForLanguage(%q) = %v, want %v", tt.lang, got, tt.want)
++				t.Errorf("TierForLanguage(%q) = %d, want %d", tt.lang, got, tt.want)
 +			}
 +		})
 +	}
