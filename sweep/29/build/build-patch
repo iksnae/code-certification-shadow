@@ -1,0 +1,83 @@
+From 8a560c11d11a97b04f3778b88cac5fc43a68d037 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Tue, 21 Jul 2026 14:20:23 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-29#s0)
+
+---
+ internal/language_tiers/language_tiers.go     | 23 +++++++++++++
+ .../language_tiers/language_tiers_test.go     | 33 +++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 internal/language_tiers/language_tiers.go
+ create mode 100644 internal/language_tiers/language_tiers_test.go
+
+diff --git a/internal/language_tiers/language_tiers.go b/internal/language_tiers/language_tiers.go
+new file mode 100644
+index 000000000..35094b2d4
+--- /dev/null
++++ b/internal/language_tiers/language_tiers.go
+@@ -0,0 +1,23 @@
++// Package language_tiers classifies languages into tiers based on analysis support.
++package language_tiers
++
++import "github.com/iksnae/code-certification/internal/analysis"
++
++// Tier represents the level of analysis support for a language.
++type Tier int
++
++const (
++	// TierGeneric is assigned to languages without a dedicated analyzer.
++	TierGeneric Tier = iota
++	// TierFull is assigned to languages with a registered analyzer.
++	TierFull
++)
++
++// TierForLanguage returns the tier for a given language identifier.
++// Languages with a registered analyzer return TierFull; all others return TierGeneric.
++func TierForLanguage(lang string) Tier {
++	if analysis.ForLanguage(lang) != nil {
++		return TierFull
++	}
++	return TierGeneric
++}
+diff --git a/internal/language_tiers/language_tiers_test.go b/internal/language_tiers/language_tiers_test.go
+new file mode 100644
+index 000000000..807b1d355
+--- /dev/null
++++ b/internal/language_tiers/language_tiers_test.go
+@@ -0,0 +1,33 @@
++package language_tiers
++
++import "testing"
++
++func TestTierForLanguage(t *testing.T) {
++	tests := []struct {
++		name string
++		lang string
++		want Tier
++	}{
++		// Registered languages — should be TierFull
++		{name: "go", lang: "go", want: TierFull},
++		{name: "ts", lang: "ts", want: TierFull},
++		{name: "py", lang: "py", want: TierFull},
++		{name: "rs", lang: "rs", want: TierFull},
++		{name: "js", lang: "js", want: TierFull},
++
++		// Unregistered languages — should be TierGeneric
++		{name: "ruby", lang: "ruby", want: TierGeneric},
++		{name: "swift", lang: "swift", want: TierGeneric},
++		{name: "c", lang: "c", want: TierGeneric},
++		{name: "empty", lang: "", want: TierGeneric},
++	}
++
++	for _, tt := range tests {
++		t.Run(tt.name, func(t *testing.T) {
++			got := TierForLanguage(tt.lang)
++			if got != tt.want {
++				t.Errorf("TierForLanguage(%q) = %d, want %d", tt.lang, got, tt.want)
++			}
++		})
++	}
++}
+-- 
+2.54.0 (Apple Git-156)
+
