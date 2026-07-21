@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 11 round(s)",
+      "detail" : "the implementor finished in 16 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "detail" : "3 file(s) changed: internal\/language_tiers\/, internal\/language_tiers\/language_tiers.go, internal\/language_tiers\/language_tiers_test.go",
+      "detail" : "2 file(s) changed: internal\/language_tiers\/language_tiers.go, internal\/language_tiers\/language_tiers_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -41,11 +41,11 @@
       }
     },
     {
-      "detail" : "committed locally on the build branch",
+      "detail" : "verification result was not committed",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -93,19 +93,11 @@
   ],
   "claims" : [
     {
-      "evidence" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t3.902s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t2.947s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t3.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t47.276s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.475s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.495s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t1.317s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t20.968s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.432s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.850s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.046s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.259s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t1.852s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.425s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.831s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.747s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.880s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t1.232s\n--- FAIL: TestGenerateSite_LargeScale (20.50s)\n    site_test.go:391: site generation took 19.627192958s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t21.537s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.158s\nFAIL\n"
-      },
-      "oracle" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "kind" : "testsPass"
-      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "fail"
+      "verdict" : "unsure"
     }
   ],
-  "committed" : true,
+  "committed" : false,
   "confidence" : 0,
   "correlationId" : "sweep-build-29",
   "dimensions" : [
@@ -113,14 +105,12 @@
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-29#s0",
-    "rcpt-build-verify-sweep-build-29#s0",
-    "rcpt-build-commit-sweep-build-29#s0"
+    "rcpt-build-verify-sweep-build-29#s0"
   ],
   "failureReasons" : [
-    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t3.902s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t2.947s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t3.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t47.276s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.475s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.495s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t1.317s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t20.968s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.432s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.850s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t1.046s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.259s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t1.852s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.425s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.831s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.747s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.880s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t1.232s\n--- FAIL: TestGenerateSite_LargeScale (20.50s)\n    site_test.go:391: site generation took 19.627192958s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t21.537s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.158s\nFAIL"
+    "The work passed verification but was not committed."
   ],
   "filesReviewed" : [
-    "internal\/language_tiers\/",
     "internal\/language_tiers\/language_tiers.go",
     "internal\/language_tiers\/language_tiers_test.go"
   ],
