@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+    "Step 1 adds `Unsupported bool` to `domain.CertificationRecord` in `internal\/domain\/record.go`. The issue non-goals state: \"Do not modify … domain types.\" If the field already exists from parent issue #25, remove Step 1. If it does not exist, the plan must either justify the exception (and update the non-goals) or find an alternative that avoids touching domain types."
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Update report consumers to skip Unsupported records in aggregate calculations",
+  "userValue" : "Plan serves the intent but Step 1 adds a field to domain types, contradicting the explicit non-goal \"Do not modify … domain types\""
+}

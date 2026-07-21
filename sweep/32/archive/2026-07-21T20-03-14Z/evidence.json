@@ -1,0 +1,18 @@
+{
+  "committed" : false,
+  "correlationId" : "sweep-build-32",
+  "filesChanged" : [
+
+  ],
+  "implementCompleted" : false,
+  "receiptIds" : [
+    "rcpt-build-implement-sweep-build-32#s0",
+    "rcpt-build-verify-sweep-build-32#s0",
+    "rcpt-build-commit-sweep-build-32#s0",
+    "rcpt-build-implement-sweep-build-32#s1",
+    "rcpt-build-verify-sweep-build-32#s1",
+    "rcpt-build-commit-sweep-build-32#s1"
+  ],
+  "rounds" : 16,
+  "verifyPassed" : false
+}
