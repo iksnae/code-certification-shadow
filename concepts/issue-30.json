@@ -1,0 +1,17 @@
+{
+  "artifactPath" : "closeouts\/30.md",
+  "id" : "issue-30",
+  "relations" : [
+    {
+      "target" : "issue-30-learning-0",
+      "type" : "produced"
+    },
+    {
+      "target" : "issue-30-learning-1",
+      "type" : "produced"
+    }
+  ],
+  "summary" : "Add GradeNA constant and Unsupported field to domain types to support the N\/A short-circuit path — delivered via PR #34 (1082cf2f); 4 files changed.",
+  "title" : "Add GradeNA constant and Unsupported field to domain types to support the N\/A short-circuit path",
+  "type" : "deliverable"
+}

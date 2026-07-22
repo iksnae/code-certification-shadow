@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/30.md",
+  "id" : "issue-30-learning-0",
+  "relations" : [
+
+  ],
+  "summary" : "Wire the new GradeNA constant and Unsupported field into the certification evaluation logic so the N\/A short-circuit path is actually exercised at runtime.",
+  "title" : "Wire the new GradeNA constant and Unsupported field into the",
+  "type" : "learning"
+}
