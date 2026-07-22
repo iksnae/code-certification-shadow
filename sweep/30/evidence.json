@@ -1,14 +1,17 @@
 {
-  "commitRef" : "b327c7607aa09776433e1c97f3052b8263fcb620",
+  "commitRef" : "7e46d8963400023aeb91a4203552d90c73db58ec",
   "committed" : true,
   "correlationId" : "sweep-build-30",
   "filesChanged" : [
     "internal\/domain\/dimension.go",
-    "internal\/domain\/dimension_grade_na_test.go",
+    "internal\/domain\/dimension_test.go",
     "internal\/domain\/record.go",
     "internal\/domain\/record_test.go"
   ],
   "implementCompleted" : true,
+  "incompleteSlices" : [
+
+  ],
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-30#s0",
     "rcpt-build-verify-sweep-build-30#s0",
@@ -17,6 +20,6 @@
     "rcpt-build-verify-sweep-build-30#s1",
     "rcpt-build-commit-sweep-build-30#s1"
   ],
-  "rounds" : 37,
+  "rounds" : 19,
   "verifyPassed" : true
 }
