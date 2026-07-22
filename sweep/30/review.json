@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 33 round(s)",
+      "detail" : "the implementor finished in 19 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -51,86 +51,65 @@
       }
     },
     {
-      "detail" : "Diff adds GradeNA constant (-1) and 'N\/A' mapping in dimension.go, and Unsupported bool field in record.go — exactly the two deliverables the plan named.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "score" : {
-          "_0" : 1
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "All 4 files touched are under internal\/domain; dimension.go and record.go were the plan's targets, and the two _test.go files add only tests for the new additions — no unrelated churn.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "score" : {
-          "_0" : 1
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "New tests genuinely verify GradeNA value (-1), String() output 'N\/A', and Unsupported default\/explicit behavior; no existing test was deleted, weakened, or hard-coded — the flaky report\/TestGenerateSite_LargeScale is a pre-existing unrelated timeout.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "score" : {
-          "_0" : 1
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Both changes are purely additive — GradeNA=-1 is outside valid score ranges and won't collide with existing GradeFromScore; Unsupported bool defaults to false preserving all existing behaviour; no doc-comment\/code mismatch.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "score" : {
-          "_0" : 1
-        }
-      }
-    },
-    {
-      "detail" : "at or above the confidence bar",
-      "id" : "judge-confidence",
-      "label" : "Judge confidence",
-      "result" : {
-        "score" : {
-          "_0" : 0.95
+        "skipped" : {
+
         }
       }
     }
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.373s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.677s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t22.792s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.042s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.184s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.924s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.179s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.071s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.051s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.049s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.051s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.099s\n--- FAIL: TestGenerateSite_LargeScale (11.88s)\n    site_test.go:391: site generation took 11.004802291s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t12.224s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.045s\nFAIL\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "fail"
     }
   ],
   "committed" : true,
-  "confidence" : 0.95,
+  "confidence" : 0,
   "correlationId" : "sweep-build-30",
   "dimensions" : [
-    {
-      "dimension" : "implements-the-approved-plan",
-      "evidence" : "Diff adds GradeNA constant (-1) and 'N\/A' mapping in dimension.go, and Unsupported bool field in record.go — exactly the two deliverables the plan named.",
-      "score" : 1
-    },
-    {
-      "dimension" : "minimal-and-scoped",
-      "evidence" : "All 4 files touched are under internal\/domain; dimension.go and record.go were the plan's targets, and the two _test.go files add only tests for the new additions — no unrelated churn.",
-      "score" : 1
-    },
-    {
-      "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "New tests genuinely verify GradeNA value (-1), String() output 'N\/A', and Unsupported default\/explicit behavior; no existing test was deleted, weakened, or hard-coded — the flaky report\/TestGenerateSite_LargeScale is a pre-existing unrelated timeout.",
-      "score" : 1
-    },
-    {
-      "dimension" : "safe-to-advance",
-      "evidence" : "Both changes are purely additive — GradeNA=-1 is outside valid score ranges and won't collide with existing GradeFromScore; Unsupported bool defaults to false preserving all existing behaviour; no doc-comment\/code mismatch.",
-      "score" : 1
-    }
+
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-30#s0",
@@ -141,7 +120,7 @@
     "rcpt-build-commit-sweep-build-30#s1"
   ],
   "failureReasons" : [
-
+    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.373s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.677s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t22.792s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.042s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.184s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.924s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.179s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.071s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.051s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.049s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.051s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.099s\n--- FAIL: TestGenerateSite_LargeScale (11.88s)\n    site_test.go:391: site generation took 11.004802291s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t12.224s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.045s\nFAIL"
   ],
   "filesReviewed" : [
     "internal\/domain\/dimension.go",
@@ -149,7 +128,7 @@
     "internal\/domain\/record.go",
     "internal\/domain\/record_test.go"
   ],
-  "outcome" : "pass",
-  "rubricId" : "build-review",
-  "rubricVersion" : 1
+  "outcome" : "needsFix",
+  "rubricId" : "",
+  "rubricVersion" : 0
 }
