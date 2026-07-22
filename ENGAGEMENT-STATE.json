@@ -9,16 +9,26 @@
       "at" : 805919441.751913,
       "issue" : "27",
       "text" : "Monitor whether the unsupported count banner drives user action (language migration) or just noise; may warrant an analytics hook."
+    },
+    {
+      "at" : 806455906.376542,
+      "issue" : "30",
+      "text" : "Wire the new GradeNA constant and Unsupported field into the certification evaluation logic so the N\/A short-circuit path is actually exercised at runtime."
+    },
+    {
+      "at" : 806455906.376542,
+      "issue" : "30",
+      "text" : "Audit other domain types that may need corresponding Unsupported \/ N\/A sentinel values for completeness."
     }
   ],
-  "cumulativeFilesChanged" : 10,
-  "cumulativeRounds" : 86,
+  "cumulativeFilesChanged" : 14,
+  "cumulativeRounds" : 118,
   "cumulativeSpendUSD" : 2.2977790700000003,
-  "deliveredCount" : 1,
-  "lastActivity" : 805919441.751913,
-  "lastConfidence" : 0.85,
+  "deliveredCount" : 2,
+  "lastActivity" : 806455906.376542,
+  "lastConfidence" : 0.95,
   "lifecycle" : "active",
   "maxRounds" : 86,
   "minConfidence" : 0.85,
-  "verifyGreenStreak" : 1
+  "verifyGreenStreak" : 2
 }
