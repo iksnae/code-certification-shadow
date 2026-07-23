@@ -1,5 +1,5 @@
 {
-  "commitRef" : "2447bc055f170340079e991d20b0ad9f825146a6",
+  "commitRef" : "c326e21a3f9f17a7f0fff299f7149e5296ba7c01",
   "committed" : true,
   "correlationId" : "sweep-build-31",
   "filesChanged" : [
@@ -16,10 +16,10 @@
   "implementCompleted" : false,
   "incompleteSlices" : [
     {
-      "index" : 4,
+      "index" : 5,
       "reason" : "failed",
       "targetFiles" : [
-        "internal\/engine\/pipeline.go"
+        "internal\/engine\/pipeline_test.go"
       ]
     }
   ],
@@ -38,8 +38,11 @@
     "rcpt-build-commit-sweep-build-31#s3",
     "rcpt-build-implement-sweep-build-31#s4",
     "rcpt-build-verify-sweep-build-31#s4",
-    "rcpt-build-commit-sweep-build-31#s4"
+    "rcpt-build-commit-sweep-build-31#s4",
+    "rcpt-build-implement-sweep-build-31#s5",
+    "rcpt-build-verify-sweep-build-31#s5",
+    "rcpt-build-commit-sweep-build-31#s5"
   ],
-  "rounds" : 81,
+  "rounds" : 86,
   "verifyPassed" : false
 }
