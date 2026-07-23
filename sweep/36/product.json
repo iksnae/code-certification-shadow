@@ -1,0 +1,14 @@
+{
+  "acceptanceCriteria" : [
+
+  ],
+  "clarifications" : [
+
+  ],
+  "outOfScope" : [
+
+  ],
+  "priority" : "medium",
+  "problemStatement" : "Add the Unsupported field to CertificationRecord (completes #30's missing half)",
+  "userValue" : "Purely additive bool field with safe zero-value default; exactly completes the #30 domain-types foundation needed by dependents #31\/#32 without touching any other code."
+}
