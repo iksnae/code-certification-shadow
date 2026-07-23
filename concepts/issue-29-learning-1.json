@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/29.md",
+  "id" : "issue-29-learning-1",
+  "relations" : [
+
+  ],
+  "summary" : "Consider adding benchmark tests if TierForLanguage or capability checks end up on hot paths.",
+  "title" : "Consider adding benchmark tests if TierForLanguage or capabi",
+  "type" : "learning"
+}

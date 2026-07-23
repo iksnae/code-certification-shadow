@@ -1,0 +1,17 @@
+{
+  "artifactPath" : "closeouts\/29.md",
+  "id" : "issue-29",
+  "relations" : [
+    {
+      "target" : "issue-29-learning-0",
+      "type" : "produced"
+    },
+    {
+      "target" : "issue-29-learning-1",
+      "type" : "produced"
+    }
+  ],
+  "summary" : "Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking — delivered via PR #35 (775e7a4f); 3 files changed.",
+  "title" : "Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking",
+  "type" : "deliverable"
+}

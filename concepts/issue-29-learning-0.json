@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/29.md",
+  "id" : "issue-29-learning-0",
+  "relations" : [
+
+  ],
+  "summary" : "Integrate language_tiers into downstream packages that currently hard-code or duplicate tier\/language logic.",
+  "title" : "Integrate language_tiers into downstream packages that curre",
+  "type" : "learning"
+}
