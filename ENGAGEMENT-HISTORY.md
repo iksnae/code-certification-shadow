@@ -8,3 +8,4 @@ narrative — distinct from the machine `DECISIONS.md`). Entries are client-clea
 - **#27** — Add an unsupported-units banner to the report card: surface the count and language list, and exclude unsupported units from aggregate grade calculations. — delivered via PR #33 (5f1530ef); 10 files changed.
 - **#30** — Add GradeNA constant and Unsupported field to domain types to support the N/A short-circuit path — delivered via PR #34 (1082cf2f); 4 files changed.
 - **#29** — Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking — delivered via PR #35 (775e7a4f); 3 files changed.
+- **#36** — Add the Unsupported field to CertificationRecord (completes #30's missing half) — delivered via PR #37 (ff8aef79); 1 file changed.
