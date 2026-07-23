@@ -1,23 +1,34 @@
 {
-  "commitRef" : "3f534b72eff245a0e27bd7e0cbb76ca5fe8b6f96",
-  "committed" : false,
+  "commitRef" : "21bf0c4ba3cdf7efedcbf87db5654bf23381ca97",
+  "committed" : true,
   "correlationId" : "sweep-build-28",
   "filesChanged" : [
-    "internal\/domain\/dimension.go",
-    "internal\/domain\/dimension_test.go",
-    "internal\/domain\/record.go",
-    "internal\/domain\/record_test.go",
-    "testdata\/policies\/swift-standard.yml"
+    "internal\/engine\/scorer_test.go",
+    "internal\/report\/card.go",
+    "internal\/report\/full.go",
+    "internal\/report\/report_test.go"
   ],
-  "implementCompleted" : false,
+  "implementCompleted" : true,
+  "incompleteSlices" : [
+    {
+      "index" : 0,
+      "reason" : "uncreditedNoOp",
+      "targetFiles" : [
+        "internal\/engine\/language_tiers_test.go"
+      ]
+    }
+  ],
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-28#s0",
     "rcpt-build-verify-sweep-build-28#s0",
     "rcpt-build-commit-sweep-build-28#s0",
     "rcpt-build-implement-sweep-build-28#s1",
     "rcpt-build-verify-sweep-build-28#s1",
-    "rcpt-build-commit-sweep-build-28#s1"
+    "rcpt-build-commit-sweep-build-28#s1",
+    "rcpt-build-implement-sweep-build-28#s2",
+    "rcpt-build-verify-sweep-build-28#s2",
+    "rcpt-build-commit-sweep-build-28#s2"
   ],
-  "rounds" : 38,
-  "verifyPassed" : false
+  "rounds" : 43,
+  "verifyPassed" : true
 }
