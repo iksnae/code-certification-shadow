@@ -1,24 +1,38 @@
 {
-  "committed" : false,
+  "commitRef" : "63aa254d4101064952e75c8eb2a2ed9aa9c211aa",
+  "committed" : true,
   "correlationId" : "sweep-build-32",
   "filesChanged" : [
-    "internal\/report\/health.go"
+    "internal\/report\/detailed.go",
+    "internal\/report\/detailed_test.go",
+    "internal\/report\/full.go",
+    "internal\/report\/health.go",
+    "internal\/report\/health_test.go"
   ],
   "implementCompleted" : false,
   "incompleteSlices" : [
     {
-      "index" : 0,
+      "index" : 3,
       "reason" : "failed",
       "targetFiles" : [
-        "internal\/report\/health.go"
+        "internal\/report\/card.go"
       ]
     }
   ],
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-32#s0",
     "rcpt-build-verify-sweep-build-32#s0",
-    "rcpt-build-commit-sweep-build-32#s0"
+    "rcpt-build-commit-sweep-build-32#s0",
+    "rcpt-build-implement-sweep-build-32#s1",
+    "rcpt-build-verify-sweep-build-32#s1",
+    "rcpt-build-commit-sweep-build-32#s1",
+    "rcpt-build-implement-sweep-build-32#s2",
+    "rcpt-build-verify-sweep-build-32#s2",
+    "rcpt-build-commit-sweep-build-32#s2",
+    "rcpt-build-implement-sweep-build-32#s3",
+    "rcpt-build-verify-sweep-build-32#s3",
+    "rcpt-build-commit-sweep-build-32#s3"
   ],
-  "rounds" : 17,
+  "rounds" : 60,
   "verifyPassed" : false
 }
