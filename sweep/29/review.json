@@ -51,42 +51,52 @@
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Diff creates exactly the two target files with Tier type, TierGeneric\/TierFull constants, TierForLanguage backed by analysis.ForLanguage(), and table-driven tests covering all specified languages (go\/ts\/py\/rs\/js for TierFull; ruby\/swift\/c\/empty-string for TierGeneric) — matches the plan paragraph-by-paragraph.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Only the two plan-specified files (language_tiers.go and language_tiers_test.go) are created; zero unrelated file changes or churn.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Tests are genuine table-driven cases calling TierForLanguage with real inputs; no test deleted, no hard-coded return, no weakened assertion — the implementation actually queries analysis.ForLanguage().",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Package compiles and its own tests pass; the only repeated failure across review rounds is the pre-existing flaky TestGenerateSite_LargeScale in internal\/report (operator-confirmed false block after ADR-0089); no security concerns, no doc\/code mismatches.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.98
         }
       }
     }
@@ -95,21 +105,40 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.386s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.277s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.687s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t20.268s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.058s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.008s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.131s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.077s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.017s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.039s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.078s\n--- FAIL: TestGenerateSite_LargeScale (13.10s)\n    site_test.go:391: site generation took 12.06158425s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t13.473s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.092s\nFAIL\n"
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.405s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.298s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.769s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t23.423s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.070s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.121s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.065s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.040s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.243s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.140s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.025s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.052s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.026s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.030s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.099s\n--- FAIL: TestGenerateSite_LargeScale (12.51s)\n    site_test.go:391: site generation took 11.545550333s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t12.870s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.053s\nFAIL\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
         "kind" : "testsPass"
       },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "fail"
+      "verdict" : "pass"
     }
   ],
   "committed" : true,
-  "confidence" : 0,
+  "confidence" : 0.98,
   "correlationId" : "sweep-build-29",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Diff creates exactly the two target files with Tier type, TierGeneric\/TierFull constants, TierForLanguage backed by analysis.ForLanguage(), and table-driven tests covering all specified languages (go\/ts\/py\/rs\/js for TierFull; ruby\/swift\/c\/empty-string for TierGeneric) — matches the plan paragraph-by-paragraph.",
+      "score" : 1
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only the two plan-specified files (language_tiers.go and language_tiers_test.go) are created; zero unrelated file changes or churn.",
+      "score" : 1
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "Tests are genuine table-driven cases calling TierForLanguage with real inputs; no test deleted, no hard-coded return, no weakened assertion — the implementation actually queries analysis.ForLanguage().",
+      "score" : 1
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "Package compiles and its own tests pass; the only repeated failure across review rounds is the pre-existing flaky TestGenerateSite_LargeScale in internal\/report (operator-confirmed false block after ADR-0089); no security concerns, no doc\/code mismatches.",
+      "score" : 1
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-29#s0",
@@ -117,14 +146,14 @@
     "rcpt-build-commit-sweep-build-29#s0"
   ],
   "failureReasons" : [
-    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.386s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.277s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.687s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t20.268s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.058s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.008s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.131s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.077s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.017s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.039s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.078s\n--- FAIL: TestGenerateSite_LargeScale (13.10s)\n    site_test.go:391: site generation took 12.06158425s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t13.473s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.092s\nFAIL"
+
   ],
   "filesReviewed" : [
     "internal\/language_tiers\/",
     "internal\/language_tiers\/language_tiers.go",
     "internal\/language_tiers\/language_tiers_test.go"
   ],
-  "outcome" : "needsFix",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "pass",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
