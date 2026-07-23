@@ -1,0 +1,27 @@
+{
+  "apiOrSchemaChanges" : [
+    "CertificationRecord gains exported field: `Unsupported bool \\`json:\"unsupported\"\\`` — additive, backward-compatible, zero value `false` preserves all existing behaviour"
+  ],
+  "cannotBeSatisfied" : false,
+  "confidence" : 0.98,
+  "failingTest" : "go test .\/... -count=1 (no specific failing test; verify nothing breaks)",
+  "fileMap" : [
+    "internal\/domain\/record.go — modify — add Unsupported bool field to CertificationRecord struct"
+  ],
+  "fixApproach" : "Add a single `Unsupported bool` field with JSON tag `\"unsupported\"` to the CertificationRecord struct in internal\/domain\/record.go, placed in the Result comment block after Confidence and before Dimensions. The zero value (`false`) is the correct default for all existing code — no struct literals, tests, or serialization paths need updating. This is purely additive and cannot break anything.",
+  "impossibilityReason" : "",
+  "openQuestions" : [
+    "Should `recordJSON` in `internal\/record\/store.go` also receive the `Unsupported` field (plus toJSON\/fromJSON mappings) to preserve the flag through persistence round-trips? Without it, records saved via Store.Save() and loaded via Store.Load() will silently lose the Unsupported flag, which would affect #31 and #32. The issue's non-goals list does not forbid store.go, but the explicit scope is record.go only."
+  ],
+  "steps" : [
+    "1. In internal\/domain\/record.go, add `Unsupported bool \\`json:\"unsupported\"\\`` to the CertificationRecord struct in the Result block, between Confidence and Dimensions",
+    "2. Run `go build -o build\/bin\/certify .\/cmd\/certify\/` to confirm clean compilation",
+    "3. Run `go test .\/... -count=1` to confirm all existing tests pass with zero-value default"
+  ],
+  "stopsForOperatorApproval" : false,
+  "summary" : "Add `Unsupported bool` field to CertificationRecord struct in internal\/domain\/record.go",
+  "uiStateNotes" : [
+
+  ],
+  "verificationCommand" : "go test .\/... -count=1"
+}
