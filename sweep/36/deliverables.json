@@ -1,0 +1,20 @@
+[
+  {
+    "nonGoals" : [
+      "Do NOT modify any struct literal construction sites (87 found across pipeline.go, store.go, store_test.go, applier_test.go, workspace_snapshot_test.go, architect_test.go, architect_snapshot_test.go, pr_test.go, report\/*_test.go, certifier_test.go)",
+      "Do NOT update recordJSON or toJSON\/fromJSON in store.go",
+      "Do NOT add or modify any test file",
+      "Do NOT touch any other struct, type, or package",
+      "Do NOT add GradeNA or any other field — Unsupported bool only"
+    ],
+    "objective" : "Add `Unsupported bool` with JSON tag `\"unsupported\"` to the CertificationRecord struct in the Result block, between Confidence and Dimensions",
+    "orderIndex" : 0,
+    "planText" : "In internal\/domain\/record.go, locate the CertificationRecord struct. Find the Result comment block containing Confidence and Dimensions. Insert:\n\n    Unsupported bool   `json:\"unsupported\"`\n\non its own line between the Confidence field line and the Dimensions field line. The zero value (false) is correct for all existing construction sites — no struct literals, tests, or serialization paths need modification. This is purely additive.",
+    "riskClass" : "low",
+    "size" : "xs",
+    "targetFiles" : [
+      "internal\/domain\/record.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  }
+]
