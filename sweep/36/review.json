@@ -1,0 +1,157 @@
+{
+  "checklist" : [
+    {
+      "detail" : "the implementor finished in 12 round(s)",
+      "id" : "build-completed",
+      "label" : "Build completed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "1 file(s) changed: internal\/domain\/record.go",
+      "id" : "change-present",
+      "label" : "Change is visible",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "expected ≥1 of: internal\/domain\/record.go",
+      "id" : "on-target",
+      "label" : "Changed the deliverable's target files",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "the project verify command was GREEN",
+      "id" : "verify-green",
+      "label" : "Verification passed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "committed locally on the build branch",
+      "id" : "committed",
+      "label" : "Work committed",
+      "result" : {
+        "pass" : {
+
+        }
+      }
+    },
+    {
+      "detail" : "Diff adds exactly `Unsupported bool \\`json:\"unsupported\"\\`` to CertificationRecord between Confidence and Dimensions as the plan specified — matches the single-file, single-field scope of issue #36.",
+      "id" : "implements-the-approved-plan",
+      "label" : "Implements the approved plan",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "Only internal\/domain\/record.go modified; one line added, zero deletions. No touches to scorer.go, dimension.go, pipeline.go, or any other file.",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "Purely additive boolean field with zero-value false — no test files altered, no assertions weakened, no hard-coded values inserted.",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "Zero-value false preserves all existing behavior; no logic changes; no doc comments added that misrepresent the adjacent code; no security or regression risk.",
+      "id" : "safe-to-advance",
+      "label" : "Safe to advance",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 1
+        }
+      }
+    }
+  ],
+  "claims" : [
+    {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.426s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.278s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.732s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t23.841s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.027s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.075s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.151s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.272s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.025s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.100s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.060s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.023s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.018s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.023s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.054s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.115s\n--- FAIL: TestGenerateSite_LargeScale (12.60s)\n    site_test.go:391: site generation took 11.706827917s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t12.944s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.049s\nFAIL\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
+      "statement" : "the reviewer's independent re-verification passes",
+      "verdict" : "pass"
+    }
+  ],
+  "committed" : true,
+  "confidence" : 1,
+  "correlationId" : "sweep-build-36",
+  "dimensions" : [
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Diff adds exactly `Unsupported bool \\`json:\"unsupported\"\\`` to CertificationRecord between Confidence and Dimensions as the plan specified — matches the single-file, single-field scope of issue #36.",
+      "score" : 1
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only internal\/domain\/record.go modified; one line added, zero deletions. No touches to scorer.go, dimension.go, pipeline.go, or any other file.",
+      "score" : 1
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "Purely additive boolean field with zero-value false — no test files altered, no assertions weakened, no hard-coded values inserted.",
+      "score" : 1
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "Zero-value false preserves all existing behavior; no logic changes; no doc comments added that misrepresent the adjacent code; no security or regression risk.",
+      "score" : 1
+    }
+  ],
+  "evidenceReceiptIds" : [
+    "rcpt-build-implement-sweep-build-36#s0",
+    "rcpt-build-verify-sweep-build-36#s0",
+    "rcpt-build-commit-sweep-build-36#s0"
+  ],
+  "failureReasons" : [
+
+  ],
+  "filesReviewed" : [
+    "internal\/domain\/record.go"
+  ],
+  "outcome" : "pass",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
+}
