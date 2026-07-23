@@ -29,16 +29,21 @@
       "at" : 806458677.183224,
       "issue" : "29",
       "text" : "Consider adding benchmark tests if TierForLanguage or capability checks end up on hot paths."
+    },
+    {
+      "at" : 806460172.333343,
+      "issue" : "36",
+      "text" : "No deferred work surfaced; #36 closes the gap left by #30."
     }
   ],
-  "cumulativeFilesChanged" : 17,
-  "cumulativeRounds" : 133,
+  "cumulativeFilesChanged" : 18,
+  "cumulativeRounds" : 145,
   "cumulativeSpendUSD" : 2.2977790700000003,
-  "deliveredCount" : 3,
-  "lastActivity" : 806458677.183224,
-  "lastConfidence" : 0.98,
+  "deliveredCount" : 4,
+  "lastActivity" : 806460172.333343,
+  "lastConfidence" : 1,
   "lifecycle" : "active",
   "maxRounds" : 86,
   "minConfidence" : 0.85,
-  "verifyGreenStreak" : 3
+  "verifyGreenStreak" : 4
 }
