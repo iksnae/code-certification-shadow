@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 24 round(s)",
+      "detail" : "the implementor finished in 15 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -51,17 +51,17 @@
       }
     },
     {
-      "detail" : "Requeue guidance (authoritative) says 'do NOT create a second copy under internal\/engine\/' and to extend existing internal\/language_tiers\/ — diff creates new internal\/engine\/language_tiers.go and _test.go in the forbidden location instead.",
+      "detail" : "Requeue guidance explicitly says 'do NOT create a second copy under internal\/engine\/' and 'EXTEND the existing internal\/language_tiers\/ package.' Diff creates new files in internal\/engine\/ instead. KnownLanguages() in detect.go not generic.go. Plan's structural intent violated even though functional registry and three tests exist.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
         "score" : {
-          "_0" : 0.3
+          "_0" : 0.35
         }
       }
     },
     {
-      "detail" : "Only 3 files changed and the substance (registry, Tier enum, 3 tests) matches plan intent, but the files are placed in the wrong package, violating the requeue directive that explicitly forbade internal\/engine\/ placement.",
+      "detail" : "Edits are thematically scoped to the issue (tier registry + test) but placed in wrong files: detect.go instead of generic.go, and engine\/ package instead of existing language_tiers\/ package as requeue guidance demands.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
@@ -71,22 +71,22 @@
       }
     },
     {
-      "detail" : "KnownLanguages() iterates the real extToLanguage map (not hardcoded), all 3 tests assert genuine behavior with no deleted\/weakened tests or forced expected values.",
+      "detail" : "All three tests are legitimate: exhaustive KnownLanguages() coverage check, unknown-language fail-safe, and Swift regression pin. No test deletion, no hard-coded expected values to force green.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
         "score" : {
-          "_0" : 0.9
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "Creating a second tier system in internal\/engine\/ when internal\/language_tiers\/ already exists per #29 introduces a duplicate registry surface that could diverge and confuse consumers — a code-organization regression risk.",
+      "detail" : "Creates a competing\/duplicate tier system in internal\/engine\/ alongside existing internal\/language_tiers\/ from #29 — two tier classifiers in one codebase is a regression risk and violates explicit authoritative guidance. Also modifies languageToAdapter with 4 new entries, changing discovery behavior beyond mere exposure.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
         "score" : {
-          "_0" : 0.4
+          "_0" : 0.25
         }
       }
     },
@@ -96,7 +96,7 @@
       "label" : "Judge confidence",
       "result" : {
         "score" : {
-          "_0" : 0.95
+          "_0" : 0.92
         }
       }
     }
@@ -105,7 +105,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "0.058s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.071s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.269s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.581s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.030s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.454s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.159s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.045s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.056s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.066s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.018s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.052s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.142s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t17.346s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.036s\n"
+        "outputExcerpt" : "0.060s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.076s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.190s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.630s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.043s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.136s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.091s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.023s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.041s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.067s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.098s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t13.856s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.070s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -116,28 +116,28 @@
     }
   ],
   "committed" : true,
-  "confidence" : 0.95,
+  "confidence" : 0.92,
   "correlationId" : "sweep-build-23",
   "dimensions" : [
     {
       "dimension" : "implements-the-approved-plan",
-      "evidence" : "Requeue guidance (authoritative) says 'do NOT create a second copy under internal\/engine\/' and to extend existing internal\/language_tiers\/ — diff creates new internal\/engine\/language_tiers.go and _test.go in the forbidden location instead.",
-      "score" : 0.3
+      "evidence" : "Requeue guidance explicitly says 'do NOT create a second copy under internal\/engine\/' and 'EXTEND the existing internal\/language_tiers\/ package.' Diff creates new files in internal\/engine\/ instead. KnownLanguages() in detect.go not generic.go. Plan's structural intent violated even though functional registry and three tests exist.",
+      "score" : 0.35
     },
     {
       "dimension" : "minimal-and-scoped",
-      "evidence" : "Only 3 files changed and the substance (registry, Tier enum, 3 tests) matches plan intent, but the files are placed in the wrong package, violating the requeue directive that explicitly forbade internal\/engine\/ placement.",
+      "evidence" : "Edits are thematically scoped to the issue (tier registry + test) but placed in wrong files: detect.go instead of generic.go, and engine\/ package instead of existing language_tiers\/ package as requeue guidance demands.",
       "score" : 0.5
     },
     {
       "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "KnownLanguages() iterates the real extToLanguage map (not hardcoded), all 3 tests assert genuine behavior with no deleted\/weakened tests or forced expected values.",
-      "score" : 0.9
+      "evidence" : "All three tests are legitimate: exhaustive KnownLanguages() coverage check, unknown-language fail-safe, and Swift regression pin. No test deletion, no hard-coded expected values to force green.",
+      "score" : 1
     },
     {
       "dimension" : "safe-to-advance",
-      "evidence" : "Creating a second tier system in internal\/engine\/ when internal\/language_tiers\/ already exists per #29 introduces a duplicate registry surface that could diverge and confuse consumers — a code-organization regression risk.",
-      "score" : 0.4
+      "evidence" : "Creates a competing\/duplicate tier system in internal\/engine\/ alongside existing internal\/language_tiers\/ from #29 — two tier classifiers in one codebase is a regression risk and violates explicit authoritative guidance. Also modifies languageToAdapter with 4 new entries, changing discovery behavior beyond mere exposure.",
+      "score" : 0.25
     }
   ],
   "evidenceReceiptIds" : [
@@ -146,8 +146,9 @@
     "rcpt-build-commit-sweep-build-23#s0"
   ],
   "failureReasons" : [
-    "Requeue guidance (authoritative) forbids creating files under internal\/engine\/ — must extend existing internal\/language_tiers\/ package instead. Diff adds internal\/engine\/language_tiers.go and _test.go in direct violation.",
-    "The existing internal\/language_tiers\/ package from #29 already has a tier classifier; this diff creates a competing\/duplicate system rather than extending the established one.",
+    "Requeue guidance (authoritative) forbids creating files under internal\/engine\/ — must extend existing internal\/language_tiers\/ package. Diff creates internal\/engine\/language_tiers.go and _test.go in direct violation, creating a duplicate tier system alongside the existing one from #29.",
+    "KnownLanguages() placed in detect.go instead of the specified generic.go per approved plan.",
+    "languageToAdapter map modified with 4 new entries (ruby, java, kotlin, shell) — a behavior change to discovery beyond the plan's intent of merely exposing existing data.",
     "aggregate score 0.525 below threshold 0.600"
   ],
   "filesReviewed" : [
