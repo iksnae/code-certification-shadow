@@ -1,13 +1,13 @@
-From 64ce6a6fd065594c5e0248a7dee15f207478bbee Mon Sep 17 00:00:00 2001
+From b0b78db9515bd675689cc94cded557441e835c84 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 22 Jul 2026 22:35:21 -0400
+Date: Wed, 22 Jul 2026 22:48:47 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s0)
 
 ---
- internal/language_tiers/language_tiers.go     | 22 ------------
- .../language_tiers/language_tiers_test.go     | 24 +++++++++----
- internal/language_tiers/tiers.go              | 35 +++++++++++++++++++
- 3 files changed, 52 insertions(+), 29 deletions(-)
+ internal/language_tiers/language_tiers.go     | 22 --------------
+ .../language_tiers/language_tiers_test.go     | 11 ++++---
+ internal/language_tiers/tiers.go              | 30 +++++++++++++++++++
+ 3 files changed, 35 insertions(+), 28 deletions(-)
  create mode 100644 internal/language_tiers/tiers.go
 
 diff --git a/internal/language_tiers/language_tiers.go b/internal/language_tiers/language_tiers.go
@@ -41,39 +41,35 @@ index 358d830b4..20662f35a 100644
 -	return TierGeneric
 -}
 diff --git a/internal/language_tiers/language_tiers_test.go b/internal/language_tiers/language_tiers_test.go
-index be6f3e8ea..f6c2621b2 100644
+index be6f3e8ea..816935a50 100644
 --- a/internal/language_tiers/language_tiers_test.go
 +++ b/internal/language_tiers/language_tiers_test.go
-@@ -8,18 +8,28 @@ func TestTierForLanguage(t *testing.T) {
+@@ -8,12 +8,11 @@ func TestTierForLanguage(t *testing.T) {
  		lang string
  		want Tier
  	}{
--		// Registered languages with full ana
-...[elided 1054 bytes - full stream is hash-only]...
-stered languages fall back to Generic
-+		// Unregistered / generic languages
- 		{name: "Ruby", lang: "ruby", want: TierGeneric},
- 		{name: "Swift", lang: "swift", want: TierGeneric},
- 		{name: "C", lang: "c", want: TierGeneric},
-+		{name: "JavaScript", lang: "javascript", want: TierGeneric},
- 		{name: "Empty string", lang: "", want: TierGeneric},
-+		{name: "TypeScript abbreviation (ts)", lang: "ts", want: TierGeneric},
-+		{name: "Python abbreviation (py)", lang: "py", want: TierGeneric},
- 	}
+-		// Registered languages with full analysis support
+-		{name: "Go", lang: "go", want: TierFull},
+-		{name: "TypeScript", lang: "ts", want: TierFull},
+-		{name: "Python", lang: "py", want: TierFull},
+-		{name: "Rust", lang: "rs", want: TierFull},
+-		{name: "JavaScript", lang: "js", want: TierFull},
++		// Languages with native analysis support
++		{name: "Go", lang: "go", want: TierNative},
++		{name: "TypeScript", lang: "typescript", want: TierNative},
++		{name: "Python", lang: "python", want: TierNative},
++		{name: "Rust", lang: "rust", want: TierNative},
  
- 	for _, tt := range tests {
+ 		// Unregistered languages fall back to Generic
+ 		{name: "Ruby", lang: "ruby", want: TierGeneric},
 diff --git a/internal/language_tiers/tiers.go b/internal/language_tiers/tiers.go
 new file mode 100644
-index 000000000..43789599e
+index 000000000..535ed511c
 --- /dev/null
 +++ b/internal/language_tiers/tiers.go
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,30 @@
 +// Package language_tiers provides tier classification for programming languages
 +// based on the depth of analysis support available.
-+//
-+// Languages are classified into two tiers:
-+//   - TierGeneric: baseline support without language-specific structural analysis.
-+//   - TierNative: full structural analysis support for natively supported languages.
 +package language_tiers
 +
 +import "strings"
@@ -83,15 +79,14 @@ index 000000000..43789599e
 +
 +const (
 +	// TierGeneric is the baseline tier for languages without specialized analysis.
-+	TierGeneric Tier = 0
-+	// TierNative is the tier for languages with full structural analysis support.
-+	TierNative Tier = 1
++	TierGeneric Tier = iota
++	// TierNative is the tier for languages with native, specialized analysis support.
++	TierNative
 +)
 +
 +// TierForLanguage returns the analysis tier for a given language identifier.
-+// It matches against known natively-supported languages case-insensitively
-+// (go, typescript, python, rust) and returns TierNative for those;
-+// all other languages return TierGeneric.
++// Languages with native analysis support (go, typescript, python, rust) return
++// TierNative; all other languages return TierGeneric. Matching is case-insensitive.
 +func TierForLanguage(lang string) Tier {
 +	switch {
 +	case strings.EqualFold(lang, "go"),
@@ -106,18 +101,19 @@ index 000000000..43789599e
 -- 
 2.54.0 (Apple Git-156)
 
-From 51bbd353691b9bd04e87c1b2d65e2d051296cd49 Mon Sep 17 00:00:00 2001
+From 042135c34e3533e472ebb7f71e74f9a754f3f1dc Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 22 Jul 2026 22:36:11 -0400
+Date: Wed, 22 Jul 2026 22:50:27 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s1)
 
 ---
- internal/domain/dimension.go      | 2 +-
+ internal/domain/dimension.go      | 4 ++--
  internal/domain/dimension_test.go | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ internal/domain/record.go         | 1 +
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/internal/domain/dimension.go b/internal/domain/dimension.go
-index 9806a00d3..62be59a4a 100644
+index 9806a00d3..5d629c4da 100644
 --- a/internal/domain/dimension.go
 +++ b/internal/domain/dimension.go
 @@ -113,7 +113,7 @@ const (
@@ -125,10 +121,19 @@ index 9806a00d3..62be59a4a 100644
  )
  
 -const GradeNA Grade = -1 // N/A — not applicable
-+const GradeNA Grade = 255 // N/A — not applicable
++const GradeNA Grade = 255 // N/A - not applicable
  
  var gradeStrings = map[Grade]string{
  	GradeA:      "A",
+@@ -134,7 +134,7 @@ func (g Grade) String() string {
+ 	return fmt.Sprintf("Grade(%d)", g)
+ }
+ 
+-// GradeFromScore converts a numeric score (0.0–1.0) to a letter grade.
++// GradeFromScore converts a numeric score (0.0-1.0) to a letter grade.
+ func GradeFromScore(score float64) Grade {
+ 	switch {
+ 	case score >= 0.93:
 diff --git a/internal/domain/dimension_test.go b/internal/domain/dimension_test.go
 index e0bd92967..99d99fbbc 100644
 --- a/internal/domain/dimension_test.go
@@ -144,6 +149,116 @@ index e0bd92967..99d99fbbc 100644
  	}
  }
  
+diff --git a/internal/domain/record.go b/internal/domain/record.go
+index cb820be4b..c65c3f626 100644
+--- a/internal/domain/record.go
++++ b/internal/domain/record.go
+@@ -76,6 +76,7 @@ type CertificationRecord struct {
+ 	Grade      Grade           `json:"grade"`
+ 	Score      float64         `json:"score"`
+ 	Confidence float64         `json:"confidence"`
++	// Unsupported indicates the unit's language has no parser available.
+ 	Unsupported bool           `json:"unsupported"`
+ 	Dimensions DimensionScores `json:"dimensions,omitempty"`
+ 
+-- 
+2.54.0 (Apple Git-156)
+
+From 3c22f44ba44540c895b1007109534c0389d8568c Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Wed, 22 Jul 2026 22:54:32 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-31#s2)
+
+---
+ internal/engine/pipeline.go    |   2 +-
+ internal/engine/scorer.go      |  32 +-
+ internal/engine/scorer_test.go | 530 +++++++++++++--------------------
+ 3 files changed, 229 insertions(+), 335 deletions(-)
+
+diff --git a/internal/engine/pipeline.go b/internal/engine/pipeline.go
+index 7d654e2dd..be2f5b318 100644
+--- a/internal/engine/pipeline.go
++++ b/internal/engine/pipeline.go
+@@ -21,7 +21,7 @@ func CertifyUnit(
+ 	evalResult := policy.Evaluate(rules, ev, unit.ID.Path())
+ 
+ 	// 2. Score across dimensions
+-	scores := Score(ev, evalResult)
++	scores := Score(unit.ID.Language(), ev, evalResult)
+ 
+ 	// 3. Compute weighted average
+ 	avg := scores.WeightedAverage(nil)
+diff --git a/internal/engine/scorer.go b/internal/engine/scorer.go
+index 71826b1cb..9d57960b1 100644
+--- a/internal/engine/scorer.go
++++ b/internal/engine/scorer.go
+@@ -6,13 +6,22 @@ import (
+ 	"strings"
+ 
+ 	"github.com/iksnae/code-certification/internal/domain"
++	"github.com/iksnae/code-certification/internal/language_tiers"
+ 	"github.com/iksnae/code-certification/internal/policy"
+ )
+ 
+ // Score computes dimension scores from evidence and evaluation results.
+ // Only dimensions with actual evidence are included in the returned map.
+ // Dimensions without evidence are absent — they don't dilute the average.
+-func Score(ev []domain.Evidence, evalResult policy.EvaluationResult) domain.DimensionScores {
++//
++// The lang parameter controls analysis depth. When language_tiers.TierForLanguage(lang)
++// returns TierGeneric (no specialized analysis), Score returns nil immediately —
++// generic languages are not scored.
++func Score(lang string, ev []domain.Evidence, evalResult policy.EvaluationResult) domain.DimensionScores {
++	if language_tiers.TierForLanguage(lang) == language_tiers.TierGeneric {
++	
+...[elided 31130 bytes - full stream is hash-only]...
+asured) for a generic-tier language, the maintainability boost is
++// skipped (0 means "unmeasured", not "excellent").
++func TestScorer_ComplexityZeroGenericNoBoost(t *testing.T) {
++	// For a native language, complexity=0 should still boost maintainability
++	nativeEv := []domain.Evidence{
++		evidence.CodeMetrics{TotalLines: 100, CodeLines: 80, Complexity: 0}.ToEvidence(),
++	}
++	nativeScores := engine.Score("go", nativeEv, policy.EvaluationResult{Passed: true})
++	if nativeScores == nil {
++		t.Fatal("native Score returned nil unexpectedly")
++	}
++	if _, ok := nativeScores[domain.DimMaintainability]; !ok {
++		t.Error("complexity=0 for native language should still set maintainability")
++	}
++}
++
++// TestScorer_ViolationsDontIntroduceDimensions verifies that violations only
++// penalize dimensions already present in the scores map; they never inject
++// new dimensions at a default baseline.
++func TestScorer_ViolationsDontIntroduceDimensions(t *testing.T) {
++	// Evidence that only sets correctness
++	ev := []domain.Evidence{
++		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 5}.ToEvidence(),
++	}
++
++	evalResult := policy.EvaluationResult{
++		Passed: false,
++		Violations: []domain.Violation{
++			{RuleID: "lint-clean", Severity: domain.SeverityWarning, Dimension: domain.DimCorrectness},
++			// This violation targets a dimension NOT set by any evidence
++			{RuleID: "security-scan", Severity: domain.SeverityCritical, Dimension: domain.DimSecurity},
++		},
++	}
++
++	scores := engine.Score("go", ev, evalResult)
++
++	// correctness should exist (from lint evidence) and be penalized
++	if _, ok := scores[domain.DimCorrectness]; !ok {
++		t.Error("correctness should be present from lint evidence")
++	}
++
++	// security should NOT exist because no evidence set it and violations
++	// no longer introduce dimensions
++	if _, ok := scores[domain.DimSecurity]; ok {
++		t.Error("security should NOT be present — violations must not introduce new dimensions")
++	}
++}
 -- 
 2.54.0 (Apple Git-156)
 
