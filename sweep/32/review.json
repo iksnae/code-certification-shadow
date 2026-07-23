@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 8 round(s) without finishing — deliverable left partial",
+      "detail" : "ran all 60 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,11 +11,11 @@
       }
     },
     {
-      "detail" : "no files were changed",
+      "detail" : "5 file(s) changed: internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/full.go, internal\/report\/health.go, internal\/report\/health_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -25,7 +25,7 @@
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -41,11 +41,11 @@
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -93,11 +93,19 @@
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "0.111s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.169s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.339s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t6.623s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.039s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.425s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.091s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.028s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.054s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.209s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t30.735s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.125s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
+  "committed" : true,
   "confidence" : 0,
   "correlationId" : "sweep-build-32",
   "dimensions" : [
@@ -106,14 +114,26 @@
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-32#s0",
     "rcpt-build-verify-sweep-build-32#s0",
-    "rcpt-build-commit-sweep-build-32#s0"
+    "rcpt-build-commit-sweep-build-32#s0",
+    "rcpt-build-implement-sweep-build-32#s1",
+    "rcpt-build-verify-sweep-build-32#s1",
+    "rcpt-build-commit-sweep-build-32#s1",
+    "rcpt-build-implement-sweep-build-32#s2",
+    "rcpt-build-verify-sweep-build-32#s2",
+    "rcpt-build-commit-sweep-build-32#s2",
+    "rcpt-build-implement-sweep-build-32#s3",
+    "rcpt-build-verify-sweep-build-32#s3",
+    "rcpt-build-commit-sweep-build-32#s3"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 8 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
-    "No files were changed."
+    "Implementation did not complete — the build used all 60 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
-
+    "internal\/report\/detailed.go",
+    "internal\/report\/detailed_test.go",
+    "internal\/report\/full.go",
+    "internal\/report\/health.go",
+    "internal\/report\/health_test.go"
   ],
   "outcome" : "blocked",
   "rubricId" : "",
