@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 49 round(s)",
+      "detail" : "the implementor finished in 14 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "detail" : "5 file(s) changed: internal\/discovery\/generic.go, internal\/discovery\/generic_test.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_registry_test.go, internal\/engine\/language_tiers_test.go",
+      "detail" : "3 file(s) changed: internal\/discovery\/detect.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -21,7 +21,7 @@
       }
     },
     {
-      "detail" : "expected ≥1 of: internal\/discovery\/generic.go, internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_test.go",
+      "detail" : "expected ≥1 of: internal\/engine\/language_tiers.go, internal\/engine\/language_tiers_test.go",
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
@@ -51,42 +51,52 @@
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Requeue guidance: 'do NOT create a second copy under internal\/engine\/' — diff creates internal\/engine\/language_tiers.go anyway; KnownLanguages in detect.go not generic.go; only 9\/22 language IDs in the CI guard slice, missing 13 languages from the plan's explicit list.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.25
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Files created in wrong package (engine\/ vs extending language_tiers\/); detect.go modified instead of generic.go as plan specified.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.3
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "KnownLanguages() returns a hardcoded 9-ID slice rather than iterating discovery.extToLanguage; new extensions added to extToLanguage won't fail CI, defeating the plan's core enforcement goal.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.2
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Creates a competing tier implementation at engine\/ when language_tiers\/ already exists; CI guard is structurally weakened and won't catch new extensions; no immediate crash risk but architectural debt is material.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.35
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.9
         }
       }
     }
@@ -95,44 +105,59 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t4.093s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t4.167s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t4.964s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t60.995s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t4.696s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t4.922s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t5.193s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t5.530s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t5.745s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t5.324s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t6.059s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t6.615s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t5.892s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.292s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t6.587s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.835s\n--- FAIL: TestGenerateSite_LargeScale (33.70s)\n    site_test.go:391: site generation took 27.821894084s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.799s\nFAIL\n"
+        "outputExcerpt" : "0.040s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.064s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.245s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.638s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.243s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.132s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.017s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.024s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.038s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.023s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.177s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t23.473s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.185s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
         "kind" : "testsPass"
       },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "fail"
+      "verdict" : "pass"
     }
   ],
   "committed" : true,
-  "confidence" : 0,
+  "confidence" : 0.9,
   "correlationId" : "sweep-build-23",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Requeue guidance: 'do NOT create a second copy under internal\/engine\/' — diff creates internal\/engine\/language_tiers.go anyway; KnownLanguages in detect.go not generic.go; only 9\/22 language IDs in the CI guard slice, missing 13 languages from the plan's explicit list.",
+      "score" : 0.25
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Files created in wrong package (engine\/ vs extending language_tiers\/); detect.go modified instead of generic.go as plan specified.",
+      "score" : 0.3
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "KnownLanguages() returns a hardcoded 9-ID slice rather than iterating discovery.extToLanguage; new extensions added to extToLanguage won't fail CI, defeating the plan's core enforcement goal.",
+      "score" : 0.2
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "Creates a competing tier implementation at engine\/ when language_tiers\/ already exists; CI guard is structurally weakened and won't catch new extensions; no immediate crash risk but architectural debt is material.",
+      "score" : 0.35
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-23#s0",
     "rcpt-build-verify-sweep-build-23#s0",
-    "rcpt-build-commit-sweep-build-23#s0",
-    "rcpt-build-implement-sweep-build-23#s1",
-    "rcpt-build-verify-sweep-build-23#s1",
-    "rcpt-build-commit-sweep-build-23#s1",
-    "rcpt-build-implement-sweep-build-23#s2",
-    "rcpt-build-verify-sweep-build-23#s2",
-    "rcpt-build-commit-sweep-build-23#s2"
+    "rcpt-build-commit-sweep-build-23#s0"
   ],
   "failureReasons" : [
-    "Reviewer independently re-ran the project verification (go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1) and it FAILED.\nok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t4.093s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t4.167s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t4.964s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t60.995s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t4.696s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t4.922s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t5.193s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t7.335s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t5.530s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t5.745s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t5.324s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t6.059s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t6.615s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t5.892s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t6.292s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t6.587s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t3.835s\n--- FAIL: TestGenerateSite_LargeScale (33.70s)\n    site_test.go:391: site generation took 27.821894084s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t38.164s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t3.799s\nFAIL"
+    "Requeue guidance explicitly forbids creating files under internal\/engine\/ — the work should EXTEND the existing internal\/language_tiers\/ package. Diff creates new internal\/engine\/language_tiers.go and _test.go in direct violation.",
+    "KnownLanguages() placed in detect.go instead of the specified generic.go, and returns only 9 hardcoded IDs instead of iterating extToLanguage or covering all 22 registered languages.",
+    "CI guard test iterates a hardcoded 9-language slice rather than the actual discovery extToLanguage map, meaning new extensions added to extToLanguage will NOT cause a test failure — the enforcement is structurally gamed.",
+    "Registry map contains 22 entries but KnownLanguages() exposes only 9, creating inconsistency between what's registered and what's tested.",
+    "aggregate score 0.275 below threshold 0.600"
   ],
   "filesReviewed" : [
-    "internal\/discovery\/generic.go",
-    "internal\/discovery\/generic_test.go",
+    "internal\/discovery\/detect.go",
     "internal\/engine\/language_tiers.go",
-    "internal\/engine\/language_tiers_registry_test.go",
     "internal\/engine\/language_tiers_test.go"
   ],
   "outcome" : "needsFix",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
