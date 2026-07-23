@@ -1,21 +1,21 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 8 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 43 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "no files were changed",
+      "detail" : "4 file(s) changed: internal\/engine\/scorer_test.go, internal\/report\/card.go, internal\/report\/full.go, internal\/report\/report_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -25,27 +25,27 @@
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -93,11 +93,19 @@
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.082s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.113s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.526s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.199s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.106s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.025s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.042s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.028s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.173s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t16.701s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.042s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
+  "committed" : true,
   "confidence" : 0,
   "correlationId" : "sweep-build-28",
   "dimensions" : [
@@ -106,14 +114,22 @@
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-28#s0",
     "rcpt-build-verify-sweep-build-28#s0",
-    "rcpt-build-commit-sweep-build-28#s0"
+    "rcpt-build-commit-sweep-build-28#s0",
+    "rcpt-build-implement-sweep-build-28#s1",
+    "rcpt-build-verify-sweep-build-28#s1",
+    "rcpt-build-commit-sweep-build-28#s1",
+    "rcpt-build-implement-sweep-build-28#s2",
+    "rcpt-build-verify-sweep-build-28#s2",
+    "rcpt-build-commit-sweep-build-28#s2"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 8 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
-    "No files were changed."
+    "Slice 1 (internal\/engine\/language_tiers_test.go) produced no changes and isn't covered by prior committed work — likely a missing sub-feature. Implement it, stacking on the already-committed slices."
   ],
   "filesReviewed" : [
-
+    "internal\/engine\/scorer_test.go",
+    "internal\/report\/card.go",
+    "internal\/report\/full.go",
+    "internal\/report\/report_test.go"
   ],
   "outcome" : "blocked",
   "rubricId" : "",
