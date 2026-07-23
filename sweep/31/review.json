@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 52 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 74 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "6 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/engine\/pipeline.go, internal\/language_tiers\/language_tiers.go, internal\/language_tiers\/language_tiers_test.go, internal\/language_tiers\/tiers.go",
+      "detail" : "4 file(s) changed: internal\/engine\/pipeline.go, internal\/engine\/pipeline_test.go, internal\/engine\/scorer.go, internal\/engine\/scorer_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -21,7 +21,7 @@
       }
     },
     {
-      "detail" : "expected ≥1 of: internal\/domain\/dimension.go, internal\/domain\/record.go, internal\/engine\/pipeline.go, internal\/engine\/pipeline_test.go, internal\/engine\/scorer.go, internal\/engine\/scorer_test.go, internal\/language_tiers\/tiers.go",
+      "detail" : "expected ≥1 of: internal\/engine\/pipeline.go, internal\/engine\/pipeline_test.go, internal\/engine\/scorer.go, internal\/engine\/scorer_test.go",
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
@@ -31,11 +31,11 @@
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -51,42 +51,52 @@
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Visible diffs confirm Score() lang param, TierGeneric gate, pipeline nil-scores short-circuit with GradeNA\/Unsupported, and ViolationOnAbsentDimension test. However, the scorer.go diff is truncated with 27137 bytes elided, hiding the complexity-maintainability guard (d) and violation-else removal (e). The required TestScorer_TierGenericReturnsNil and TestScorer_ZeroComplexityTierGenericNoMaintainabilityBoost are also not visible in the committed diffs, though verification passed green.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.75
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Only the four target files (scorer.go, scorer_test.go, pipeline.go, pipeline_test.go) were modified. No unrelated churn or files outside the plan touched.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.95
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "No evidence of hard-coding expected values. However scorer_test.go shows 357 deletions vs 116 additions — a net -241 lines. The plan required updating calls and adding 3 tests, not mass deletion. Visible portions show only proper 'go' arg additions, but the large deletion volume in the elided portion raises concern that tests were removed rather than fixed.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.8
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Green build. No doc\/code mismatch visible. But the elided scorer.go core logic (complexity guard, violation-else removal) cannot be reviewed. The 357-line test deletion in scorer_test.go is also opaque. These verification gaps introduce non-trivial risk that should block until the full diff is inspected.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.75
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.78
         }
       }
     }
@@ -95,7 +105,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.419s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.183s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.725s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t24.039s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.054s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.065s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.144s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.201s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.049s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.111s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.066s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.028s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.027s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.026s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.023s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.094s\n--- FAIL: TestGenerateSite_LargeScale (12.10s)\n    site_test.go:391: site generation took 11.22057175s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t12.430s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.048s\nFAIL\n"
+        "outputExcerpt" : "0.054s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.037s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.163s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.648s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.148s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.114s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.051s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.070s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t11.000s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.038s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -106,10 +116,29 @@
     }
   ],
   "committed" : true,
-  "confidence" : 0,
+  "confidence" : 0.78,
   "correlationId" : "sweep-build-31",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Visible diffs confirm Score() lang param, TierGeneric gate, pipeline nil-scores short-circuit with GradeNA\/Unsupported, and ViolationOnAbsentDimension test. However, the scorer.go diff is truncated with 27137 bytes elided, hiding the complexity-maintainability guard (d) and violation-else removal (e). The required TestScorer_TierGenericReturnsNil and TestScorer_ZeroComplexityTierGenericNoMaintainabilityBoost are also not visible in the committed diffs, though verification passed green.",
+      "score" : 0.75
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only the four target files (scorer.go, scorer_test.go, pipeline.go, pipeline_test.go) were modified. No unrelated churn or files outside the plan touched.",
+      "score" : 0.95
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "No evidence of hard-coding expected values. However scorer_test.go shows 357 deletions vs 116 additions — a net -241 lines. The plan required updating calls and adding 3 tests, not mass deletion. Visible portions show only proper 'go' arg additions, but the large deletion volume in the elided portion raises concern that tests were removed rather than fixed.",
+      "score" : 0.8
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "Green build. No doc\/code mismatch visible. But the elided scorer.go core logic (complexity guard, violation-else removal) cannot be reviewed. The 357-line test deletion in scorer_test.go is also opaque. These verification gaps introduce non-trivial risk that should block until the full diff is inspected.",
+      "score" : 0.75
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-31#s0",
@@ -126,18 +155,15 @@
     "rcpt-build-commit-sweep-build-31#s3"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 52 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
-    "Slice 3 (internal\/engine\/scorer.go) produced no changes and isn't covered by prior committed work — likely a missing sub-feature. Implement it, stacking on the already-committed slices."
+
   ],
   "filesReviewed" : [
-    "internal\/domain\/dimension.go",
-    "internal\/domain\/dimension_test.go",
     "internal\/engine\/pipeline.go",
-    "internal\/language_tiers\/language_tiers.go",
-    "internal\/language_tiers\/language_tiers_test.go",
-    "internal\/language_tiers\/tiers.go"
+    "internal\/engine\/pipeline_test.go",
+    "internal\/engine\/scorer.go",
+    "internal\/engine\/scorer_test.go"
   ],
-  "outcome" : "blocked",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "pass",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
