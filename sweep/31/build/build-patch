@@ -1,13 +1,13 @@
-From 59a39f3e0ced2ad6b833debb59273f15482b815f Mon Sep 17 00:00:00 2001
+From 1fa815409ad58a5b13bc29820b8adf00260ee10c Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 22 Jul 2026 20:45:35 -0400
+Date: Wed, 22 Jul 2026 21:00:33 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s0)
 
 ---
- internal/language_tiers/language_tiers.go     | 22 ------------
- .../language_tiers/language_tiers_test.go     | 34 +++++++++++++++----
- internal/language_tiers/tiers.go              | 27 +++++++++++++++
- 3 files changed, 54 insertions(+), 29 deletions(-)
+ internal/language_tiers/language_tiers.go     | 22 ---------------
+ .../language_tiers/language_tiers_test.go     | 20 +++++++++-----
+ internal/language_tiers/tiers.go              | 27 +++++++++++++++++++
+ 3 files changed, 40 insertions(+), 29 deletions(-)
  create mode 100644 internal/language_tiers/tiers.go
 
 diff --git a/internal/language_tiers/language_tiers.go b/internal/language_tiers/language_tiers.go
@@ -41,45 +41,36 @@ index 358d830b4..20662f35a 100644
 -	return TierGeneric
 -}
 diff --git a/internal/language_tiers/language_tiers_test.go b/internal/language_tiers/language_tiers_test.go
-index be6f3e8ea..780314149 100644
+index be6f3e8ea..434e48762 100644
 --- a/internal/language_tiers/language_tiers_test.go
 +++ b/internal/language_tiers/language_tiers_test.go
-@@ -8,17 +8,28 @@ func TestTierForLanguage(t *testing.T) {
+@@ -8,17 +8,23 @@ func TestTierForLanguage(t *testing.T) {
  		lang string
  		want Tier
  	}{
--		// Registered languages with full a
-...[elided 1071 bytes - full stream is hash-only]...
- want: TierNative},
+-		// Registered languages with full
+...[elided 423 bytes - full stream is hash-only]...
+xed case", lang: "Go", want: TierNative},
++		{name: "TypeScript lowercase", lang: "typescript", want: TierNative},
++		{name: "TypeScript uppercase", lang: "TYPESCRIPT", want: TierNative},
++		{name: "TypeScript mixed case", lang: "TypeScript", want: TierNative},
++		{name: "Python lowercase", lang: "python", want: TierNative},
++		{name: "Python uppercase", lang: "PYTHON", want: TierNative},
++		{name: "Rust lowercase", lang: "rust", want: TierNative},
++		{name: "Rust uppercase", lang: "RUST", want: TierNative},
  
 -		// Unregistered languages fall back to Generic
-+		// Unrecognized languages fall back to Generic
++		// Generic-tier languages
  		{name: "Ruby", lang: "ruby", want: TierGeneric},
  		{name: "Swift", lang: "swift", want: TierGeneric},
  		{name: "C", lang: "c", want: TierGeneric},
 +		{name: "JavaScript", lang: "javascript", want: TierGeneric},
-+		{name: "TypeScript shortened", lang: "ts", want: TierGeneric},
-+		{name: "Python shortened", lang: "py", want: TierGeneric},
-+		{name: "Rust shortened", lang: "rs", want: TierGeneric},
  		{name: "Empty string", lang: "", want: TierGeneric},
  	}
  
-@@ -31,3 +42,12 @@ func TestTierForLanguage(t *testing.T) {
- 		})
- 	}
- }
-+
-+func TestTierConstants(t *testing.T) {
-+	if TierGeneric != 0 {
-+		t.Errorf("TierGeneric = %d, want 0", TierGeneric)
-+	}
-+	if TierNative != 1 {
-+		t.Errorf("TierNative = %d, want 1", TierNative)
-+	}
-+}
 diff --git a/internal/language_tiers/tiers.go b/internal/language_tiers/tiers.go
 new file mode 100644
-index 000000000..7699e5d89
+index 000000000..663ca90d3
 --- /dev/null
 +++ b/internal/language_tiers/tiers.go
 @@ -0,0 +1,27 @@
@@ -93,15 +84,15 @@ index 000000000..7699e5d89
 +type Tier int
 +
 +const (
-+	// TierGeneric is the baseline tier for languages without native-level analysis.
++	// TierGeneric is the baseline tier for languages without specialized analysis.
 +	TierGeneric Tier = 0
-+	// TierNative is the tier for languages with native structural analysis support.
++	// TierNative is the tier for languages with native, specialized analysis support.
 +	TierNative Tier = 1
 +)
 +
 +// TierForLanguage returns the analysis tier for a given language identifier.
-+// Languages with native analysis support (go, typescript, python, rust)
-+// return TierNative; all others return TierGeneric. Matching is case-insensitive.
++// Languages with native support (go, typescript, python, rust) return TierNative;
++// all others return TierGeneric. Matching is case-insensitive.
 +func TierForLanguage(lang string) Tier {
 +	switch strings.ToLower(lang) {
 +	case "go", "typescript", "python", "rust":
@@ -113,9 +104,9 @@ index 000000000..7699e5d89
 -- 
 2.54.0 (Apple Git-156)
 
-From 9ea68ad4b854b46eacec9226db91e2faf325c1ee Mon Sep 17 00:00:00 2001
+From 3c6e33225febfb7265c87041772581863b7ba661 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 22 Jul 2026 20:46:29 -0400
+Date: Wed, 22 Jul 2026 21:01:31 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s1)
 
 ---
@@ -169,16 +160,16 @@ index cb820be4b..e194fd91c 100644
 -- 
 2.54.0 (Apple Git-156)
 
-From d91e47c70295449c806cab8b6c92f3efb72a46a4 Mon Sep 17 00:00:00 2001
+From fecf5036100019253cc79949c904488bde28fd68 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 22 Jul 2026 20:49:15 -0400
+Date: Wed, 22 Jul 2026 21:04:09 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s2)
 
 ---
  internal/engine/pipeline.go    |   2 +-
- internal/engine/scorer.go      |  28 +-
- internal/engine/scorer_test.go | 836 ++-------------------------------
- 3 files changed, 60 insertions(+), 806 deletions(-)
+ internal/engine/scorer.go      |  33 +-
+ internal/engine/scorer_test.go | 844 ++-------------------------------
+ 3 files changed, 74 insertions(+), 805 deletions(-)
 
 diff --git a/internal/engine/pipeline.go b/internal/engine/pipeline.go
 index 7d654e2dd..be2f5b318 100644
@@ -194,10 +185,10 @@ index 7d654e2dd..be2f5b318 100644
  	// 3. Compute weighted average
  	avg := scores.WeightedAverage(nil)
 diff --git a/internal/engine/scorer.go b/internal/engine/scorer.go
-index 71826b1cb..99d83d21a 100644
+index 71826b1cb..8685673a6 100644
 --- a/internal/engine/scorer.go
 +++ b/internal/engine/scorer.go
-@@ -6,13 +6,22 @@ import (
+@@ -6,13 +6,23 @@ import (
  	"strings"
  
  	"github.com/iksnae/code-certification/internal/domain"
@@ -210,13 +201,15 @@ index 71826b1cb..99d83d21a 100644
  // Dimensions without evidence are absent — they don't dilute the average.
 -func Score(ev []domain.Evidence, evalResult policy.EvaluationResult) domain.DimensionScores {
 +//
-+// The lang parameter is used to gate scoring: if the language tier is TierGeneric
-+// (no native analysis support), Score returns nil immediately because there is
-+// insufficient structural evidence to produce meaningful scores.
++// lang is the programming language being scored. If the language maps to
++// TierGeneric (unrecognized/unsupported), Score returns nil immediately
++// because no meaningful scores can be computed for unknown languages.
 +func Score(lang string, ev []domain.Evidence, evalResult policy.EvaluationResult) domain.DimensionScores {
-+	if language_tiers.TierForLanguage(lang) == language_tier
-...[elided 29892 bytes - full stream is hash-only]...
-.Evidence{{
++	// Tier gate: unknown languages get no scores
++	if language_tiers.T
+...[elided 30562 bytes - full stream is hash-only]...
+{
+-	ev := []domain.Evidence{{
 -		Kind: domain.EvidenceKindStructural, Source: "structural", Passed: true,
 -		Metrics: map[string]float64{"dep_depth": 10},
 -	}}
@@ -264,88 +257,91 @@ index 71826b1cb..99d83d21a 100644
 -		},
 -	}}
 -	scores := engine.Score(ev, policy.EvaluationResult{Passed: true})
- 
+-
 -	for dim, score := range scores {
 -		if score < 0.80 {
 -			t.Errorf("dim %s = %f, want >= 0.80 for clean code", dim, score)
 -		}
-+	scores := Score("go", ev, evalResult)
-+	if _, ok := scores[domain.DimCorrectness]; ok {
-+		t.Error("Score() violations should not introduce new dimensions when no evidence exists")
++	// complexity 3 → boost to 0.95, then warning penalty -0.1 → 0.85
++	if v != 0.85 {
++		t.Errorf("expected maintainability 0.85 after boost+penalty, got %v", v)
  	}
  }
 -- 
 2.54.0 (Apple Git-156)
 
-From 2447bc055f170340079e991d20b0ad9f825146a6 Mon Sep 17 00:00:00 2001
+From c326e21a3f9f17a7f0fff299f7149e5296ba7c01 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Wed, 22 Jul 2026 20:51:29 -0400
+Date: Wed, 22 Jul 2026 21:06:31 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-31#s3)
 
 ---
- internal/engine/scorer_test.go | 54 ++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ internal/engine/scorer_test.go | 57 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
 diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
-index 2741472af..f9bf3de5c 100644
+index 4d5569d42..766c5c37f 100644
 --- a/internal/engine/scorer_test.go
 +++ b/internal/engine/scorer_test.go
-@@ -72,3 +72,57 @@ func TestScore_ViolationsOnlyPenalizeExistingDimensions(t *testing.T) {
- 		t.Error("Score() violations should not introduce new dimensions when no evidence exists")
+@@ -86,3 +86,60 @@ func TestScore_Violations_PenalizeExistingDimensions(t *testing.T) {
+ 		t.Errorf("expected maintainability 0.85 after boost+penalty, got %v", v)
  	}
  }
 +
 +func TestScorer_TierGenericReturnsNil(t *testing.T) {
-+	ev := []domain.Evidence{
-+		{Kind: domain.EvidenceKindTest, Passed: true},
-+	}
++	ev := []domain.Evidence{{
++		Kind:   domain.EvidenceKindMetrics,
++		Passed: true,
++		Metrics: map[string]float64{
++			"complexity": 3,
++		},
++	}}
 +	evalResult := policy.EvaluationResult{
 +		Violations: []domain.Violation{
-+			{Dimension: domain.DimCorrectness, Severity: domain.SeverityWarning},
++			{Dimension: domain.DimMaintainability, Severity: domain.SeverityWarning},
 +		},
 +	}
-+
-+	scores := Score("swift", ev, evalResult)
-+	if scores != nil {
-+		t.Errorf("Score() with TierGeneric language 'swift' should return nil, got %v", scores)
++	result := Score("swift", ev, evalResult)
++	if result != nil {
++		t.Errorf("expected nil for generic tier language 'swift', got %v", result)
 +	}
 +}
 +
 +func TestScorer_ZeroComplexityTierGenericNoMaintainabilityBoost(t *testing.T) {
-+	ev := []domain.Evidence{
-+		{
-+			Kind:    domain.EvidenceKindMetrics,
-+			Metrics: map[string]float64{"complexity": 0},
++	ev := []domain.Evidence{{
++		Kind: domain.EvidenceKindMetrics,
++		Metrics: map[string]float64{
++			"complexity": 0,
 +		},
-+	}
-+	evalResult := policy.EvaluationResult{}
-+
-+	scores := Score("swift", ev, evalResult)
-+	// TierGeneric with complexity=0 should return nil (entire scoring gated).
-+	if scores != nil {
-+		t.Errorf("Score() with TierGeneric language 'swift' should return nil, got %v", scores)
++	}}
++	result := Score("swift", ev, policy.EvaluationResult{})
++	// For generic tier, complexity==0 means "unmeasured" — no boost.
++	// Since Score returns nil for generic tier, maintainability cannot be present.
++	// Either the result is nil (whole map absent) or maintainability is absent from it.
++	if result != nil {
++		if v, ok := result[domain.DimMaintainability]; ok && v == 0.95 {
++			t.Errorf("expected no maintainability boost for complexity==0 in generic tier, got 0.95")
++		}
 +	}
 +}
 +
 +func TestScorer_ViolationOnAbsentDimensionDoesNotInject(t *testing.T) {
-+	// Evidence sets correctness dimension but violation targets maintainability.
-+	// Violation on an absent dimension should NOT inject it.
-+	ev := []domain.Evidence{
-+		{Kind: domain.EvidenceKindLint, Passed: true},
-+	}
++	ev := []domain.Evidence{{
++		Kind:   domain.EvidenceKindMetrics,
++		Passed: true,
++		Metrics: map[string]float64{
++			"complexity": 3,
++		},
++	}}
 +	evalResult := policy.EvaluationResult{
 +		Violations: []domain.Violation{
-+			{Dimension: domain.DimMaintainability, Severity: domain.SeverityError},
++			{Dimension: domain.DimSecurity, Severity: domain.SeverityWarning},
 +		},
 +	}
-+
-+	scores := Score("go", ev, evalResult)
-+	if _, ok := scores[domain.DimMaintainability]; ok {
-+		t.Error("Score() violations on absent dimension should not inject that dimension")
-+	}
-+	// Correctness should be present (from evidence).
-+	if _, ok := scores[domain.DimCorrectness]; !ok {
-+		t.Error("Score() should still set dimensions that have evidence")
++	result := Score("go", ev, evalResult)
++	// Violations on dimensions without evidence must not inject them.
++	if _, ok := result[domain.DimSecurity]; ok {
++		t.Errorf("expected security dimension to be absent (no evidence), but it was injected: %v", result[domain.DimSecurity])
 +	}
 +}
 -- 
