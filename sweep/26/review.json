@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 29 round(s)",
+      "detail" : "the implementor finished in 36 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "detail" : "1 file(s) changed: internal\/engine\/scorer_test.go",
+      "detail" : "2 file(s) changed: internal\/engine\/pipeline.go, internal\/engine\/scorer_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -51,42 +51,42 @@
       }
     },
     {
-      "detail" : "Only 2 of 5 plan-required tests have non-skipped implementations (Test #5 is t.Skip, Tests #3 and #4 delivered in s0, #1 and #2 in s1). Even the 4 non-skipped tests have gaps: TestScore_UnsupportedLanguage_ReturnsNA omits Grade=='N\/A' and Unsupported==true assertions; TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric as plan mandates; TestScore_SupportedLanguage_StillWorks omits grade (A\/B\/C\/D\/F) assertion; TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil shortcut rather than specifically asserting maintainability != 0.95.",
+      "detail" : "3 of 5 tests present; one is t.Skip(), two have incomplete assertions; plan's 'WHOLE objective' unmet; production code changed against explicit non-goal",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
         "score" : {
-          "_0" : 0.3
+          "_0" : 0.1
         }
       }
     },
     {
-      "detail" : "Only scorer_test.go was modified, matching the plan's single target file; no production code, language_tiers.go, or other files were touched.",
+      "detail" : "Plan specifies only scorer_test.go; pipeline.go modified with 19 lines of production logic against explicit non-goal 'Do NOT change production code'",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
         "score" : {
-          "_0" : 1
+          "_0" : 0.2
         }
       }
     },
     {
-      "detail" : "TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric to avoid triggering the unsupported path where 0.5 defaults could reappear — this weakens the guard. TestScore_UnsupportedLanguage_ReturnsNA omits Grade\/Unsupported assertions the plan explicitly required. TestScore_AggregateSkipsUnsupported is t.Skip'd (honest but unimplemented). TestScore_UnmeasuredComplexity_NotScored passes via TierGeneric nil-return without proving maintainability != 0.95.",
+      "detail" : "Skip is honest; no evidence of test-weakening; but TierGeneric nil-return shortcut avoids targeted 0.95 assertion plan required",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
         "score" : {
-          "_0" : 0.25
+          "_0" : 0.5
         }
       }
     },
     {
-      "detail" : "No security risk, but the DefaultsNotInjected test using 'go' instead of TierGeneric means the old-0.5-default-injection guard for unsupported languages is not actually tested, leaving a regression gap. SupportedLanguage_StillWorks lacks a grade assertion, reducing its value as a regression guard. Advancing would ship under-tested coverage.",
+      "detail" : "pipeline.go adds early-return for nil scores in CertifyUnit — correctness risk from production change in a test-only step, against plan non-goal",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
         "score" : {
-          "_0" : 0.35
+          "_0" : 0.2
         }
       }
     },
@@ -96,7 +96,7 @@
       "label" : "Judge confidence",
       "result" : {
         "score" : {
-          "_0" : 0.92
+          "_0" : 0.94
         }
       }
     }
@@ -105,7 +105,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "0.062s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.091s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.359s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.077s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.245s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.275s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.062s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.033s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.117s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.042s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.028s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.038s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.182s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t14.805s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.066s\n"
+        "outputExcerpt" : "0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.092s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.211s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.932s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.076s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.332s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.066s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.027s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.026s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.065s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.067s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.024s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.056s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.167s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t15.308s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.070s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -116,28 +116,28 @@
     }
   ],
   "committed" : true,
-  "confidence" : 0.92,
+  "confidence" : 0.94,
   "correlationId" : "sweep-build-26",
   "dimensions" : [
     {
       "dimension" : "implements-the-approved-plan",
-      "evidence" : "Only 2 of 5 plan-required tests have non-skipped implementations (Test #5 is t.Skip, Tests #3 and #4 delivered in s0, #1 and #2 in s1). Even the 4 non-skipped tests have gaps: TestScore_UnsupportedLanguage_ReturnsNA omits Grade=='N\/A' and Unsupported==true assertions; TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric as plan mandates; TestScore_SupportedLanguage_StillWorks omits grade (A\/B\/C\/D\/F) assertion; TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil shortcut rather than specifically asserting maintainability != 0.95.",
-      "score" : 0.3
+      "evidence" : "3 of 5 tests present; one is t.Skip(), two have incomplete assertions; plan's 'WHOLE objective' unmet; production code changed against explicit non-goal",
+      "score" : 0.1
     },
     {
       "dimension" : "minimal-and-scoped",
-      "evidence" : "Only scorer_test.go was modified, matching the plan's single target file; no production code, language_tiers.go, or other files were touched.",
-      "score" : 1
+      "evidence" : "Plan specifies only scorer_test.go; pipeline.go modified with 19 lines of production logic against explicit non-goal 'Do NOT change production code'",
+      "score" : 0.2
     },
     {
       "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric to avoid triggering the unsupported path where 0.5 defaults could reappear — this weakens the guard. TestScore_UnsupportedLanguage_ReturnsNA omits Grade\/Unsupported assertions the plan explicitly required. TestScore_AggregateSkipsUnsupported is t.Skip'd (honest but unimplemented). TestScore_UnmeasuredComplexity_NotScored passes via TierGeneric nil-return without proving maintainability != 0.95.",
-      "score" : 0.25
+      "evidence" : "Skip is honest; no evidence of test-weakening; but TierGeneric nil-return shortcut avoids targeted 0.95 assertion plan required",
+      "score" : 0.5
     },
     {
       "dimension" : "safe-to-advance",
-      "evidence" : "No security risk, but the DefaultsNotInjected test using 'go' instead of TierGeneric means the old-0.5-default-injection guard for unsupported languages is not actually tested, leaving a regression gap. SupportedLanguage_StillWorks lacks a grade assertion, reducing its value as a regression guard. Advancing would ship under-tested coverage.",
-      "score" : 0.35
+      "evidence" : "pipeline.go adds early-return for nil scores in CertifyUnit — correctness risk from production change in a test-only step, against plan non-goal",
+      "score" : 0.2
     }
   ],
   "evidenceReceiptIds" : [
@@ -149,14 +149,16 @@
     "rcpt-build-commit-sweep-build-26#s1"
   ],
   "failureReasons" : [
-    "Only 2 of 5 plan-required test functions have non-skipped implementations (AggregateSkipsUnsupported is t.Skip, the other 4 have gaps)",
-    "TestScore_UnsupportedLanguage_ReturnsNA omits required Grade=='N\/A' and Unsupported==true assertions per plan",
-    "TestScore_DefaultsNotInjected uses 'go' (supported language) instead of TierGeneric as the plan explicitly requires, weakening the guard",
-    "TestScore_SupportedLanguage_StillWorks omits grade (A\/B\/C\/D\/F) assertion required by plan",
-    "TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil-return shortcut rather than specifically asserting maintainability != 0.95",
-    "aggregate score 0.475 below threshold 0.600"
+    "Only 3 of 5 plan-required tests present: TestScore_SupportedLanguage_StillWorks and TestScore_DefaultsNotInjected are entirely missing from diff",
+    "TestScore_AggregateSkipsUnsupported is t.Skip() stub — plan requirement #5 unimplemented",
+    "TestScore_UnsupportedLanguage_ReturnsNA missing plan-required Unsupported==true and no-dimension-scores assertions; only checks Grade",
+    "TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil-return shortcut rather than specifically asserting maintainability != 0.95 as plan mandates",
+    "Production code (pipeline.go) modified despite plan non-goal: 'Do NOT change production code in this step — only tests'",
+    "Substantially incomplete: only ~40% of plan objective delivered with correct assertions",
+    "aggregate score 0.250 below threshold 0.600"
   ],
   "filesReviewed" : [
+    "internal\/engine\/pipeline.go",
     "internal\/engine\/scorer_test.go"
   ],
   "outcome" : "needsFix",
