@@ -1,0 +1,149 @@
+From c4f2a65dd6f980f34ab84f968fcbfc2c65a5aae5 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 23 Jul 2026 13:09:05 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-28#s1)
+
+---
+ internal/report/card.go        |  45 ++++++++--
+ internal/report/full.go        |  19 +++--
+ internal/report/report_test.go | 147 +++++++++++++++++++++++++++++++++
+ 3 files changed, 196 insertions(+), 15 deletions(-)
+ create mode 100644 internal/report/report_test.go
+
+diff --git a/internal/report/card.go b/internal/report/card.go
+index 1c597a7e1..adb13d367 100644
+--- a/internal/report/card.go
++++ b/internal/report/card.go
+@@ -70,11 +70,24 @@ func GenerateCard(records []domain.CertificationRecord, repo, commit string, now
+ 		return c
+ 	}
+ 
++	supported, unsupported := partitionByLanguage(records)
+ 	c.TotalUnits = len(records)
+-	var totalScore float64
++	c.AnalyzableUnits = len(supported)
++
++	// Unsupported-language tracking
++	c.UnsupportedCount = len(unsupported)
++	seen := make(map[string]bool)
++	for _, r := range unsupported {
++		lang := r.UnitID.Language()
++		if !seen[lang] {
++			seen[lang] = true
++			c.UnsupportedLanguages = append(c.UnsupportedLanguages, lang)
++		}
++	}
++	sort.Strings(c.UnsupportedLanguages)
+ 
++	// Compute grade distributions and counts from ALL records (for visibility)
+ 	for _, r := range records {
+-		totalScore += r.Score
+ 		c.GradeDistribution[r.Grade.String()]++
+ 
+ 		switch {
+@@ -90,10 +103,19 @@ func GenerateCard(records []domain.CertificationRecord, repo, commit string, now
+ 		}
+ 	}
+ 
+-	c.OverallScore = totalScore / float64(c.TotalUnits)
+-	c.OverallGrade = domain.GradeFromScore(c.OverallScore).String()
+-	c.PassRate = float64(c.Passing) / float64(c.TotalUnits)
+-	c.Languages = buildLanguageDetail(records)
++	// Aggregate scores and grade from supported records only
++	if len(supported) > 0 {
++		var totalScore float64
++		for _, r := range supported {
++			totalScore += r.Score
++		}
++		c.OverallScore = totalScore / float64(len(supported)
+...[elided 7358 bytes - full stream is hash-only]...
+yzableUnits=2 (only go records), got %d", card.AnalyzableUnits)
++	}
++}
++
++func TestFull_BuildLanguageDetailExcludesUnsupported(t *testing.T) {
++	records := []domain.CertificationRecord{
++		testRecord("go", "pkg/foo.go", "FuncA", 0.95, domain.StatusCertified),
++		testRecord("swift", "pkg/bar.swift", "FuncB", 0.80, domain.StatusCertified),
++		testRecord("go", "pkg/baz.go", "FuncC", 0.60, domain.StatusCertifiedWithObservations),
++		testRecord("swift", "pkg/qux.swift", "FuncD", 0.45, domain.StatusDecertified),
++	}
++
++	full := GenerateFullReport(records, "github.com/foo", "abc1234", time.Now())
++
++	// LanguageDetail should NOT include unsupported languages.
++	for _, ld := range full.LanguageDetail {
++		if ld.Name == "swift" {
++			t.Error("expected LanguageDetail to exclude unsupported language 'swift'")
++		}
++	}
++
++	// DimensionAverages should only reflect supported-language units.
++	if len(full.DimensionAverages) == 0 {
++		t.Error("expected DimensionAverages to be non-empty")
++	}
++}
++
++func TestFull_AggregateScoreExcludesUnsupported(t *testing.T) {
++	// Two supported go records with high scores, two unsupported swift with low scores.
++	records := []domain.CertificationRecord{
++		testRecord("go", "pkg/foo.go", "FuncA", 0.95, domain.StatusCertified),
++		testRecord("go", "pkg/bar.go", "FuncB", 0.85, domain.StatusCertified),
++		testRecord("swift", "pkg/baz.swift", "FuncC", 0.10, domain.StatusDecertified),
++		testRecord("swift", "pkg/qux.swift", "FuncD", 0.05, domain.StatusDecertified),
++	}
++
++	card := GenerateCard(records, "github.com/foo", "abc1234", time.Now())
++
++	// If unsupported records were excluded from aggregate, overall score
++	// should reflect only the go records (avg 0.90), not the swift ones.
++	// If all 4 were averaged: (0.95+0.85+0.10+0.05)/4 = 0.4875
++	// If only 2 go: (0.95+0.85)/2 = 0.90
++	if card.OverallScore < 0.85 {
++		t.Errorf("expected aggregate score >= 0.85 (based on supported only), got %.3f", card.OverallScore)
++	}
++}
+-- 
+2.54.0 (Apple Git-156)
+
+From 21bf0c4ba3cdf7efedcbf87db5654bf23381ca97 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 23 Jul 2026 13:10:23 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-28#s2)
+
+---
+ internal/engine/scorer_test.go | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
+index 245b46eaa..6188e4d70 100644
+--- a/internal/engine/scorer_test.go
++++ b/internal/engine/scorer_test.go
+@@ -551,6 +551,24 @@ func TestScorer_ConcreteDeps(t *testing.T) {
+ 	}
+ }
+ 
++func TestScorer_NAAGradeIsNoOp(t *testing.T) {
++	// Pass evidence with an unsupported (N/A-grade) language through the scorer.
++	// The scorer must not panic and should return nil for TierGeneric languages.
++	ev := []domain.Evidence{
++		evidence.LintResult{Tool: "eslint", ErrorCount: 0}.ToEvidence(),
++		evidence.TestResult{Tool: "jest", TotalCount: 5, PassedCount: 5, Coverage: 0.8}.ToEvidence(),
++		evidence.CodeMetrics{TotalLines: 100, CodeLines: 80, Complexity: 5}.ToEvidence(),
++	}
++
++	evalResult := policy.EvaluationResult{Passed: true}
++
++	// Use an unsupported language — must not panic
++	scores := engine.Score(ev, evalResult, "swift")
++	if scores != nil {
++		t.Errorf("expected nil scores for N/A-grade language, got %d dimensions", len(scores))
++	}
++}
++
+ func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
+ 	// A function with all deep analysis metrics clean should score well
+ 	ev := []domain.Evidence{{
+-- 
+2.54.0 (Apple Git-156)
+
