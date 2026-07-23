@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 31 round(s)",
+      "detail" : "the implementor finished in 16 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,11 +11,11 @@
       }
     },
     {
-      "detail" : "1 file(s) changed: internal\/engine\/scorer_test.go",
+      "detail" : "no files were changed",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -25,7 +25,7 @@
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -41,52 +41,52 @@
       }
     },
     {
-      "detail" : "committed locally on the build branch",
+      "detail" : "verification result was not committed",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "5 test functions present but #4 uses Go not TierGeneric, #1 omits Grade\/Unsupported assertions from plan, #5 is t.Skip — roughly 55% of plan requirements fully met",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "score" : {
-          "_0" : 0.55
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Only scorer_test.go modified; no unrelated churn, no production code touched, exactly the target file",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "score" : {
-          "_0" : 1
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "No tests deleted or weakened; but DefaultsNotInjected uses 'go' instead of TierGeneric (weaker guard than plan), and Aggregate is t.Skip — not gaming but incomplete",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "score" : {
-          "_0" : 0.65
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Only additive test changes, no production edits; DefaultsNotInjected using Go instead of TierGeneric reduces regression coverage for the old-default bug but creates no new risk",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "score" : {
-          "_0" : 0.85
+        "skipped" : {
+
         }
       }
     },
@@ -96,48 +96,35 @@
       "label" : "Judge confidence",
       "result" : {
         "score" : {
-          "_0" : 0.85
+          "_0" : 0.99
         }
       }
     }
   ],
   "claims" : [
     {
-      "evidence" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "0.058s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.068s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.449s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t3.705s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.043s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.476s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.183s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.057s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.024s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.046s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.186s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t17.326s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.064s\n"
-      },
-      "oracle" : {
-        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "kind" : "testsPass"
-      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "pass"
+      "verdict" : "unsure"
     }
   ],
-  "committed" : true,
-  "confidence" : 0.85,
+  "committed" : false,
+  "confidence" : 0.99,
   "correlationId" : "sweep-build-26",
   "dimensions" : [
     {
-      "dimension" : "implements-the-approved-plan",
-      "evidence" : "5 test functions present but #4 uses Go not TierGeneric, #1 omits Grade\/Unsupported assertions from plan, #5 is t.Skip — roughly 55% of plan requirements fully met",
-      "score" : 0.55
+      "dimension" : "acceptance-already-met",
+      "evidence" : "scorer_test.go contains zero of the 5 required tests: grep for 'TestScore_UnsupportedLanguage_ReturnsNA', 'TestScore_UnmeasuredComplexity_NotScored', 'TestScore_SupportedLanguage_StillWorks', 'TestScore_DefaultsNotInjected', 'TestScore_AggregateSkipsUnsupported' — none found.",
+      "score" : 0
     },
     {
-      "dimension" : "minimal-and-scoped",
-      "evidence" : "Only scorer_test.go modified; no unrelated churn, no production code touched, exactly the target file",
-      "score" : 1
+      "dimension" : "citation-concrete",
+      "evidence" : "No citation is possible because no existing symbol satisfies the plan; the required test functions do not exist anywhere in scorer_test.go.",
+      "score" : 0
     },
     {
-      "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "No tests deleted or weakened; but DefaultsNotInjected uses 'go' instead of TierGeneric (weaker guard than plan), and Aggregate is t.Skip — not gaming but incomplete",
-      "score" : 0.65
-    },
-    {
-      "dimension" : "safe-to-advance",
-      "evidence" : "Only additive test changes, no production edits; DefaultsNotInjected using Go instead of TierGeneric reduces regression coverage for the old-default bug but creates no new risk",
-      "score" : 0.85
+      "dimension" : "no-remaining-work",
+      "evidence" : "All 5 plan tests remain unimplemented — the existing tests (e.g., TestScorer_OnlyMeasuredDimensionsPresent at line ~38) address different concerns (dimension presence from evidence type), not unsupported-language N\/A, unmeasured-complexity guard, TierGeneric defaults, or aggregate skipping.",
+      "score" : 0
     }
   ],
   "evidenceReceiptIds" : [
@@ -149,14 +136,14 @@
     "rcpt-build-commit-sweep-build-26#s1"
   ],
   "failureReasons" : [
-    "TestScore_DefaultsNotInjected uses language 'go' (supported) instead of a TierGeneric unit as the plan explicitly requires (\"construct a TierGeneric unit\"), weakening the guard against old-default injection for unsupported languages",
-    "TestScore_UnsupportedLanguage_ReturnsNA omits the plan-specified assertions for Grade=='N\/A' and Unsupported==true; only checks nil scores",
-    "TestScore_AggregateSkipsUnsupported is t.Skip — plan requirement #5 is not implemented, though the TODO justification is honest"
+    "None of the 5 plan-required test functions exist in scorer_test.go: TestScore_UnsupportedLanguage_ReturnsNA, TestScore_UnmeasuredComplexity_NotScored, TestScore_SupportedLanguage_StillWorks, TestScore_DefaultsNotInjected, and TestScore_AggregateSkipsUnsupported are all absent.",
+    "The agency claimed the project ALREADY satisfies the plan, but the plan's entire deliverable (5 new test functions) is unimplemented — the file contains only pre-existing tests covering different scenarios (e.g., TestScorer_AllClean, TestScorer_ComplexityBoostsMaintainability) none of which match the plan's required assertions about unsupported languages, unmeasured complexity guards, or TierGeneric default-injection prevention.",
+    "aggregate score 0.000 below threshold 0.600"
   ],
   "filesReviewed" : [
-    "internal\/engine\/scorer_test.go"
+
   ],
-  "outcome" : "needsFix",
-  "rubricId" : "build-review",
+  "outcome" : "blocked",
+  "rubricId" : "build-review-already-complete",
   "rubricVersion" : 1
 }
