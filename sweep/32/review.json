@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 60 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 56 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "5 file(s) changed: internal\/report\/detailed.go, internal\/report\/detailed_test.go, internal\/report\/full.go, internal\/report\/health.go, internal\/report\/health_test.go",
+      "detail" : "3 file(s) changed: internal\/report\/detailed.go, internal\/report\/detailed_unsupported_test.go, internal\/report\/health.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,11 +31,11 @@
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -95,7 +95,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "0.111s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.169s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.339s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t6.623s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.039s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.425s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.091s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.028s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.054s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.209s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t30.735s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.125s\n"
+        "outputExcerpt" : "0.075s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.133s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.411s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.817s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.065s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.286s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.260s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.065s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.058s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.040s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.039s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.072s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.185s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t14.703s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.068s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -126,14 +126,13 @@
     "rcpt-build-commit-sweep-build-32#s3"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 60 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "Slice 3 (internal\/report\/full.go) produced no changes and isn't covered by prior committed work — likely a missing sub-feature. Implement it, stacking on the already-committed slices.",
+    "Slice 4 (internal\/report\/card.go) produced no changes and isn't covered by prior committed work — likely a missing sub-feature. Implement it, stacking on the already-committed slices."
   ],
   "filesReviewed" : [
     "internal\/report\/detailed.go",
-    "internal\/report\/detailed_test.go",
-    "internal\/report\/full.go",
-    "internal\/report\/health.go",
-    "internal\/report\/health_test.go"
+    "internal\/report\/detailed_unsupported_test.go",
+    "internal\/report\/health.go"
   ],
   "outcome" : "blocked",
   "rubricId" : "",
