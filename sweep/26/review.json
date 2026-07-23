@@ -1,11 +1,11 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 15 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 34 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -31,90 +31,131 @@
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Plan required 5 named tests; diff delivers only TestScore_SupportedLanguage_StillWorks and TestScore_DefaultsNotInjected. TestScore_UnsupportedLanguage_ReturnsNA, TestScore_UnmeasuredComplexity_NotScored, and TestScore_AggregateSkipsUnsupported are entirely absent (not even stubs). 2\/5 = partial.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.4
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Only scorer_test.go touched, 70 lines added at end of file, no existing code modified, no other files changed — exactly as plan specified.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 1
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Both added tests assert real behavior using dynamic inputs (no hard-coded expected values). Minor deviation: TestScore_DefaultsNotInjected uses 'go' instead of the plan-specified TierGeneric unit, but the assertion logic itself is sound and not gamed.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.9
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Diff is test-only with no production changes or doc\/code mismatches, but 3 of 5 planned regression guards are missing — leaving unsupported-language N\/A, unmeasured-complexity, and aggregate-skip paths without test coverage, which is a concrete regression risk.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.6
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.96
         }
       }
     }
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "0.103s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.115s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.440s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t6.616s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.065s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.513s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.183s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.053s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.045s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.060s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.037s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.046s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.492s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t30.831s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.119s\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
-  "confidence" : 0,
+  "committed" : true,
+  "confidence" : 0.96,
   "correlationId" : "sweep-build-26",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Plan required 5 named tests; diff delivers only TestScore_SupportedLanguage_StillWorks and TestScore_DefaultsNotInjected. TestScore_UnsupportedLanguage_ReturnsNA, TestScore_UnmeasuredComplexity_NotScored, and TestScore_AggregateSkipsUnsupported are entirely absent (not even stubs). 2\/5 = partial.",
+      "score" : 0.4
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only scorer_test.go touched, 70 lines added at end of file, no existing code modified, no other files changed — exactly as plan specified.",
+      "score" : 1
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "Both added tests assert real behavior using dynamic inputs (no hard-coded expected values). Minor deviation: TestScore_DefaultsNotInjected uses 'go' instead of the plan-specified TierGeneric unit, but the assertion logic itself is sound and not gamed.",
+      "score" : 0.9
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "Diff is test-only with no production changes or doc\/code mismatches, but 3 of 5 planned regression guards are missing — leaving unsupported-language N\/A, unmeasured-complexity, and aggregate-skip paths without test coverage, which is a concrete regression risk.",
+      "score" : 0.6
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-26#s0",
     "rcpt-build-verify-sweep-build-26#s0",
-    "rcpt-build-commit-sweep-build-26#s0"
+    "rcpt-build-commit-sweep-build-26#s0",
+    "rcpt-build-implement-sweep-build-26#s1",
+    "rcpt-build-verify-sweep-build-26#s1",
+    "rcpt-build-commit-sweep-build-26#s1"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 15 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "Only 2 of 5 required tests delivered — TestScore_UnsupportedLanguage_ReturnsNA, TestScore_UnmeasuredComplexity_NotScored, and TestScore_AggregateSkipsUnsupported are completely missing from the diff.",
+    "Substantially incomplete: plan objective calls for comprehensive regression coverage across 5 test functions; only 40% implemented."
   ],
   "filesReviewed" : [
     "internal\/engine\/scorer_test.go"
   ],
-  "outcome" : "blocked",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "needsFix",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
