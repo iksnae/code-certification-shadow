@@ -1,0 +1,131 @@
+From 4a25458e1fb720c3f827763e3f83dc5f23567c24 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 23 Jul 2026 12:51:52 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-23#s0)
+
+---
+ internal/discovery/detect.go           | 22 +++++++++
+ internal/engine/language_tiers.go      | 66 ++++++++++++++++++++++++++
+ internal/engine/language_tiers_test.go | 29 +++++++++++
+ 3 files changed, 117 insertions(+)
+ create mode 100644 internal/engine/language_tiers.go
+ create mode 100644 internal/engine/language_tiers_test.go
+
+diff --git a/internal/discovery/detect.go b/internal/discovery/detect.go
+index a7abca580..e335fad9d 100644
+--- a/internal/discovery/detect.go
++++ b/internal/discovery/detect.go
+@@ -45,6 +45,28 @@ var configToLanguages = map[string][]string{
+ 	"build.gradle":     {"java"},
+ }
+ 
++// knownLanguageIDs is the set of tier-compatible short IDs for every language
++// discoverable via extToLanguage. When a new extension is added to extToLanguage,
++// a corresponding entry must be added here so the CI-enforcing test in
++// engine/language_tiers_test.go can confirm a tier entry exists.
++var knownLanguageIDs = []string{
++	"go",     // .go
++	"ts",     // .ts, .tsx
++	"js",     // .js, .jsx
++	"py",     // .py
++	"rs",     // .rs
++	"rb",     // .rb
++	"java",   // .java
++	"kt",     // .kt
++	"sh",     // .sh, .bash
++}
++
++// KnownLanguages returns every language ID that the discovery system can detect.
++// These are tier-compatible short IDs used by the engine's language tier registry.
++func KnownLanguages() []string {
++	return knownLanguageIDs
++}
++
+ // languageToAdapter maps language names to adapter identifiers.
+ var languageToAdapter = map[string]string{
+ 	"go":         "go",
+diff --git a/internal/engine/language_tiers.go b/internal/engine/language_tiers.go
+new file mode 100644
+index 000000000..d4f064cf0
+--- /dev/null
++++ b/internal/engine/language_tiers.go
+@@ -0,0 +1,66 @@
++package engine
++
++// Tier represents the analysis capability level fo
+...[elided 711 bytes - full stream is hash-only]...
+ability tier.
++var languageTiers = map[string]Tier{
++	// TierFull languages (deep semantic analysis)
++	"go": TierFull,
++	"ts": TierFull,
++	"js": TierFull,
++	"py": TierFull,
++	"rs": TierFull,
++
++	// TierGeneric languages (file-level classification only)
++	"rb":     TierGeneric,
++	"java":   TierGeneric,
++	"kt":     TierGeneric,
++	"sh":     TierGeneric,
++	"c":      TierGeneric,
++	"cpp":    TierGeneric,
++	"cs":     TierGeneric,
++	"swift":  TierGeneric,
++	"php":    TierGeneric,
++	"elixir": TierGeneric,
++	"erlang": TierGeneric,
++	"scala":  TierGeneric,
++	"lua":    TierGeneric,
++	"r":      TierGeneric,
++	"zig":    TierGeneric,
++	"sql":    TierGeneric,
++	"proto":  TierGeneric,
++}
++
++// TierForLanguage returns the analysis tier for the given language ID.
++// Unknown languages return TierGeneric.
++func TierForLanguage(lang string) Tier {
++	if tier, ok := languageTiers[lang]; ok {
++		return tier
++	}
++	return TierGeneric
++}
+diff --git a/internal/engine/language_tiers_test.go b/internal/engine/language_tiers_test.go
+new file mode 100644
+index 000000000..d6bf206a3
+--- /dev/null
++++ b/internal/engine/language_tiers_test.go
+@@ -0,0 +1,29 @@
++package engine
++
++import (
++	"testing"
++
++	"github.com/iksnae/code-certification/internal/discovery"
++)
++
++func TestTierRegistry_AllKnownLanguagesHaveTiers(t *testing.T) {
++	for _, lang := range discovery.KnownLanguages() {
++		tier := languageTiers[lang]
++		if tier == TierNone {
++			t.Errorf("language %q has no tier entry in the registry (tier=0 / TierNone); "+
++				"add it to languageTiers in language_tiers.go", lang)
++		}
++	}
++}
++
++func TestTierRegistry_UnknownLanguageReturnsGeneric(t *testing.T) {
++	if got := TierForLanguage("nonsense"); got != TierGeneric {
++		t.Errorf("expected TierGeneric for unknown language, got %v", got)
++	}
++}
++
++func TestTierRegistry_SwiftIsGeneric(t *testing.T) {
++	if got := TierForLanguage("swift"); got != TierGeneric {
++		t.Errorf("expected swift to be TierGeneric, got %v", got)
++	}
++}
+-- 
+2.54.0 (Apple Git-156)
+
