@@ -34,16 +34,31 @@
       "at" : 806460172.333343,
       "issue" : "36",
       "text" : "No deferred work surfaced; #36 closes the gap left by #30."
+    },
+    {
+      "at" : 806469660.792586,
+      "issue" : "31",
+      "text" : "Audit remaining scoring rules for similar gate-pattern adoption where inputs may be undefined or unvalidated."
+    },
+    {
+      "at" : 806469660.792586,
+      "issue" : "31",
+      "text" : "Document the language-tier gate contract so future rule authors consistently check before scoring."
+    },
+    {
+      "at" : 806469660.792586,
+      "issue" : "31",
+      "text" : "Consider CI enforcement that no magic-number defaults re-enter the scorer configuration."
     }
   ],
-  "cumulativeFilesChanged" : 18,
-  "cumulativeRounds" : 145,
+  "cumulativeFilesChanged" : 22,
+  "cumulativeRounds" : 219,
   "cumulativeSpendUSD" : 2.40405628,
-  "deliveredCount" : 4,
-  "lastActivity" : 806460172.333343,
-  "lastConfidence" : 1,
+  "deliveredCount" : 5,
+  "lastActivity" : 806469660.792586,
+  "lastConfidence" : 0.78,
   "lifecycle" : "active",
   "maxRounds" : 86,
-  "minConfidence" : 0.85,
-  "verifyGreenStreak" : 4
+  "minConfidence" : 0.78,
+  "verifyGreenStreak" : 5
 }
