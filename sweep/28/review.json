@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 14 round(s) without finishing — deliverable left partial",
+      "detail" : "ran all 13 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -109,7 +109,7 @@
     "rcpt-build-commit-sweep-build-28#s0"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 14 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "Implementation did not complete — the build used all 13 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
     "internal\/engine\/language_tiers_test.go"
