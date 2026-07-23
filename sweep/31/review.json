@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 47 round(s) without finishing — deliverable left partial",
+      "detail" : "ran all 81 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "detail" : "7 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/domain\/record.go, internal\/domain\/record_test.go, internal\/language_tiers\/, internal\/language_tiers\/tiers.go, internal\/language_tiers\/tiers_test.go",
+      "detail" : "9 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/domain\/record.go, internal\/engine\/pipeline.go, internal\/engine\/scorer.go, internal\/engine\/scorer_test.go, internal\/language_tiers\/language_tiers.go, internal\/language_tiers\/language_tiers_test.go, internal\/language_tiers\/tiers.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -41,11 +41,11 @@
       }
     },
     {
-      "detail" : "verification result was not committed",
+      "detail" : "committed locally on the build branch",
       "id" : "committed",
       "label" : "Work committed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -93,11 +93,19 @@
   ],
   "claims" : [
     {
+      "evidence" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "outputExcerpt" : "ok  \tgithub.com\/iksnae\/code-certification\/cmd\/certify\t0.442s\nok  \tgithub.com\/iksnae\/code-certification\/internal\t0.143s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/agent\t0.784s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\t23.707s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/analysis\/lsp\t0.045s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.070s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.206s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.920s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.049s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.212s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.109s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.041s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.028s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.033s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.026s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.029s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.103s\n--- FAIL: TestGenerateSite_LargeScale (12.97s)\n    site_test.go:391: site generation took 12.116860709s, want < 10s\nFAIL\nFAIL\tgithub.com\/iksnae\/code-certification\/internal\/report\t13.373s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.049s\nFAIL\n"
+      },
+      "oracle" : {
+        "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
+        "kind" : "testsPass"
+      },
       "statement" : "the reviewer's independent re-verification passes",
-      "verdict" : "unsure"
+      "verdict" : "pass"
     }
   ],
-  "committed" : false,
+  "committed" : true,
   "confidence" : 0,
   "correlationId" : "sweep-build-31",
   "dimensions" : [
@@ -115,19 +123,24 @@
     "rcpt-build-commit-sweep-build-31#s2",
     "rcpt-build-implement-sweep-build-31#s3",
     "rcpt-build-verify-sweep-build-31#s3",
-    "rcpt-build-commit-sweep-build-31#s3"
+    "rcpt-build-commit-sweep-build-31#s3",
+    "rcpt-build-implement-sweep-build-31#s4",
+    "rcpt-build-verify-sweep-build-31#s4",
+    "rcpt-build-commit-sweep-build-31#s4"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 47 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "Implementation did not complete — the build used all 81 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
     "internal\/domain\/dimension.go",
     "internal\/domain\/dimension_test.go",
     "internal\/domain\/record.go",
-    "internal\/domain\/record_test.go",
-    "internal\/language_tiers\/",
-    "internal\/language_tiers\/tiers.go",
-    "internal\/language_tiers\/tiers_test.go"
+    "internal\/engine\/pipeline.go",
+    "internal\/engine\/scorer.go",
+    "internal\/engine\/scorer_test.go",
+    "internal\/language_tiers\/language_tiers.go",
+    "internal\/language_tiers\/language_tiers_test.go",
+    "internal\/language_tiers\/tiers.go"
   ],
   "outcome" : "blocked",
   "rubricId" : "",
