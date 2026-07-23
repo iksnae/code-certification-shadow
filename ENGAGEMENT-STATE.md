@@ -5,7 +5,7 @@ Lifecycle: **active**
 - Delivered: **4**
 - Open issues: **—**
 - Last activity: 2026-07-23T00:42:52Z
-- Spend: **$2.33**
+- Spend: **$2.40**
 - Rounds: avg **36.2**, max **86**
 - Confidence: last **100%**, min **85%**
 - Verify-green streak: **4**
