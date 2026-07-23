@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "closeouts\/23.md",
+  "id" : "issue-23",
+  "relations" : [
+
+  ],
+  "summary" : "Create a language-tier registry mapping every known language ID to an analysis capability tier (None\/Generic\/Lint\/Parse\/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry. — delivered via PR #41 (a4e74229); 5 files changed.",
+  "title" : "Create a language-tier registry mapping every known language ID to an analysis capability tier (None\/Generic\/Lint\/Parse\/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry.",
+  "type" : "deliverable"
+}
