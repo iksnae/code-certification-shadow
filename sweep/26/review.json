@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 51 round(s) without finishing — deliverable left partial",
+      "detail" : "the implementor finished in 96 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
     },
     {
-      "detail" : "2 file(s) changed: internal\/engine\/scorer_test.go, internal\/engine\/scorer_test_read.md",
+      "detail" : "2 file(s) changed: go.mod, internal\/engine\/scorer_test.go",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,11 +31,11 @@
       }
     },
     {
-      "detail" : "the project verify command was RED",
+      "detail" : "the project verify command was GREEN",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "fail" : {
+        "pass" : {
 
         }
       }
@@ -51,42 +51,52 @@
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Plan requires Grade==\"N\/A\" and Unsupported==true assertions for test 1; diff only checks nil result with a TODO comment documenting the bug as accepted behavior. Tests 2\/4 rely on TierGeneric nil shortcut rather than the specific assertions the plan calls for.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.55
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "Only scorer_test.go and go.mod changed; go.mod adds testify dep needed for new tests — minor scope expansion beyond the single target file but defensible and not production code.",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.85
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "TestScore_UnsupportedLanguage_ReturnsNA comments \"NOTE: Current behavior returns nil… TODO: Consider returning a special N\/A indicator\" — this documents rather than fixes, making the test pass by accepting the bug. Tests 2 and 4 pass via TierGeneric nil-return, not by proving the specific 0.95\/0.5 guards work.",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.4
         }
       }
     },
     {
-      "detail" : "judge not run — the deterministic gate decided the outcome",
+      "detail" : "No production code changed and no security risk, but the doc-comment on TestScore_UnsupportedLanguage_ReturnsNA explicitly says the fix is a TODO — a docs\/code mismatch where the test name promises 'ReturnsNA' but the body only checks nil, which could mislead an operator into thinking the N\/A behavior is verified.",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "skipped" : {
-
+        "score" : {
+          "_0" : 0.5
+        }
+      }
+    },
+    {
+      "detail" : "at or above the confidence bar",
+      "id" : "judge-confidence",
+      "label" : "Judge confidence",
+      "result" : {
+        "score" : {
+          "_0" : 0.92
         }
       }
     }
@@ -95,7 +105,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "0.041s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.117s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.372s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.791s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.107s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.220s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.018s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.147s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t28.869s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.084s\n"
+        "outputExcerpt" : "0.046s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.056s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.173s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.982s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.027s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.131s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.045s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.041s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.038s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.079s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.038s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.056s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.122s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t12.581s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.044s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -106,10 +116,29 @@
     }
   ],
   "committed" : true,
-  "confidence" : 0,
+  "confidence" : 0.92,
   "correlationId" : "sweep-build-26",
   "dimensions" : [
-
+    {
+      "dimension" : "implements-the-approved-plan",
+      "evidence" : "Plan requires Grade==\"N\/A\" and Unsupported==true assertions for test 1; diff only checks nil result with a TODO comment documenting the bug as accepted behavior. Tests 2\/4 rely on TierGeneric nil shortcut rather than the specific assertions the plan calls for.",
+      "score" : 0.55
+    },
+    {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only scorer_test.go and go.mod changed; go.mod adds testify dep needed for new tests — minor scope expansion beyond the single target file but defensible and not production code.",
+      "score" : 0.85
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "TestScore_UnsupportedLanguage_ReturnsNA comments \"NOTE: Current behavior returns nil… TODO: Consider returning a special N\/A indicator\" — this documents rather than fixes, making the test pass by accepting the bug. Tests 2 and 4 pass via TierGeneric nil-return, not by proving the specific 0.95\/0.5 guards work.",
+      "score" : 0.4
+    },
+    {
+      "dimension" : "safe-to-advance",
+      "evidence" : "No production code changed and no security risk, but the doc-comment on TestScore_UnsupportedLanguage_ReturnsNA explicitly says the fix is a TODO — a docs\/code mismatch where the test name promises 'ReturnsNA' but the body only checks nil, which could mislead an operator into thinking the N\/A behavior is verified.",
+      "score" : 0.5
+    }
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-26#s0",
@@ -120,16 +149,25 @@
     "rcpt-build-commit-sweep-build-26#s1",
     "rcpt-build-implement-sweep-build-26#s2",
     "rcpt-build-verify-sweep-build-26#s2",
-    "rcpt-build-commit-sweep-build-26#s2"
+    "rcpt-build-commit-sweep-build-26#s2",
+    "rcpt-build-implement-sweep-build-26#s3",
+    "rcpt-build-verify-sweep-build-26#s3",
+    "rcpt-build-commit-sweep-build-26#s3",
+    "rcpt-build-implement-sweep-build-26#s4",
+    "rcpt-build-verify-sweep-build-26#s4",
+    "rcpt-build-commit-sweep-build-26#s4"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 51 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "TestScore_UnsupportedLanguage_ReturnsNA documents current nil-return behavior with a TODO comment instead of asserting Grade==\"N\/A\" and Unsupported==true as the approved plan explicitly requires — this is test gaming that accepts the bug rather than verifying the fix",
+    "TestScore_UnmeasuredComplexity_NotScored and TestScore_DefaultsNotInjected both rely on TierGeneric nil-return shortcut rather than specifically testing the complexity branch or dimension-value guard as the plan mandates",
+    "TestScore_SupportedLanguage_StillWorks diff is truncated in the review artifact but the test appears present and functional",
+    "aggregate score 0.575 below threshold 0.600"
   ],
   "filesReviewed" : [
-    "internal\/engine\/scorer_test.go",
-    "internal\/engine\/scorer_test_read.md"
+    "go.mod",
+    "internal\/engine\/scorer_test.go"
   ],
-  "outcome" : "blocked",
-  "rubricId" : "",
-  "rubricVersion" : 0
+  "outcome" : "needsFix",
+  "rubricId" : "build-review",
+  "rubricVersion" : 1
 }
