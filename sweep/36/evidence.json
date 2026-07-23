@@ -1,0 +1,19 @@
+{
+  "commitRef" : "4749a2e212b4391bc269c051b3f833fe84fc33bc",
+  "committed" : true,
+  "correlationId" : "sweep-build-36",
+  "filesChanged" : [
+    "internal\/domain\/record.go"
+  ],
+  "implementCompleted" : true,
+  "incompleteSlices" : [
+
+  ],
+  "receiptIds" : [
+    "rcpt-build-implement-sweep-build-36#s0",
+    "rcpt-build-verify-sweep-build-36#s0",
+    "rcpt-build-commit-sweep-build-36#s0"
+  ],
+  "rounds" : 12,
+  "verifyPassed" : true
+}
