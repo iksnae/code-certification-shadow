@@ -1,0 +1,13 @@
+{
+  "artifactPath" : "closeouts\/36.md",
+  "id" : "issue-36",
+  "relations" : [
+    {
+      "target" : "issue-36-learning-0",
+      "type" : "produced"
+    }
+  ],
+  "summary" : "Add the Unsupported field to CertificationRecord (completes #30's missing half) — delivered via PR #37 (ff8aef79); 1 file changed.",
+  "title" : "Add the Unsupported field to CertificationRecord (completes #30's missing half)",
+  "type" : "deliverable"
+}
