@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/31.md",
+  "id" : "issue-31-learning-1",
+  "relations" : [
+
+  ],
+  "summary" : "Document the language-tier gate contract so future rule authors consistently check before scoring.",
+  "title" : "Document the language-tier gate contract so future rule auth",
+  "type" : "learning"
+}

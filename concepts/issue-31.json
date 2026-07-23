@@ -1,0 +1,21 @@
+{
+  "artifactPath" : "closeouts\/31.md",
+  "id" : "issue-31",
+  "relations" : [
+    {
+      "target" : "issue-31-learning-0",
+      "type" : "produced"
+    },
+    {
+      "target" : "issue-31-learning-1",
+      "type" : "produced"
+    },
+    {
+      "target" : "issue-31-learning-2",
+      "type" : "produced"
+    }
+  ],
+  "summary" : "Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests — delivered via PR #38 (a410f437); 4 files changed.",
+  "title" : "Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests",
+  "type" : "deliverable"
+}

@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/31.md",
+  "id" : "issue-31-learning-0",
+  "relations" : [
+
+  ],
+  "summary" : "Audit remaining scoring rules for similar gate-pattern adoption where inputs may be undefined or unvalidated.",
+  "title" : "Audit remaining scoring rules for similar gate-pattern adopt",
+  "type" : "learning"
+}

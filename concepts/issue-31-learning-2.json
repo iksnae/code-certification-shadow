@@ -1,0 +1,10 @@
+{
+  "artifactPath" : "journal\/31.md",
+  "id" : "issue-31-learning-2",
+  "relations" : [
+
+  ],
+  "summary" : "Consider CI enforcement that no magic-number defaults re-enter the scorer configuration.",
+  "title" : "Consider CI enforcement that no magic-number defaults re-ent",
+  "type" : "learning"
+}
