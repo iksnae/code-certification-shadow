@@ -1,19 +1,33 @@
 [
   {
     "nonGoals" : [
-      "Do NOT change scorer.go or integrate tiers into scoring",
-      "Do NOT implement new collectors",
-      "Do NOT modify init_cmd.go or report generation",
-      "Do NOT create an internal\/language_tiers\/ package"
+      "Do NOT change scorer.go — it already imports language_tiers and uses TierForLanguage\/TierGeneric",
+      "Do NOT add new analyzers or evidence collectors",
+      "Do NOT break the TierGeneric fallback contract (unknown language → TierGeneric)"
     ],
-    "objective" : "Create language-tier registry (Tier enum, static map of 22 language→tier, TierForLanguage helper) and exhaustive CI-enforcing test in internal\/engine\/",
+    "objective" : "Replace the existing 2-tier enum {TierGeneric, TierFull} with a 5-tier iota enum {TierNone, TierGeneric, TierLint, TierParse, TierFull}, add a String() method, define a static map[string]Tier registry covering all 22 language IDs, and update TierForLanguage(lang) to return the mapped tier or TierGeneric for unknowns.",
     "orderIndex" : 0,
-    "planText" : "Create internal\/engine\/language_tiers.go: define type Tier int with iota (TierNone=0, TierGeneric, TierLint, TierParse, TierFull) and a String() method. Define var languageTiers = map[string]Tier with all 22 known language IDs: go\/ts\/js\/py\/rs → TierFull; rb\/java\/kt\/sh\/c\/cpp\/cs\/swift\/php\/elixir\/erlang\/scala\/lua\/r\/zig\/sql\/proto → TierGeneric. Implement func TierForLanguage(lang string) Tier that returns the map value or TierGeneric for unknown keys.\n\nCreate internal\/engine\/language_tiers_test.go with three tests:\n1. TestTierRegistry_AllKnownLanguagesHaveTiers — calls discovery.KnownLanguages(), asserts every returned ID maps to a non-zero Tier in languageTiers (fails CI when a new extension is added to certifiableExts without a registry entry)\n2. TestTierRegistry_UnknownLanguageReturnsGeneric — asserts TierForLanguage(\"nonsense\") == TierGeneric\n3. TestTierRegistry_SwiftIsGeneric — asserts TierForLanguage(\"swift\") == TierGeneric as a regression pin",
+    "planText" : "In internal\/language_tiers\/language_tiers.go: (1) Redefine Tier as an iota enum: TierNone=0, TierGeneric, TierLint, TierParse, TierFull. (2) Add a String() method returning the human-readable tier name. (3) Define `var languageTiers = map[string]Tier{…}` with all 22 language IDs: go\/ts\/js\/py\/rs → TierFull; rb\/java\/kt\/sh\/c\/cpp\/cs\/swift\/php\/elixir\/erlang\/scala\/lua\/r\/zig\/sql\/proto → TierGeneric. (4) Update TierForLanguage(lang string) Tier to look up the registry and return TierGeneric when the key is missing. Ensure TierGeneric stays at iota value 1 (backward-compatible with existing scorer.go usage that compares against TierGeneric).",
+    "riskClass" : "medium",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/language_tiers\/language_tiers.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do NOT modify tier definitions here — tests only",
+      "Do NOT add integration or end-to-end tests",
+      "Do NOT depend on any files outside discovery and language_tiers packages"
+    ],
+    "objective" : "Add three tests: (a) TestTierRegistry_AllKnownLanguagesHaveTiers — imports discovery.KnownLanguages() and asserts every ID returns a non-zero, explicitly-mapped tier; (b) TestTierRegistry_UnknownLanguageReturnsGeneric — asserts TierForLanguage(\"nonsense\") == TierGeneric; (c) TestTierRegistry_SwiftIsGeneric — regression pin asserting TierForLanguage(\"swift\") == TierGeneric.",
+    "orderIndex" : 1,
+    "planText" : "In internal\/language_tiers\/language_tiers_test.go, replace or augment the existing test file with three test functions. Test (a) calls discovery.KnownLanguages(), iterates every returned ID, and asserts TierForLanguage(id) != TierNone — this is the CI gate: adding a new extension to certifiableExts without a corresponding tier entry will fail. Test (b) asserts the unknown fallback returns TierGeneric. Test (c) asserts the explicit Swift-to-Generic mapping as a regression pin. Run `go test .\/... -count=1` to confirm all pass.",
     "riskClass" : "low",
     "size" : "s",
     "targetFiles" : [
-      "internal\/engine\/language_tiers.go",
-      "internal\/engine\/language_tiers_test.go"
+      "internal\/language_tiers\/language_tiers_test.go"
     ],
     "verificationCommand" : "go test .\/... -count=1"
   }
