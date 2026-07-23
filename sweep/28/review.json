@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "ran all 38 round(s) without finishing — deliverable left partial",
+      "detail" : "ran all 8 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -11,21 +11,21 @@
       }
     },
     {
-      "detail" : "5 file(s) changed: internal\/domain\/dimension.go, internal\/domain\/dimension_test.go, internal\/domain\/record.go, internal\/domain\/record_test.go, testdata\/policies\/swift-standard.yml",
+      "detail" : "no files were changed",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "expected ≥1 of: cmd\/certify\/cli_test.go, cmd\/certify\/init_cmd.go, internal\/config\/policy_test.go, internal\/domain\/dimension.go, internal\/domain\/record.go, internal\/engine\/certifier.go, internal\/engine\/language_tiers_test.go, internal\/engine\/pipeline.go, internal\/report\/card.go, internal\/report\/card_test.go, internal\/report\/full.go, internal\/report\/full_test.go, testdata\/policies\/swift-standard.yml",
+      "detail" : "expected ≥1 of: internal\/engine\/language_tiers_test.go, internal\/engine\/scorer_test.go, internal\/report\/report_test.go",
       "id" : "on-target",
       "label" : "Changed the deliverable's target files",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -106,20 +106,14 @@
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-28#s0",
     "rcpt-build-verify-sweep-build-28#s0",
-    "rcpt-build-commit-sweep-build-28#s0",
-    "rcpt-build-implement-sweep-build-28#s1",
-    "rcpt-build-verify-sweep-build-28#s1",
-    "rcpt-build-commit-sweep-build-28#s1"
+    "rcpt-build-commit-sweep-build-28#s0"
   ],
   "failureReasons" : [
-    "Implementation did not complete — the build used all 38 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
+    "Implementation did not complete — the build used all 8 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial.",
+    "No files were changed."
   ],
   "filesReviewed" : [
-    "internal\/domain\/dimension.go",
-    "internal\/domain\/dimension_test.go",
-    "internal\/domain\/record.go",
-    "internal\/domain\/record_test.go",
-    "testdata\/policies\/swift-standard.yml"
+
   ],
   "outcome" : "blocked",
   "rubricId" : "",
