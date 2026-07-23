@@ -1,0 +1,19 @@
+{
+  "components" : [
+
+  ],
+  "confidence" : 0.8,
+  "constraints" : [
+
+  ],
+  "contractChanges" : [
+
+  ],
+  "openQuestions" : [
+
+  ],
+  "risks" : [
+
+  ],
+  "summary" : "Purely additive bool field with zero-value default (false); zero struct-literal impact, JSON consumers get new key but unmarshaling is backward-compatible."
+}
