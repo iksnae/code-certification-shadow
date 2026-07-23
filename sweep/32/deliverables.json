@@ -1,33 +1,16 @@
 [
   {
     "nonGoals" : [
-      "Do not modify partitionByLanguage or any other function in card.go",
-      "Do not modify the Card struct definition",
-      "Do not change the N\/A rendering logic or gradeEmoji fallback",
-      "Do not add new report output formats"
+      "Do not modify scorer.go, pipeline.go, or domain types",
+      "Do not change N\/A rendering logic",
+      "Do not add new report output formats",
+      "Do not modify other report files"
     ],
-    "objective" : "Guard GenerateCard's records loop to skip unsupported-language records and use a counted denominator for aggregate calculations",
+    "objective" : "Guard the records loop in internal\/report\/health.go and use a counted denominator for pass rate and average score, adding the analysis import.",
     "orderIndex" : 0,
-    "planText" : "In GenerateCard(), add a `counted` variable initialized to 0 before the records loop. At the top of the loop body, add the guard `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }`. Immediately after the guard, increment `counted`. Replace every use of `len(records)` as a denominator for aggregate rates\/scores with `counted` — specifically for TotalUnits, OverallScore, and PassRate calculations. Set `card.AnalyzableUnits = counted`. Do NOT modify partitionByLanguage, any other function in card.go, or the Card struct definition. The analysis import is already present — do not add it again.",
+    "planText" : "Add `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` import. In `Health()`: add a `counted` variable initialized to 0; at top of the records loop, guard with `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }`; increment `counted` after guard; replace `len(records)` denominator with `counted` for `PassRate` and `AverageScore` calculations; add a check for `counted == 0` to avoid division by zero, returning appropriate N\/A values if no supported records.",
     "riskClass" : "medium",
     "size" : "s",
-    "targetFiles" : [
-      "internal\/report\/card.go"
-    ],
-    "verificationCommand" : "go test .\/... -count=1"
-  },
-  {
-    "nonGoals" : [
-      "Do not modify any other function in health.go",
-      "Do not change the Health struct definition",
-      "Do not modify scorer.go, pipeline.go, or domain types",
-      "Do not add new report output formats"
-    ],
-    "objective" : "Guard Health's records loop to skip unsupported-language records and use a counted denominator for pass-rate and average-score",
-    "orderIndex" : 1,
-    "planText" : "Add the import `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` to the import block. In Health(), add a `counted` variable initialized to 0 before the `for _, r := range records` loop. At the top of the loop body, add the guard `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }`. Immediately after the guard, increment `counted`. Set `h.TotalUnits = counted` instead of `len(records)`. Replace `len(records)` with `counted` in the PassRate and AverageScore denominator calculations. Do NOT modify any other function in health.go.",
-    "riskClass" : "medium",
-    "size" : "xs",
     "targetFiles" : [
       "internal\/report\/health.go"
     ],
@@ -35,14 +18,14 @@
   },
   {
     "nonGoals" : [
-      "Do not modify Detailed() or any other function in detailed.go",
-      "Do not change return types or function signatures",
-      "Do not add a counted denominator — per-dimension\/per-language counts handle exclusion naturally",
-      "Do not modify scorer.go, pipeline.go, or domain types"
+      "Do not modify scorer.go, pipeline.go, or domain types",
+      "Do not change N\/A rendering logic",
+      "Do not add new report output formats",
+      "Do not introduce counted denominator (per-dimension\/language counts already handle it)"
     ],
-    "objective" : "Guard computeDimensionAverages and computeLanguageBreakdowns loops to skip unsupported-language records",
-    "orderIndex" : 2,
-    "planText" : "Add the import `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` to the import block. In computeDimensionAverages(), at the top of the `for _, r := range records` loop body, add the guard `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before any dimension summing or count incrementing. In computeLanguageBreakdowns(), add the same guard at the top of the records loop before any per-language accumulation. No counted denominator variable is needed — the per-dimension and per-language counts naturally exclude unsupported records. Do NOT modify any other function in detailed.go.",
+    "objective" : "Guard two aggregation loops in internal\/report\/detailed.go to skip unsupported records, adding the analysis import.",
+    "orderIndex" : 1,
+    "planText" : "Add `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` import. In `computeDimensionAverages()`: at top of the records loop, add `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before summing dimensions and incrementing counts. In `computeLanguageBreakdowns()`: at top of its records loop, add the same guard before per-language accumulation.",
     "riskClass" : "low",
     "size" : "xs",
     "targetFiles" : [
@@ -52,19 +35,35 @@
   },
   {
     "nonGoals" : [
-      "Do not modify GenerateFullReport() or any other function in full.go",
-      "Do not change return types or function signatures",
-      "Do not add a counted denominator — per-language counts handle exclusion naturally",
       "Do not modify scorer.go, pipeline.go, or domain types",
-      "Do not add new report output formats"
+      "Do not change N\/A rendering logic",
+      "Do not add new report output formats",
+      "Do not introduce counted denominator (the slice of scores already only grows for processed records)"
     ],
-    "objective" : "Guard buildLanguageDetail's records loop to skip unsupported-language records",
-    "orderIndex" : 3,
-    "planText" : "Add the import `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` to the import block. In buildLanguageDetail(), at the top of the records loop body, add the guard `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before any per-language sum or count computation. No counted denominator variable is needed — per-language counts naturally exclude unsupported records. Do NOT modify GenerateFullReport() or any other function in full.go.",
+    "objective" : "Guard the buildLanguageDetail loop in internal\/report\/full.go to skip unsupported records, adding the analysis import.",
+    "orderIndex" : 2,
+    "planText" : "Add `\"github.com\/iksnae\/code-certification\/internal\/analysis\"` import. In `buildLanguageDetail()`: at top of the records loop, add `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }` before computing per-language sums and counts.",
     "riskClass" : "low",
     "size" : "xs",
     "targetFiles" : [
       "internal\/report\/full.go"
+    ],
+    "verificationCommand" : "go test .\/... -count=1"
+  },
+  {
+    "nonGoals" : [
+      "Do not modify scorer.go, pipeline.go, or domain types",
+      "Do not change N\/A rendering logic",
+      "Do not add new report output formats",
+      "Do not add the analysis import (already present)"
+    ],
+    "objective" : "Guard the GenerateCard loop in internal\/report\/card.go and use a counted denominator for total units, pass rate, and overall score.",
+    "orderIndex" : 3,
+    "planText" : "In `GenerateCard()`: add a `counted` variable initialized to 0; at top of the records loop, add `if analysis.ForLanguage(r.UnitID.Language()) == nil { continue }`; increment `counted` after guard; replace `len(records)` denominator with `counted` for `TotalUnits`, `PassRate`, and `OverallScore` calculations; handle `counted == 0` edge case to avoid division by zero, ensuring overall score becomes N\/A when no supported records exist.",
+    "riskClass" : "medium",
+    "size" : "s",
+    "targetFiles" : [
+      "internal\/report\/card.go"
     ],
     "verificationCommand" : "go test .\/... -count=1"
   }
