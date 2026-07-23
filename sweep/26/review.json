@@ -1,7 +1,7 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 28 round(s)",
+      "detail" : "the implementor finished in 29 round(s)",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
@@ -51,29 +51,9 @@
       }
     },
     {
-      "detail" : "Only 2 of 5 plan-required tests have meaningful non-skipped implementations: TestScore_AggregateSkipsUnsupported is t.Skip'd; TestScore_UnsupportedLanguage_ReturnsNA omits Grade=='N\/A' and Unsupported==true; TestScore_SupportedLanguage_StillWorks omits grade assertion; TestScore_DefaultsNotInjected uses 'go' instead of TierGeneric — plan required TierGeneric unit.",
+      "detail" : "Only 4 of 5 required tests present; TestScore_AggregateSkipsUnsupported is t.Skip'd (plan req #5 unmet); TestScore_UnsupportedLanguage_ReturnsNA omits plan-required Grade=='N\/A' and Unsupported==true assertions; TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric as plan mandates; TestScore_SupportedLanguage_StillWorks missing grade A\/B\/C\/D\/F assertion.",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
-      "result" : {
-        "score" : {
-          "_0" : 0.35
-        }
-      }
-    },
-    {
-      "detail" : "Edit is confined to internal\/engine\/scorer_test.go, the only file the plan called for; no production code changes, no unrelated churn.",
-      "id" : "minimal-and-scoped",
-      "label" : "Minimal and scoped",
-      "result" : {
-        "score" : {
-          "_0" : 1
-        }
-      }
-    },
-    {
-      "detail" : "TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric unit as the plan explicitly requires, weakening the guard; TestScore_SupportedLanguage_StillWorks weakens the plan-required grade assertion to a weaker weighted-average check; TestScore_UnsupportedLanguage_ReturnsNA drops Grade and Unsupported assertions.",
-      "id" : "no-fake-or-test-gaming",
-      "label" : "No test-gaming \/ faking",
       "result" : {
         "score" : {
           "_0" : 0.4
@@ -81,12 +61,32 @@
       }
     },
     {
-      "detail" : "No production code changes; tests compile and pass; but weakened\/missing assertions leave regression gaps — unsupported-language handling and TierGeneric default injection are not fully guarded as the plan intended.",
+      "detail" : "Only scorer_test.go modified as plan specified; no production files touched. Minor deduction for t.Skip stub adding noise without value.",
+      "id" : "minimal-and-scoped",
+      "label" : "Minimal and scoped",
+      "result" : {
+        "score" : {
+          "_0" : 0.9
+        }
+      }
+    },
+    {
+      "detail" : "No test deletion or hard-coded expected values found. However TestScore_DefaultsNotInjected uses supported 'go' instead of TierGeneric, avoiding the actual injection scenario; t.Skip on AggregateSkipsUnsupported is honest but leaves requirement untested.",
+      "id" : "no-fake-or-test-gaming",
+      "label" : "No test-gaming \/ faking",
+      "result" : {
+        "score" : {
+          "_0" : 0.5
+        }
+      }
+    },
+    {
+      "detail" : "Test-only changes; no production code modified. But partial\/inaccurate tests (wrong language, missing assertions) risk false confidence; 20% of plan requirements entirely unimplemented (t.Skip).",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
         "score" : {
-          "_0" : 0.55
+          "_0" : 0.5
         }
       }
     },
@@ -105,7 +105,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "\t0.079s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.093s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.272s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t2.233s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.032s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.281s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.067s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.026s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.062s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.108s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.037s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.033s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.138s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t9.436s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.076s\n"
+        "outputExcerpt" : "\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.055s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.142s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.968s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.195s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.077s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.042s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.047s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.057s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.063s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.165s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t9.795s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.060s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -121,23 +121,23 @@
   "dimensions" : [
     {
       "dimension" : "implements-the-approved-plan",
-      "evidence" : "Only 2 of 5 plan-required tests have meaningful non-skipped implementations: TestScore_AggregateSkipsUnsupported is t.Skip'd; TestScore_UnsupportedLanguage_ReturnsNA omits Grade=='N\/A' and Unsupported==true; TestScore_SupportedLanguage_StillWorks omits grade assertion; TestScore_DefaultsNotInjected uses 'go' instead of TierGeneric — plan required TierGeneric unit.",
-      "score" : 0.35
-    },
-    {
-      "dimension" : "minimal-and-scoped",
-      "evidence" : "Edit is confined to internal\/engine\/scorer_test.go, the only file the plan called for; no production code changes, no unrelated churn.",
-      "score" : 1
-    },
-    {
-      "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric unit as the plan explicitly requires, weakening the guard; TestScore_SupportedLanguage_StillWorks weakens the plan-required grade assertion to a weaker weighted-average check; TestScore_UnsupportedLanguage_ReturnsNA drops Grade and Unsupported assertions.",
+      "evidence" : "Only 4 of 5 required tests present; TestScore_AggregateSkipsUnsupported is t.Skip'd (plan req #5 unmet); TestScore_UnsupportedLanguage_ReturnsNA omits plan-required Grade=='N\/A' and Unsupported==true assertions; TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric as plan mandates; TestScore_SupportedLanguage_StillWorks missing grade A\/B\/C\/D\/F assertion.",
       "score" : 0.4
     },
     {
+      "dimension" : "minimal-and-scoped",
+      "evidence" : "Only scorer_test.go modified as plan specified; no production files touched. Minor deduction for t.Skip stub adding noise without value.",
+      "score" : 0.9
+    },
+    {
+      "dimension" : "no-fake-or-test-gaming",
+      "evidence" : "No test deletion or hard-coded expected values found. However TestScore_DefaultsNotInjected uses supported 'go' instead of TierGeneric, avoiding the actual injection scenario; t.Skip on AggregateSkipsUnsupported is honest but leaves requirement untested.",
+      "score" : 0.5
+    },
+    {
       "dimension" : "safe-to-advance",
-      "evidence" : "No production code changes; tests compile and pass; but weakened\/missing assertions leave regression gaps — unsupported-language handling and TierGeneric default injection are not fully guarded as the plan intended.",
-      "score" : 0.55
+      "evidence" : "Test-only changes; no production code modified. But partial\/inaccurate tests (wrong language, missing assertions) risk false confidence; 20% of plan requirements entirely unimplemented (t.Skip).",
+      "score" : 0.5
     }
   ],
   "evidenceReceiptIds" : [
@@ -149,11 +149,11 @@
     "rcpt-build-commit-sweep-build-26#s1"
   ],
   "failureReasons" : [
-    "Only 2 of 5 plan-required tests have meaningful non-skipped implementations (TestScore_AggregateSkipsUnsupported is t.Skip'd)",
-    "TestScore_UnsupportedLanguage_ReturnsNA omits plan-required Grade=='N\/A' and Unsupported==true assertions",
-    "TestScore_SupportedLanguage_StillWorks omits plan-required grade (A\/B\/C\/D\/F) assertion",
-    "TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric unit as plan explicitly requires, weakening the guard",
-    "TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil-return shortcut rather than specifically testing the complexity<=5 branch",
+    "TestScore_AggregateSkipsUnsupported is t.Skip'd — plan requirement #5 entirely unimplemented",
+    "TestScore_UnsupportedLanguage_ReturnsNA missing plan-required Grade=='N\/A' and Unsupported==true assertions",
+    "TestScore_DefaultsNotInjected uses 'go' (supported language) instead of TierGeneric unit as plan explicitly requires",
+    "TestScore_SupportedLanguage_StillWorks missing plan-required grade (A\/B\/C\/D\/F) assertion",
+    "TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil-return shortcut rather than specifically testing the complexity≤5 branch as plan intends",
     "aggregate score 0.575 below threshold 0.600"
   ],
   "filesReviewed" : [
