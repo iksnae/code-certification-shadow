@@ -10,3 +10,4 @@ narrative — distinct from the machine `DECISIONS.md`). Entries are client-clea
 - **#29** — Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking — delivered via PR #35 (775e7a4f); 3 files changed.
 - **#36** — Add the Unsupported field to CertificationRecord (completes #30's missing half) — delivered via PR #37 (ff8aef79); 1 file changed.
 - **#31** — Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests — delivered via PR #38 (a410f437); 4 files changed.
+- **#23** — Create a language-tier registry mapping every known language ID to an analysis capability tier (None/Generic/Lint/Parse/Full), with a test that fails CI when a new language extension is added to discovery without a tier entry. — delivered via PR #41 (a4e74229); 5 files changed.
