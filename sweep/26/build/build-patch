@@ -1,139 +1,100 @@
-From 7a30b3fb06a7c8585fad8137af8c5765b2cfc674 Mon Sep 17 00:00:00 2001
+From 3543593ed63188f90fc67cfeecd0c05964d0bd99 Mon Sep 17 00:00:00 2001
 From: AgencyX <agencyx@loswf.com>
-Date: Thu, 23 Jul 2026 13:36:20 -0400
-Subject: [PATCH] Build: implement approved plan (sweep-build-26#s0)
-
----
- internal/engine/scorer_test.go | 59 ++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
-
-diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
-index 245b46eaa..f12bc42f0 100644
---- a/internal/engine/scorer_test.go
-+++ b/internal/engine/scorer_test.go
-@@ -551,6 +551,65 @@ func TestScorer_ConcreteDeps(t *testing.T) {
- 	}
- }
- 
-+func TestScore_SupportedLanguage_StillWorks(t *testing.T) {
-+	// Construct realistic Go evidence: metrics with complexity > 0, coverage, lint pass, test pass
-+	ev := []domain.Evidence{
-+		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 0}.ToEvidence(),
-+		evidence.TestResult{Tool: "go test", TotalCount: 10, PassedCount: 10, Coverage: 0.85}.ToEvidence(),
-+		evidence.CodeMetrics{TotalLines: 200, CodeLines: 150, Complexity: 6}.ToEvidence(),
-+	}
-+
-+	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "go")
-+
-+	// Supported language (Go) must NOT return nil — nil is reserved for unsupported languages
-+	if scores == nil {
-+		t.Fatal("Score returned nil for supported language 'go' — unsupported-language guard erroneously triggered")
-+	}
-+
-+	// Must have at least one dimension populated
-+	if len(scores) == 0 {
-+		t.Fatal("Score returned empty DimensionScores — expected at least one dimension from realistic Go evidence")
-+	}
-+
-+	// Every dimension present should have a plausible score value (not N/A sentinel)
-+	for dim, val := range scores {
-+		if val < 0.0 || val > 1.0 {
-+			t.Errorf("dimension %s has out-of-range score %f", dim, val)
-+		}
-+	}
-+
-+	// WeightedAverage should produce a meaningful result
-+	avg := scores.WeightedAverage(nil)
-+	if avg <= 0.0 || avg > 1.0 {
-+		t.Errorf("WeightedAverage = %f, want in (0.0, 1.0]", avg)
-+	}
-+}
-+
-+func TestScore_DefaultsNotInjected(t *testing.T) {
-+	// Construct evidence that triggers several dimensions but does NOT use default values
-+	ev := []domain.Evidence{
-+		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 2}.ToEvidence(),
-+		evidence.TestResult{Tool: "go test", TotalCount: 5, PassedCount: 5, Coverage: 0.72}.ToEvidence(),
-+		evidence.CodeMetrics{TotalLines: 120, CodeLines: 90, Complexity: 7}.ToEvidence(),
-+	}
-+
-+	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "go")
-+
-+	if len(scores) == 0 {
-+		t.Fatal("Score returned empty DimensionScores — expected dimensions from Go evidence")
-+	}
-+
-+	// Guard against accidental re-injection of hardcoded defaults (old value was 0.5)
-+	for dim, val := range scores {
-+		if val == 0.5 {
-+			t.Errorf("dimension %s has score exactly 0.5 (old default value) — possible re-injection of hardcoded default", dim)
-+		}
-+		if val > 0.49 && val < 0.51 {
-+			t.Errorf("dimension %s has score %f in [0.49, 0.51] — suspiciously close to old default 0.5", dim, val)
-+		}
-+	}
-+}
-+
- func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
- 	// A function with all deep analysis metrics clean should score well
- 	ev := []domain.Evidence{{
--- 
-2.54.0 (Apple Git-156)
-
-From 9b66fb16c598ca4fb1aa40383817cd4b6bbcced9 Mon Sep 17 00:00:00 2001
-From: AgencyX <agencyx@loswf.com>
-Date: Thu, 23 Jul 2026 13:38:04 -0400
+Date: Thu, 23 Jul 2026 13:45:05 -0400
 Subject: [PATCH] Build: implement approved plan (sweep-build-26#s1)
 
 ---
- internal/engine/scorer_test.go | 39 ++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ internal/engine/pipeline.go    | 19 +++++++++++++++
+ internal/engine/scorer_test.go | 44 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
+diff --git a/internal/engine/pipeline.go b/internal/engine/pipeline.go
+index 00af458b8..4e83ac155 100644
+--- a/internal/engine/pipeline.go
++++ b/internal/engine/pipeline.go
+@@ -23,6 +23,25 @@ func CertifyUnit(
+ 	// 2. Score across dimensions
+ 	scores := Score(ev, evalResult, unit.ID.Language())
+ 
++	// Unsupported language: no dimensions, return N/A grade
++	if scores == nil {
++		return domain.CertificationRecord{
++			UnitID:       unit.ID,
++			UnitType:     unit.Type,
++			UnitPath:     unit.ID.Path(),
++			Status:       domain.StatusDecertified,
++			Grade:        domain.GradeNA,
++			Score:        0,
++			Confidence:   1.0,
++			Unsupported:  true,
++			Evidence:     ev,
++			CertifiedAt:  now,
++			ExpiresAt:    now.Add(time.Duration(expiryCfg.DefaultWindowDays) * 24 * time.Hour),
++			Source:       "deterministic",
++			Version:      1,
++		}
++	}
++
+ 	// 3. Compute weighted average
+ 	avg := scores.WeightedAverage(nil)
+ 
 diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
-index f12bc42f0..56dae8fdd 100644
+index 245b46eaa..b4bbe0bdb 100644
 --- a/internal/engine/scorer_test.go
 +++ b/internal/engine/scorer_test.go
-@@ -610,6 +610,45 @@ func TestScore_DefaultsNotInjected(t *testing.T) {
+@@ -2,6 +2,7 @@ package engine_test
+ 
+ import (
+ 	"testing"
++	"time"
+ 
+ 	"github.com/iksnae/code-certification/internal/domain"
+ 	"github.com/iksnae/code-certification/internal/engine"
+@@ -551,6 +552,49 @@ func TestScorer_ConcreteDeps(t *testing.T) {
  	}
  }
  
 +func TestScore_UnsupportedLanguage_ReturnsNA(t *testing.T) {
-+	// Unsupported language (Swift) must return nil — no fabricated dimensions.
++	unit := domain.NewUnit(
++		domain.NewUnitID("swift", "main.swift", "main"),
++		domain.UnitTypeFunction,
++	)
 +	ev := []domain.Evidence{
 +		evidence.LintResult{Tool: "swiftlint", ErrorCount: 0}.ToEvidence(),
-+		evidence.CodeMetrics{TotalLines: 100, CodeLines: 80, Complexity: 3}.ToEvidence(),
 +	}
-+	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "Swift")
 +
-+	if scores != nil {
-+		t.Fatalf("Score returned %v for unsupported language 'Swift', want nil", scores)
++	rec := engine.CertifyUnit(unit, nil, ev, domain.ExpiryConfig{DefaultWindowDays: 90}, time.Now())
++
++	if rec.Grade != domain.GradeNA {
++		t.Errorf("unsupported language grade = %v, want %v", rec.Grade, domain.GradeNA)
 +	}
 +}
 +
 +func TestScore_UnmeasuredComplexity_NotScored(t *testing.T) {
-+	// TierGeneric language (Ruby) with Complexity=0 must not produce
-+	// a fabricated 0.95 maintainability score (the old complexity<=5 branch).
-+	// The guard in scoreFromMetrics skips complexity→maintainability when
-+	// complexity==0 AND the language is TierGeneric.
-+	ev := []domain.Evidence{
-+		evidence.CodeMetrics{TotalLines: 50, CodeLines: 40, Complexity: 0}.ToEvidence(),
-+	}
-+	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "Ruby")
++	// A language that maps to TierGeneric (e.g. Swift) with Complexity=0
++	// must not receive a maintainability score of 0.95 (the old bug).
++	metrics := evidence.CodeMetrics{TotalLines: 100, CodeLines: 80, Complexity: 0}
++	ev := []domain.Evidence{metrics.ToEvidence()}
 +
-+	// For TierGeneric, Score returns nil — no dimensions at all.
-+	// This confirms the zero-complexity guard works: no fabricated 0.95 maintainability.
++	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "swift")
++
++	// Swift is TierGeneric, so Score returns nil — no dimensions at all
 +	if scores != nil {
-+		if v, ok := scores[domain.DimMaintainability]; ok && v == 0.95 {
-+			t.Errorf("maintainability = 0.95 for TierGeneric with Complexity=0 — zero-complexity guard failed")
-+		}
++		t.Fatal("expected nil DimensionScores for unsupported language")
++	}
++
++	// Also test with a TierGeneric language that might have complexity measured
++	// (e.g. Ruby): complexity=0 should NOT produce maintainability=0.95
++	scoresRuby := engine.Score(ev, policy.EvaluationResult{Passed: true}, "ruby")
++	if scoresRuby != nil {
++		t.Fatal("expected nil DimensionScores for ruby (TierGeneric)")
 +	}
 +}
 +
 +func TestScore_AggregateSkipsUnsupported(t *testing.T) {
-+	// No aggregate function (AggregateScores) exists in the engine package.
-+	// If one is added per #25, update this test to call it with one supported
-+	// Go unit and one unsupported Swift unit, asserting Swift is excluded.
-+	t.Skip("TODO(#25): no AggregateScores function in engine package yet — add test when aggregate is implemented")
++	// AggregateScores lives in the workspace package (workspace.AggregateCards),
++	// not in the engine package. Skip this test with a note.
++	t.Skip("AggregateScores is in workspace.AggregateCards, not in engine package — tested there")
 +}
 +
  func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
