@@ -9,3 +9,4 @@ narrative — distinct from the machine `DECISIONS.md`). Entries are client-clea
 - **#30** — Add GradeNA constant and Unsupported field to domain types to support the N/A short-circuit path — delivered via PR #34 (1082cf2f); 4 files changed.
 - **#29** — Create the language_tiers package with tier constants, TierForLanguage function, and parser-capability checking — delivered via PR #35 (775e7a4f); 3 files changed.
 - **#36** — Add the Unsupported field to CertificationRecord (completes #30's missing half) — delivered via PR #37 (ff8aef79); 1 file changed.
+- **#31** — Guard Score() with language-tier gate, protect complexity maintainability rule, remove 0.5 defaults, update pipeline, and fix all engine tests — delivered via PR #38 (a410f437); 4 files changed.
