@@ -19,16 +19,26 @@
       "at" : 806455906.376542,
       "issue" : "30",
       "text" : "Audit other domain types that may need corresponding Unsupported \/ N\/A sentinel values for completeness."
+    },
+    {
+      "at" : 806458677.183224,
+      "issue" : "29",
+      "text" : "Integrate language_tiers into downstream packages that currently hard-code or duplicate tier\/language logic."
+    },
+    {
+      "at" : 806458677.183224,
+      "issue" : "29",
+      "text" : "Consider adding benchmark tests if TierForLanguage or capability checks end up on hot paths."
     }
   ],
-  "cumulativeFilesChanged" : 14,
-  "cumulativeRounds" : 118,
+  "cumulativeFilesChanged" : 17,
+  "cumulativeRounds" : 133,
   "cumulativeSpendUSD" : 2.2977790700000003,
-  "deliveredCount" : 2,
-  "lastActivity" : 806455906.376542,
-  "lastConfidence" : 0.95,
+  "deliveredCount" : 3,
+  "lastActivity" : 806458677.183224,
+  "lastConfidence" : 0.98,
   "lifecycle" : "active",
   "maxRounds" : 86,
   "minConfidence" : 0.85,
-  "verifyGreenStreak" : 2
+  "verifyGreenStreak" : 3
 }
