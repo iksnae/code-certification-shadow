@@ -1,0 +1,90 @@
+From 53df551f6d7762859af1f6f91880629daef7cf83 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 23 Jul 2026 12:48:19 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-26#s0)
+
+---
+ internal/engine/scorer_test.go | 70 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+
+diff --git a/internal/engine/scorer_test.go b/internal/engine/scorer_test.go
+index 245b46eaa..1f7976dc3 100644
+--- a/internal/engine/scorer_test.go
++++ b/internal/engine/scorer_test.go
+@@ -579,3 +579,73 @@ func TestScorer_DeepAnalysis_AllClean(t *testing.T) {
+ 		}
+ 	}
+ }
++
++func TestScore_SupportedLanguage_StillWorks(t *testing.T) {
++	// Construct realistic evidence for a Go unit: lint passing, tests passing
++	// with coverage, low complexity, and git history.
++	ev := []domain.Evidence{
++		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 0}.ToEvidence(),
++		evidence.TestResult{Tool: "go test", TotalCount: 20, PassedCount: 20, Coverage: 0.92}.ToEvidence(),
++		evidence.CodeMetrics{TotalLines: 200, CodeLines: 150, Complexity: 3}.ToEvidence(),
++		evidence.GitStats{CommitCount: 25, AuthorCount: 2, AgeDays: 180}.ToEvidence(),
++	}
++
++	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "go")
++
++	// Must have at least one dimension scored.
++	if len(scores) == 0 {
++		t.Fatal("expected at least one dimension score for supported Go unit, got none")
++	}
++
++	avg := scores.WeightedAverage(nil)
++	// A supported language with clean evidence must produce a positive score
++	// that maps to a real letter grade (A–F), never zero (which would be N/A).
++	if avg <= 0 {
++		t.Errorf("weighted average = %f, want > 0 for supported language with clean evidence", avg)
++	}
++
++	// Confirm at least the main dimensions are populated.
++	hasDimension := false
++	for _, dim := range []domain.Dimension{
++		domain.DimCorrectness,
++		domain.DimMaintainability,
++		domain.DimReadability,
++		domain.DimTestability,
++		domain.DimChangeRisk,
++		domain.DimOperationalQuality,
++	} {
++		if _, ok := scores[dim]; ok {
++			hasDimension = true
++		}
++	}
++	if !hasDimension {
++		t.Error("expected at least one recognized dimension to be scored, got none")
++	}
++}
++
++func TestScore_DefaultsNotInjected(t *testing.T) {
++	// Construct evidence that exercises multiple dimensions.
++	ev := []domain.Evidence{
++		evidence.LintResult{Tool: "golangci-lint", ErrorCount: 0}.ToEvidence(),
++		evidence.TestResult{Tool: "go test", TotalCount: 5, PassedCount: 5, Coverage: 0.75}.ToEvidence(),
++		evidence.CodeMetrics{TotalLines: 120, CodeLines: 90, Complexity: 7}.ToEvidence(),
++	}
++
++	scores := engine.Score(ev, policy.EvaluationResult{Passed: true}, "go")
++
++	for dim, v := range scores {
++		// No dimension should have the exact old default of 0.5.
++		if v == 0.5 {
++			t.Errorf("dimension %s has value exactly 0.5 (the old default) — defaults should not be injected", dim)
++		}
++		// Catch near-defaults (anything in [0.49, 0.51] that's not exactly 0.5
++		// is also suspicious).
++		if v >= 0.49 && v <= 0.51 {
++			t.Errorf("dimension %s has value %f in [0.49, 0.51] — looks like a hardcoded default", dim, v)
++		}
++	}
++
++	if len(scores) == 0 {
++		t.Error("expected at least one dimension to be scored; got empty map")
++	}
++}
+-- 
+2.54.0 (Apple Git-156)
+
