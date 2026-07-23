@@ -1,17 +1,17 @@
 {
   "checklist" : [
     {
-      "detail" : "the implementor finished in 29 round(s)",
+      "detail" : "ran all 51 round(s) without finishing — deliverable left partial",
       "id" : "build-completed",
       "label" : "Build completed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
     },
     {
-      "detail" : "1 file(s) changed: internal\/engine\/scorer_test.go",
+      "detail" : "2 file(s) changed: internal\/engine\/scorer_test.go, internal\/engine\/scorer_test_read.md",
       "id" : "change-present",
       "label" : "Change is visible",
       "result" : {
@@ -31,11 +31,11 @@
       }
     },
     {
-      "detail" : "the project verify command was GREEN",
+      "detail" : "the project verify command was RED",
       "id" : "verify-green",
       "label" : "Verification passed",
       "result" : {
-        "pass" : {
+        "fail" : {
 
         }
       }
@@ -51,52 +51,42 @@
       }
     },
     {
-      "detail" : "Only 4 of 5 required tests present; TestScore_AggregateSkipsUnsupported is t.Skip'd (plan req #5 unmet); TestScore_UnsupportedLanguage_ReturnsNA omits plan-required Grade=='N\/A' and Unsupported==true assertions; TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric as plan mandates; TestScore_SupportedLanguage_StillWorks missing grade A\/B\/C\/D\/F assertion.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "implements-the-approved-plan",
       "label" : "Implements the approved plan",
       "result" : {
-        "score" : {
-          "_0" : 0.4
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Only scorer_test.go modified as plan specified; no production files touched. Minor deduction for t.Skip stub adding noise without value.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "minimal-and-scoped",
       "label" : "Minimal and scoped",
       "result" : {
-        "score" : {
-          "_0" : 0.9
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "No test deletion or hard-coded expected values found. However TestScore_DefaultsNotInjected uses supported 'go' instead of TierGeneric, avoiding the actual injection scenario; t.Skip on AggregateSkipsUnsupported is honest but leaves requirement untested.",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "no-fake-or-test-gaming",
       "label" : "No test-gaming \/ faking",
       "result" : {
-        "score" : {
-          "_0" : 0.5
+        "skipped" : {
+
         }
       }
     },
     {
-      "detail" : "Test-only changes; no production code modified. But partial\/inaccurate tests (wrong language, missing assertions) risk false confidence; 20% of plan requirements entirely unimplemented (t.Skip).",
+      "detail" : "judge not run — the deterministic gate decided the outcome",
       "id" : "safe-to-advance",
       "label" : "Safe to advance",
       "result" : {
-        "score" : {
-          "_0" : 0.5
-        }
-      }
-    },
-    {
-      "detail" : "at or above the confidence bar",
-      "id" : "judge-confidence",
-      "label" : "Judge confidence",
-      "result" : {
-        "score" : {
-          "_0" : 0.92
+        "skipped" : {
+
         }
       }
     }
@@ -105,7 +95,7 @@
     {
       "evidence" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
-        "outputExcerpt" : "\t0.036s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.055s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.142s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t1.968s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.195s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.077s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.042s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.047s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.057s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.020s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.063s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.165s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t9.795s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.060s\n"
+        "outputExcerpt" : "0.041s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/config\t0.117s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/discovery\t0.372s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/doctor\t4.791s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/domain\t0.031s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/engine\t0.107s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/evidence\t0.220s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/expiry\t0.019s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/github\t0.035s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/language_tiers\t0.034s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/override\t0.021s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/policy\t0.018s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/queue\t0.044s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/record\t0.147s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/report\t28.869s\nok  \tgithub.com\/iksnae\/code-certification\/internal\/workspace\t0.084s\n"
       },
       "oracle" : {
         "command" : "go build -o build\/bin\/certify .\/cmd\/certify\/ && go test .\/... -count=1",
@@ -116,29 +106,10 @@
     }
   ],
   "committed" : true,
-  "confidence" : 0.92,
+  "confidence" : 0,
   "correlationId" : "sweep-build-26",
   "dimensions" : [
-    {
-      "dimension" : "implements-the-approved-plan",
-      "evidence" : "Only 4 of 5 required tests present; TestScore_AggregateSkipsUnsupported is t.Skip'd (plan req #5 unmet); TestScore_UnsupportedLanguage_ReturnsNA omits plan-required Grade=='N\/A' and Unsupported==true assertions; TestScore_DefaultsNotInjected uses 'go' (supported) instead of TierGeneric as plan mandates; TestScore_SupportedLanguage_StillWorks missing grade A\/B\/C\/D\/F assertion.",
-      "score" : 0.4
-    },
-    {
-      "dimension" : "minimal-and-scoped",
-      "evidence" : "Only scorer_test.go modified as plan specified; no production files touched. Minor deduction for t.Skip stub adding noise without value.",
-      "score" : 0.9
-    },
-    {
-      "dimension" : "no-fake-or-test-gaming",
-      "evidence" : "No test deletion or hard-coded expected values found. However TestScore_DefaultsNotInjected uses supported 'go' instead of TierGeneric, avoiding the actual injection scenario; t.Skip on AggregateSkipsUnsupported is honest but leaves requirement untested.",
-      "score" : 0.5
-    },
-    {
-      "dimension" : "safe-to-advance",
-      "evidence" : "Test-only changes; no production code modified. But partial\/inaccurate tests (wrong language, missing assertions) risk false confidence; 20% of plan requirements entirely unimplemented (t.Skip).",
-      "score" : 0.5
-    }
+
   ],
   "evidenceReceiptIds" : [
     "rcpt-build-implement-sweep-build-26#s0",
@@ -146,20 +117,19 @@
     "rcpt-build-commit-sweep-build-26#s0",
     "rcpt-build-implement-sweep-build-26#s1",
     "rcpt-build-verify-sweep-build-26#s1",
-    "rcpt-build-commit-sweep-build-26#s1"
+    "rcpt-build-commit-sweep-build-26#s1",
+    "rcpt-build-implement-sweep-build-26#s2",
+    "rcpt-build-verify-sweep-build-26#s2",
+    "rcpt-build-commit-sweep-build-26#s2"
   ],
   "failureReasons" : [
-    "TestScore_AggregateSkipsUnsupported is t.Skip'd — plan requirement #5 entirely unimplemented",
-    "TestScore_UnsupportedLanguage_ReturnsNA missing plan-required Grade=='N\/A' and Unsupported==true assertions",
-    "TestScore_DefaultsNotInjected uses 'go' (supported language) instead of TierGeneric unit as plan explicitly requires",
-    "TestScore_SupportedLanguage_StillWorks missing plan-required grade (A\/B\/C\/D\/F) assertion",
-    "TestScore_UnmeasuredComplexity_NotScored relies on TierGeneric nil-return shortcut rather than specifically testing the complexity≤5 branch as plan intends",
-    "aggregate score 0.575 below threshold 0.600"
+    "Implementation did not complete — the build used all 51 round(s) without finishing. COMPLETE the deliverable; if it is large, finish the highest-priority target file first rather than leaving every file partial."
   ],
   "filesReviewed" : [
-    "internal\/engine\/scorer_test.go"
+    "internal\/engine\/scorer_test.go",
+    "internal\/engine\/scorer_test_read.md"
   ],
-  "outcome" : "needsFix",
-  "rubricId" : "build-review",
-  "rubricVersion" : 1
+  "outcome" : "blocked",
+  "rubricId" : "",
+  "rubricVersion" : 0
 }
