@@ -1,17 +1,28 @@
 {
-  "commitRef" : "5c0ae327a2f83fc30f2763ebe30ad818424a499d",
-  "committed" : false,
+  "commitRef" : "2447bc055f170340079e991d20b0ad9f825146a6",
+  "committed" : true,
   "correlationId" : "sweep-build-31",
   "filesChanged" : [
     "internal\/domain\/dimension.go",
     "internal\/domain\/dimension_test.go",
     "internal\/domain\/record.go",
-    "internal\/domain\/record_test.go",
-    "internal\/language_tiers\/",
-    "internal\/language_tiers\/tiers.go",
-    "internal\/language_tiers\/tiers_test.go"
+    "internal\/engine\/pipeline.go",
+    "internal\/engine\/scorer.go",
+    "internal\/engine\/scorer_test.go",
+    "internal\/language_tiers\/language_tiers.go",
+    "internal\/language_tiers\/language_tiers_test.go",
+    "internal\/language_tiers\/tiers.go"
   ],
   "implementCompleted" : false,
+  "incompleteSlices" : [
+    {
+      "index" : 4,
+      "reason" : "failed",
+      "targetFiles" : [
+        "internal\/engine\/pipeline.go"
+      ]
+    }
+  ],
   "receiptIds" : [
     "rcpt-build-implement-sweep-build-31#s0",
     "rcpt-build-verify-sweep-build-31#s0",
@@ -24,8 +35,11 @@
     "rcpt-build-commit-sweep-build-31#s2",
     "rcpt-build-implement-sweep-build-31#s3",
     "rcpt-build-verify-sweep-build-31#s3",
-    "rcpt-build-commit-sweep-build-31#s3"
+    "rcpt-build-commit-sweep-build-31#s3",
+    "rcpt-build-implement-sweep-build-31#s4",
+    "rcpt-build-verify-sweep-build-31#s4",
+    "rcpt-build-commit-sweep-build-31#s4"
   ],
-  "rounds" : 47,
+  "rounds" : 81,
   "verifyPassed" : false
 }
