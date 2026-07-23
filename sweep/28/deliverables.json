@@ -1,14 +1,14 @@
 [
   {
     "nonGoals" : [
-      "Do NOT modify any production code in analysis\/, engine\/certifier.go, or engine\/pipeline.go",
-      "Do NOT add new analyzer registrations",
-      "Do NOT introduce the optional Swift analysis tier",
-      "Do NOT touch cmd\/certify\/init_cmd.go or testdata\/policies\/"
+      "Do not modify production analyzer registry code",
+      "Do not add a Swift analyzer",
+      "Do not introduce new features or scoring dimensions",
+      "Do not refactor unrelated test files"
     ],
-    "objective" : "Create internal\/engine\/language_tiers_test.go to lock in the analyzer-registry contract: ForLanguage returns nil for swift\/unknown and non-nil for go\/ts\/js\/py\/rs; certifier yields N\/A for unsupported-language units",
+    "objective" : "Create language_tiers_test.go to verify the analyzer registry returns nil for Swift and non-nil for each supported language, and that the certifier emits N\/A for unsupported-language units.",
     "orderIndex" : 0,
-    "planText" : "Create internal\/engine\/language_tiers_test.go with table-driven tests:\n- TestForLanguage_Supported: verify ForLanguage returns non-nil for \"go\", \"ts\", \"js\", \"py\", \"rs\"\n- TestForLanguage_Unsupported: verify ForLanguage returns nil for \"swift\" and \"brainfuck\"\n- TestCertifier_UnsupportedLanguageYieldsNA: construct a minimal Unit with language \"swift\", certify it via engine.Certify (or the appropriate entry point), assert the resulting record has grade N\/A and score 0.0\nImport analysis package for ForLanguage, engine package for certifier. Use the project's existing test patterns (no external test fixtures beyond what the certifier already accepts).",
+    "planText" : "Create internal\/engine\/language_tiers_test.go to lock in the analyzer-registry contract: verify ForLanguage returns nil for swift (unsupported), non-nil for go\/ts\/js\/py\/rs (supported), and that certifier yields N\/A grade for swift units. This is the foundational contract test — all other behavior depends on the registry correctly classifying languages.",
     "riskClass" : "low",
     "size" : "s",
     "targetFiles" : [
@@ -18,35 +18,33 @@
   },
   {
     "nonGoals" : [
-      "Do NOT modify internal\/report\/card.go or internal\/report\/full.go",
-      "Do NOT add test cases to card_test.go or full_test.go — this consolidates into report_test.go",
-      "Do NOT test production code paths that are not yet wired",
-      "Do NOT introduce new report formats or features"
+      "Do not modify production scoring logic in scorer.go or certifier.go",
+      "Do not change existing passing assertions for supported languages",
+      "Do not introduce new test fixtures or testdata files"
     ],
-    "objective" : "Create internal\/report\/report_test.go with N\/A-grade rendering, unsupported-banner, and aggregate-exclusion test cases for the report layer",
+    "objective" : "Add N\/A-grade test expectations to scorer_test.go so unsupported-language units are explicitly tested for N\/A output rather than accidentally passing with misleading F grades.",
     "orderIndex" : 1,
-    "planText" : "Create internal\/report\/report_test.go covering the unsupported-language seam in reporting:\n- TestCard_UnsupportedBanner: construct a Card (or use GenerateCard) with records that include unsupported-language units, verify UnsupportedCount > 0 and UnsupportedLanguages is populated, and that the formatted output includes an unsupported-languages banner section\n- TestCard_NAAGradeRendering: verify that records with N\/A grade render correctly (not as F), appearing in output with an 'N\/A' designation\n- TestCard_AnalyzableUnits: verify that AnalyzableUnits excludes unsupported-language records\n- TestFull_BuildLanguageDetailExcludesUnsupported: construct records mixing go (supported) and swift (unsupported), pass through buildLanguageDetail (or the Full report path), verify unsupported languages do not contribute to LanguageDetail aggregates or DimensionAverages\n- TestFull_AggregateScoreExcludesUnsupported: verify overall aggregate score\/grades are computed only from supported-language records\nUse the project's existing test patterns and helper functions. Import internal\/report and internal\/engine packages as needed.",
-    "riskClass" : "medium",
-    "size" : "m",
+    "planText" : "Update internal\/engine\/scorer_test.go with N\/A-grade expectations for unsupported-language units. After the language-tier split, units in unsupported languages receive N\/A (not score-0→F). Add test cases that explicitly assert N\/A grade output so the scoring layer's contract for unsupported languages is verified.",
+    "riskClass" : "low",
+    "size" : "s",
     "targetFiles" : [
-      "internal\/report\/report_test.go"
+      "internal\/engine\/scorer_test.go"
     ],
     "verificationCommand" : "go test .\/... -count=1"
   },
   {
     "nonGoals" : [
-      "Do NOT rewrite or refactor existing scorer tests",
-      "Do NOT add Swift-specific scorer test cases",
-      "Do NOT modify scorer production code",
-      "Do NOT introduce new scoring dimensions or policies"
+      "Do not modify production report rendering in card.go or full.go",
+      "Do not change existing passing report assertions",
+      "Do not introduce new report templates or formats"
     ],
-    "objective" : "Verify internal\/engine\/scorer_test.go has no regressions — run existing tests, confirm they pass, and add a smoke test ensuring scorer handles N\/A-grade records without panicking",
+    "objective" : "Add unsupported-banner and unsupported-exclusion test cases to report_test.go so the report layer's handling of unsupported-language units is explicitly verified.",
     "orderIndex" : 2,
-    "planText" : "Run existing scorer tests: go test .\/internal\/engine\/ -run TestScorer -count=1. Confirm all pass (they only use Go evidence, no Swift\/unsupported assumptions). Optionally add one smoke test: TestScorer_NAAGradeIsNoOp — pass a record with N\/A grade through the scorer, verify it does not panic and the record is unchanged (scorer should be a no-op for N\/A grades, or at minimum not crash). This is a verification deliverable; if all existing tests pass cleanly, no code changes are required.",
+    "planText" : "Update internal\/report\/report_test.go with unsupported-banner and unsupported-exclusion test cases. Add assertions that the card renderer displays an unsupported-language banner when such units are present, and that the full report's aggregate scoring (buildLanguageDetail) excludes unsupported-language records from score calculations.",
     "riskClass" : "low",
-    "size" : "xs",
+    "size" : "s",
     "targetFiles" : [
-      "internal\/engine\/scorer_test.go"
+      "internal\/report\/report_test.go"
     ],
     "verificationCommand" : "go test .\/... -count=1"
   }
