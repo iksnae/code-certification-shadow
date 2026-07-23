@@ -1,0 +1,179 @@
+From f10bb9599d379b1dffc02a5b83c4a297378a7ce0 Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 23 Jul 2026 13:13:49 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-32#s0)
+
+---
+ internal/report/health.go | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/internal/report/health.go b/internal/report/health.go
+index bea22e1ae..d400cd8cc 100644
+--- a/internal/report/health.go
++++ b/internal/report/health.go
+@@ -6,6 +6,7 @@ import (
+ 	"fmt"
+ 	"strings"
+ 
++	"github.com/iksnae/code-certification/internal/analysis"
+ 	"github.com/iksnae/code-certification/internal/domain"
+ )
+ 
+@@ -33,8 +34,14 @@ func Health(records []domain.CertificationRecord) HealthReport {
+ 
+ 	var totalScore float64
+ 	var passing int
++	var counted int
+ 
+ 	for _, r := range records {
++		if analysis.ForLanguage(r.UnitID.Language()) == nil {
++			continue
++		}
++		counted++
++
+ 		totalScore += r.Score
+ 
+ 		switch r.Status {
+@@ -56,8 +63,12 @@ func Health(records []domain.CertificationRecord) HealthReport {
+ 		}
+ 	}
+ 
+-	h.PassRate = float64(passing) / float64(h.TotalUnits)
+-	h.AverageScore = totalScore / float64(h.TotalUnits)
++	if counted == 0 {
++		return h
++	}
++
++	h.PassRate = float64(passing) / float64(counted)
++	h.AverageScore = totalScore / float64(counted)
+ 
+ 	return h
+ }
+-- 
+2.54.0 (Apple Git-156)
+
+From b58b952ff71bc61075374213e038aad5e9ffd5cd Mon Sep 17 00:00:00 2001
+From: AgencyX <agencyx@loswf.com>
+Date: Thu, 23 Jul 2026 13:16:16 -0400
+Subject: [PATCH] Build: implement approved plan (sweep-build-32#s1)
+
+---
+ internal/report/detailed.go                  |  7 ++
+ internal/report/detailed_unsupported_test.go | 74 ++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
+ create mode 100644 internal/report/detailed_unsupported_test.go
+
+diff --git a/internal/report/detailed.go b/internal/report/detailed.go
+index 6e92ceb91..a9992d45f 100644
+--- a/internal/report/detailed.go
++++ b/internal/report/detailed.go
+@@ -7,6 +7,7 @@ import (
+ 	"strings"
+ 	"time"
+ 
++	"github.com/iksnae/code-certification/internal/analysis"
+ 	"github.com/iksnae/code-certification/internal/domain"
+ )
+ 
+@@ -80,6 +81,9 @@ func computeDimensionAverages(records []domain.CertificationRecord) map[string]f
+ 	sums := make(map[string]float64)
+ 	counts := make(map[string]int)
+ 	for _, r := range records {
++		if analysis.ForLanguage(r.UnitID.Language()) == nil {
++			continue
++		}
+ 		for dim, score := range r.Dimensions {
+ 			sums[dim.String()] += score
+ 			counts[dim.String()]++
+@@ -99,6 +103,9 @@ func computeLanguageBreakdowns(records []domain.CertificationRecord) map[string]
+ 	passing := make(map[string]int)
+ 	scores := make(map[string]float64)
+ 	for _, r := range records {
++		if analysis.ForLanguage(r.UnitID.Language()) == nil {
++			continue
++		}
+ 		lang := r.UnitID.Language()
+ 		totals[lang]++
+ 		scores[lang] += r.Score
+diff --git a/internal/report/detailed_unsupported_test.go b/internal/report/detailed_unsupported_test.go
+new file mode 100644
+index 000000000..bd62290f3
+--- /dev/null
++++ b/internal/report/detailed_unsupported_test.go
+@@ -0,0 +1,74 @@
++package report_test
++
++import (
++	"testing"
++	"time"
++
++	"github.com/iksnae/code-certification/internal/domain"
++	"github.com/iksnae/code-certification/internal/report"
++)
++
++func TestDetailedReport_UnsupportedSkippedInAggregates(t *testing.T) {
++	now :=
+...[elided 50 bytes - full stream is hash-only]...
+	domain.DimCorrectness:     0.9,
++		domain.DimMaintainability: 0.8,
++	}
++
++	// A supported Go record
++	goRec := domain.CertificationRecord{
++		UnitID:     domain.NewUnitID("go", "pkg/a.go", "FuncA"),
++		UnitType:   domain.UnitTypeFunction,
++		UnitPath:   "pkg/a.go",
++		Status:     domain.StatusCertified,
++		Score:      0.9,
++		Grade:      domain.GradeFromScore(0.9),
++		Dimensions: dims,
++		CertifiedAt: now,
++		ExpiresAt:  now.Add(90 * 24 * time.Hour),
++	}
++
++	// An unsupported language record (cobol has no analyzer registered)
++	unsupDims := domain.DimensionScores{
++		domain.DimCorrectness:     0.1,
++		domain.DimMaintainability: 0.1,
++	}
++	unsupRec := domain.CertificationRecord{
++		UnitID:     domain.NewUnitID("cobol", "pkg/old.cbl", "OldFunc"),
++		UnitType:   domain.UnitTypeFunction,
++		UnitPath:   "pkg/old.cbl",
++		Status:     domain.StatusDecertified,
++		Score:      0.1,
++		Grade:      domain.GradeFromScore(0.1),
++		Dimensions: unsupDims,
++		CertifiedAt: now,
++		ExpiresAt:  now.Add(90 * 24 * time.Hour),
++	}
++
++	records := []domain.CertificationRecord{goRec, unsupRec}
++	d := report.Detailed(records, now)
++
++	// Dimension averages should only reflect the supported record
++	if v, ok := d.Dimensions["correctness"]; !ok || v != 0.9 {
++		t.Errorf("correctness avg = %v, want 0.9 (unsupported should be skipped)", v)
++	}
++	if v, ok := d.Dimensions["maintainability"]; !ok || v != 0.8 {
++		t.Errorf("maintainability avg = %v, want 0.8 (unsupported should be skipped)", v)
++	}
++
++	// Language breakdowns should only include the supported language
++	if _, exists := d.ByLanguage["cobol"]; exists {
++		t.Error("cobol should be absent from language breakdowns (unsupported)")
++	}
++	if ld, exists := d.ByLanguage["go"]; !exists {
++		t.Error("go should be present in language breakdowns")
++	} else {
++		if ld.Units != 1 {
++			t.Errorf("go units = %d, want 1", ld.Units)
++		}
++		if ld.Passing != 1 {
++			t.Errorf("go passing = %d, want 1", ld.Passing)
++		}
++	}
++}
+-- 
+2.54.0 (Apple Git-156)
+
