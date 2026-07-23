@@ -1,9 +1,9 @@
 {
-  "commitRef" : "3543593ed63188f90fc67cfeecd0c05964d0bd99",
+  "commitRef" : "a9a13ddc5e05b5906f619d9cf5121d7be8a81512",
   "committed" : true,
   "correlationId" : "sweep-build-26",
   "filesChanged" : [
-    "internal\/engine\/pipeline.go",
+    "go.mod",
     "internal\/engine\/scorer_test.go"
   ],
   "implementCompleted" : true,
@@ -16,8 +16,17 @@
     "rcpt-build-commit-sweep-build-26#s0",
     "rcpt-build-implement-sweep-build-26#s1",
     "rcpt-build-verify-sweep-build-26#s1",
-    "rcpt-build-commit-sweep-build-26#s1"
+    "rcpt-build-commit-sweep-build-26#s1",
+    "rcpt-build-implement-sweep-build-26#s2",
+    "rcpt-build-verify-sweep-build-26#s2",
+    "rcpt-build-commit-sweep-build-26#s2",
+    "rcpt-build-implement-sweep-build-26#s3",
+    "rcpt-build-verify-sweep-build-26#s3",
+    "rcpt-build-commit-sweep-build-26#s3",
+    "rcpt-build-implement-sweep-build-26#s4",
+    "rcpt-build-verify-sweep-build-26#s4",
+    "rcpt-build-commit-sweep-build-26#s4"
   ],
-  "rounds" : 36,
+  "rounds" : 96,
   "verifyPassed" : true
 }
