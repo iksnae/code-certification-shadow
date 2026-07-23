@@ -5,7 +5,7 @@ Lifecycle: **active**
 - Delivered: **6**
 - Open issues: **—**
 - Last activity: 2026-07-23T21:22:27Z
-- Spend: **$5.73**
+- Spend: **$6.68**
 - Rounds: avg **44.7**, max **86**
 - Confidence: last **80%**, min **78%**
 - Verify-green streak: **6**
@@ -22,16 +22,3 @@ Lifecycle: **active**
 - **#31** — Audit remaining scoring rules for similar gate-pattern adoption where inputs may be undefined or unvalidated.
 - **#31** — Document the language-tier gate contract so future rule authors consistently check before scoring.
 - **#31** — Consider CI enforcement that no magic-number defaults re-enter the scorer configuration.
-
-## Spend detail
-
-Total: **$5.73** (968 costed calls across 54 ledgers)
-
-Top contributors:
-- run `ledger-E30A5FE0-AF0A-466C-8B5A-19DA318EAEEB.jsonl` — **$1.2104** (102 calls)
-- run `ledger-5FCFBFE8-408D-44C5-85A0-DCC6A2660865.jsonl` — **$1.0197** (93 calls)
-- run `ledger-2033094E-635E-4348-A9DC-77DED54B6798.jsonl` — **$0.4936** (59 calls)
-- ticket `26/spend/1/ledger.jsonl` — **$0.3631** (65 calls)
-- ticket `31/build/ledger.jsonl` — **$0.3619** (74 calls)
-
-Honest-unknown: 25 local ledgers with no price entry (not a gap).
